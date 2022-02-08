@@ -81,7 +81,7 @@ if ($.isNode()) {
       $.info = {}
       token = await getJxToken()
       await cfd();
-      await $.wait(2000);
+      await $.wait(10000);
     }
   }
   let res = await getAuthorShareCode('')
@@ -184,6 +184,7 @@ async function cfd() {
       await $.wait(2000)
     }
 
+    await $.wait(4000);
     //接待贵宾
     console.log(`接待贵宾`)
     if ($.info.StoryInfo.StoryList) {
@@ -203,7 +204,7 @@ async function cfd() {
     } else {
       console.log(`当前暂无贵宾\n`)
     }
-
+    await $.wait(4000);
     //收藏家
     console.log(`收藏家`)
     if ($.info.StoryInfo.StoryList) {
@@ -224,7 +225,7 @@ async function cfd() {
     } else {
       console.log(`当前暂无收藏家\n`)
     }
-
+    await $.wait(4000);
     //美人鱼
     console.log(`美人鱼`)
     if ($.info.StoryInfo.StoryList) {
@@ -247,31 +248,31 @@ async function cfd() {
     }
 
     //倒垃圾
-    await $.wait(2000)
+    await $.wait(4000)
     await queryRubbishInfo()
 
     console.log(`\n做任务`)
     //牛牛任务
-    await $.wait(2000)
+    await $.wait(4000)
     await getActTask()
 
     //日常任务
-    await $.wait(2000);
+    await $.wait(4000);
     await getTaskList(0);
-    await $.wait(2000);
+    await $.wait(4000);
     await browserTask(0);
 
     //成就任务
-    await $.wait(2000);
+    await $.wait(4000);
     await getTaskList(1);
-    await $.wait(2000);
+    await $.wait(4000);
     await browserTask(1);
 
     //卡片任务
-    await $.wait(2000);
+    await $.wait(4000);
     await getPropTask();
 
-    await $.wait(2000);
+    await $.wait(4000);
     const endInfo = await getUserInfo(false);
     $.result.push(
         `【京东账号${$.index}】${$.nickName || $.UserName}`,
@@ -1571,38 +1572,39 @@ function readShareCode() {
   })
 }
 function uploadShareCode(code) {
-  return new Promise(async resolve => {
-    $.post({url: `https://transfer.nz.lu/upload/cfd?code=${code}&ptpin=${encodeURIComponent(encodeURIComponent($.UserName))}`, timeout: 30 * 1000}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(JSON.stringify(err))
-          console.log(`${$.name} uploadShareCode API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            if (data === 'OK') {
-              console.log(`已自动提交助力码\n`)
-            } else if (data === 'error') {
-              console.log(`助力码格式错误，乱玩API是要被打屁屁的~\n`)
-            } else if (data === 'full') {
-              console.log(`车位已满，请等待下一班次\n`)
-            } else if (data === 'exist') {
-              console.log(`助力码已经提交过了~\n`)
-            } else if (data === 'not in whitelist') {
-              console.log(`提交助力码失败，此用户不在白名单中\n`)
-            } else {
-              console.log(`未知错误：${data}\n`)
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(30 * 1000);
-    resolve()
-  })
+  // return new Promise(async resolve => {
+  //   $.post({url: `https://transfer.nz.lu/upload/cfd?code=${code}&ptpin=${encodeURIComponent(encodeURIComponent($.UserName))}`, timeout: 30 * 1000}, (err, resp, data) => {
+  //     try {
+  //       if (err) {
+  //         console.log(JSON.stringify(err))
+  //         console.log(`${$.name} uploadShareCode API请求失败，请检查网路重试`)
+  //       } else {
+  //         if (data) {
+  //           if (data === 'OK') {
+  //             console.log(`已自动提交助力码\n`)
+  //           } else if (data === 'error') {
+  //             console.log(`助力码格式错误，乱玩API是要被打屁屁的~\n`)
+  //           } else if (data === 'full') {
+  //             console.log(`车位已满，请等待下一班次\n`)
+  //           } else if (data === 'exist') {
+  //             console.log(`助力码已经提交过了~\n`)
+  //           } else if (data === 'not in whitelist') {
+  //             console.log(`提交助力码失败，此用户不在白名单中\n`)
+  //           } else {
+  //             console.log(`未知错误：${data}\n`)
+  //           }
+  //         }
+  //       }
+  //     } catch (e) {
+  //       $.logErr(e, resp)
+  //     } finally {
+  //       resolve(data);
+  //     }
+  //   })
+  //   await $.wait(30 * 1000);
+  //   resolve()
+  // })
+  console.log(`取消提交助力码\n`)
 }
 //格式化助力码
 function shareCodesFormat() {
