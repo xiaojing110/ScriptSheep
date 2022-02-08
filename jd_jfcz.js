@@ -16,7 +16,7 @@ cron "15 10 * * *" script-path=https://raw.githubusercontent.com/jiulan/platypus
 ====================================小火箭=============================
 见缝插针 = type=cron,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_jfcz.js, cronexpr="15 10 * * *", timeout=3600, enable=true
  */
-const $ = new Env('见缝插针');
+const $ = new Env('见缝插针---寄，黑号');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
