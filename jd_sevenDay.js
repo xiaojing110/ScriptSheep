@@ -29,11 +29,11 @@ let activityIdList2 = [
     '39d2abd43cdd4f2fac94d7996077191c',
     '1d3e6931bb3f45c5b1769ba854c26275',
     'f23cae60c63f4a37a95303b056d2588e',
-    '1bfe5bbefbdd451b85715ac0e3a28fe3',
+    //'1bfe5bbefbdd451b85715ac0e3a28fe3',
     '63145166e7a04b28a602279606611595',
-    '359f13b7a17f4a7dbf3ef7b3ecadb9a7',
+    //'359f13b7a17f4a7dbf3ef7b3ecadb9a7',
     'effe38321a274e178b2ce450b5e23dc8',
-    'a11ca10aa53d419f9f23aee1b4629c40',
+    //'a11ca10aa53d419f9f23aee1b4629c40',
 ]
 let activityIdList3 = [
     //缺省
@@ -118,21 +118,21 @@ if ($.isNode()) {
                 $.activityUrl = `https://lzkj-isv.isvjcloud.com/sign/sevenDay/signActivity?activityId=${$.activityId}&venderId=${$.venderId}&adsource=&sid=&un_area=`
                 $.activityId = activityIdList[a];
                 await signActivity();
-                await $.wait(2000)
+                await $.wait(8000)
             }
             console.log("签到类型2")
             for(let a in activityIdList2){
                 $.activityUrl = `https://lzkj-isv.isvjcloud.com/sign/signActivity2?activityId=${$.activityId}&venderId=${$.venderId}&adsource=&sid=&un_area=`
                 $.activityId = activityIdList2[a];
                 await signActivity2();
-                await $.wait(2000)
+                await $.wait(8000)
             }
             console.log("签到类型3")
             for(let a in activityIdList3){
                 $.activityUrl = `https://cjhy-isv.isvjcloud.com/sign/signActivity?activityId=${$.activityId}&venderId=${$.venderId}&adsource=&sid=&un_area=`
                 $.activityId = activityIdList3[a];
                 await signActivity3();
-                await $.wait(2000)
+                await $.wait(8000)
             }
             if ($.bean > 0) {
                 message += `\n【京东账号${$.index}】${$.nickName || $.UserName} \n       └ 获得 ${$.bean} 京豆。`
