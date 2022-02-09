@@ -10,7 +10,10 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 // const notify = $.isNode() ? require('./sendNotify') : '';
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
-let UA = `jdpingou;iPhone;5.2.2;14.3;${randomString(40)};network/wifi;model/iPhone12,1;appBuild/100630;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/1;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
+//let UA = `jdpingou;iPhone;5.2.2;14.3;${randomString(40)};network/wifi;model/iPhone12,1;appBuild/100630;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/1;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
+$.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
+let UA = `jdpingou;iPhone;5.2.2;15.0;${randomString(40)};network/wifi;model/iPhone12,1;appBuild/100630;ADID/${$.ADID};supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
+
 function randomString(e) {
   e = e || 32;
   let t = "abcdef0123456789", a = t.length, n = "";
@@ -58,7 +61,8 @@ $.appId = 10032;
       $.index = i + 1;
       $.isLogin = true;
       console.log(`\n*****开始【京东账号${$.index}】${$.UserName}****\n`);
-      UA = `jdpingou;iPhone;5.2.2;14.3;${randomString(40)};network/wifi;model/iPhone12,1;appBuild/100630;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/1;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
+      $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
+      UA = `jdpingou;iPhone;5.2.2;15.0;${randomString(40)};network/wifi;model/iPhone12,1;appBuild/100630;ADID/${$.ADID};supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
       await run();
     }
   }
@@ -1214,6 +1218,17 @@ function getUrlQueryParams(url_string, param) {
   return '';
 }
 
+function getUUID(format = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', UpperCase = 0) {
+  return format.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      if (UpperCase) {
+          uuid = v.toString(36).toUpperCase();
+      } else {
+          uuid = v.toString(36)
+      }
+      return uuid;
+  });
+}
 
 
 function getAuthorShareCode(url) {
