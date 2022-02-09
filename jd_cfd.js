@@ -36,11 +36,23 @@ $.showLog = $.getdata("cfd_showLog") ? $.getdata("cfd_showLog") === "true" : fal
 $.notifyTime = $.getdata("cfd_notifyTime");
 $.result = [];
 $.shareCodes = [];
+
 let cookiesArr = [], cookie = '', token = '';
 let UA, UAInfo = {};
 let nowTimes;
 const randomCount = $.isNode() ? 20 : 3;
 $.appId = 10032;
+function getUUID(format = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', UpperCase = 0) {
+  return format.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      if (UpperCase) {
+          uuid = v.toString(36).toUpperCase();
+      } else {
+          uuid = v.toString(36)
+      }
+      return uuid;
+  });
+}
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -65,7 +77,8 @@ if ($.isNode()) {
       $.index = i + 1;
       $.nickName = '';
       $.isLogin = true;
-      UA = $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+      $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
+      UA = `jdpingou;iPhone;5.2.2;15.0;${randomString(40)};network/wifi;model/iPhone12,1;appBuild/100630;ADID/${$.ADID};supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`      
       UAInfo[$.UserName] = UA
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
