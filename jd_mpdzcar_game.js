@@ -82,6 +82,7 @@ async function mpdzCar() {
     $.token = null;
     $.buyerNick = null;
     await getToken();
+    $.score = random(800,900)
     if ($.token) {
         await task('/ql/front/getFansInfo', {
             "data": $.token,
@@ -94,7 +95,7 @@ async function mpdzCar() {
             await task('/ql/front/carPlayUpdate', {
                 buyerNick: $.buyerNick,
                 "behavior": "run",
-                "energyValue": 10000,
+                "energyValue": $.score,
             })
         } else {
             console.log("can't got buyerNick");
@@ -207,6 +208,7 @@ function bindWithVender(venderId, channel = 401) {
     })
 }
 function taskUrl(function_id, body, isCommon) {
+    console.log(body)
     return {
         url: isCommon ? `https://mpdz-car-dz.isvjcloud.com/${function_id}` : `https://mpdz-car-dz.isvjcloud.com${function_id}`,
         headers: {
