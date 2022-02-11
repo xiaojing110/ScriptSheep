@@ -216,6 +216,7 @@ function toDailyHome() {
   return new Promise(async resolve => {
     const body = getBody(true)
     $.get(taskUrl('toDailyHome', body), (err, resp, data) => {
+      //console.log(data)
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -224,6 +225,7 @@ function toDailyHome() {
           if (data) {
             // console.log(data)
             data = JSON.parse(data);
+            console.log(data)
             if (data.resultData.code !== "0000") {
               $.stopNext = true
               console.log($.name + `（${arguments.callee.name}）` + "：" + data.resultData.msg)
