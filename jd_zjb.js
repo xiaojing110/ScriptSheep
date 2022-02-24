@@ -23,7 +23,7 @@ if ($.isNode() && process.env.InviterPin) {
   InviterPin = process.env.InviterPin;
 }
 if (InviterPin.length == 0) {
-  console.log(`\n您未填写邀请码变量，默认帮【zero205】助力\n`);
+  console.log(`\n您未填写邀请码变量，默认内部助力\n`);
 }
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {

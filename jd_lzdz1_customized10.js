@@ -33,7 +33,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz110.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            'e7c54de96c3b45a398c05ad66ec6c743',
+            '',
         ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {

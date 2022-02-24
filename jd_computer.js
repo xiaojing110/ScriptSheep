@@ -38,7 +38,7 @@ $.outFlag = 0
   }
   if (!activityIdList) {
     $.log(`没有电脑配件ID，尝试获取远程`);
-    let data = await getData("https://gitee.com/Aels_Tlaeld/JD-Scripts/raw/master/shareCodes/dlpj.json")
+    let data = await getData("https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/dlpj.json")
     if (data && data.length) {
         $.log(`获取到远程且有数据`);
         activityIdList = data.join('@')
@@ -447,18 +447,6 @@ function randomString(e) {
   for (i = 0; i < e; i++)
     n += t.charAt(Math.floor(Math.random() * a));
   return n
-}
-
-function getUUID(format = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', UpperCase = 0) {
-  return format.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      if (UpperCase) {
-          uuid = v.toString(36).toUpperCase();
-      } else {
-          uuid = v.toString(36)
-      }
-      return uuid;
-  });
 }
 
 function jsonParse(str) {
