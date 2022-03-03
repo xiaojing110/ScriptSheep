@@ -7,5 +7,5 @@
 
 拉库代码
 
-`ql repo https://github.com/Tlaeld/ScriptSheep.git "jd_|jx_|gua_|jddj_|getJDCookie" "activity|backUp|Coupon|update" "^jd[^_]|USER|utils|^JS|^TS|^JDJRValidator_|^ZooFaker|^sign|ql|sentNotify|JDSignValidator"`
+`ql repo https://github.com/Tlaeld/ScriptSheep.git "jd_|jx_|gua_|jddj_|getJDCookie" "activity|backUp|Coupon|update" "^jd[^_]|USER|utils|^JS|^TS|^JDJRValidator_|^ZooFaker|^sign|ql|sentNotify|JDSignValidator|function|JDJR"`
 ## 可能有些BUG已修复
