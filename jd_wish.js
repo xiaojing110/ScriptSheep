@@ -25,8 +25,8 @@ let message = '', allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let appIdArr = ['1FFVQyqw','1EFRWxKuG', '1E1xZy6s'];
-let appNameArr = ['1111点心动','许愿抽好礼', 'PLUS生活特权'];
+let appIdArr = ['1FFVQyqw','1EFRQwA','1EFRWxKuG', '1E1xZy6s'];
+let appNameArr = ['1111点心动','疯狂砸金蛋','许愿抽好礼', 'PLUS生活特权'];
 let appId, appName;
 $.shareCode = [];
 if ($.isNode()) {
@@ -72,8 +72,8 @@ if ($.isNode()) {
     if ($.isNode()) await notify.sendNotify($.name, allMessage);
     $.msg($.name, '', allMessage)
   }
-  let res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/wish.json')
-  $.shareCode = [...$.shareCode, ...(res || [])]
+  // let res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/wish.json')
+  // $.shareCode = [...$.shareCode, ...(res || [])]
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -336,38 +336,38 @@ function taskUrl(function_id, body = {}) {
   }
 }
 
-function getAuthorShareCode(url) {
-  return new Promise(async resolve => {
-    const options = {
-      url: `${url}?${new Date()}`, "timeout": 10000, headers: {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }
-    };
-    if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
-      const tunnel = require("tunnel");
-      const agent = {
-        https: tunnel.httpsOverHttp({
-          proxy: {
-            host: process.env.TG_PROXY_HOST,
-            port: process.env.TG_PROXY_PORT * 1
-          }
-        })
-      }
-      Object.assign(options, { agent })
-    }
-    $.get(options, async (err, resp, data) => {
-      try {
-        resolve(JSON.parse(data))
-      } catch (e) {
-        // $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-    await $.wait(10000)
-    resolve();
-  })
-}
+// function getAuthorShareCode(url) {
+//   return new Promise(async resolve => {
+//     const options = {
+//       url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+//         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+//       }
+//     };
+//     if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+//       const tunnel = require("tunnel");
+//       const agent = {
+//         https: tunnel.httpsOverHttp({
+//           proxy: {
+//             host: process.env.TG_PROXY_HOST,
+//             port: process.env.TG_PROXY_PORT * 1
+//           }
+//         })
+//       }
+//       Object.assign(options, { agent })
+//     }
+//     $.get(options, async (err, resp, data) => {
+//       try {
+//         resolve(JSON.parse(data))
+//       } catch (e) {
+//         // $.logErr(e, resp)
+//       } finally {
+//         resolve();
+//       }
+//     })
+//     await $.wait(10000)
+//     resolve();
+//   })
+// }
 
 function TotalBean() {
   return new Promise(async resolve => {
