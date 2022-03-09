@@ -1,3 +1,12 @@
+/*
+[task_local]
+幸运抽奖
+10 10 10 10 0 jd_wx_luckDraw.js, tag=幸运抽奖, enabled=true
+================Loon==============
+[Script]
+cron "10 10 10 10 0" script-path=jd_wx_luckDraw.js,tag=幸运抽奖
+配置文件中变量填写：//export M_WX_LUCK_DRAW_URL=""
+*/
 let mode = __dirname.includes('/home/magic/Work/wools/magic/raw')
 const {Env} = mode ? require('../magic') : require('./magic')
 const $ = new Env('M幸运抽奖');
@@ -308,4 +317,3 @@ function taskPostUrl(url, body) {
         }
     }
 }
-
