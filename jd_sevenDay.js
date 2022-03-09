@@ -101,6 +101,10 @@ if ($.isNode()) {
                 $.activityUrl = `https://lzkj-isv.isvjcloud.com/sign/sevenDay/signActivity?activityId=${$.activityId}&venderId=${$.venderId}&adsource=&sid=&un_area=`
                 $.activityId = activityIdList[a];
                 await signActivity();
+                if ($.errorMessage === '活动太火爆，还是去买买买吧') {
+					console.log($.errorMessage);
+					continue;
+				}
                 await $.wait(8000)
             }
             console.log("签到类型2")
@@ -108,6 +112,10 @@ if ($.isNode()) {
                 $.activityUrl = `https://lzkj-isv.isvjcloud.com/sign/signActivity2?activityId=${$.activityId}&venderId=${$.venderId}&adsource=&sid=&un_area=`
                 $.activityId = activityIdList2[a];
                 await signActivity2();
+                if ($.errorMessage === '活动太火爆，还是去买买买吧') {
+					console.log($.errorMessage);
+					continue;
+				}
                 await $.wait(8000)
             }
             console.log("签到类型3")
@@ -115,6 +123,10 @@ if ($.isNode()) {
                 $.activityUrl = `https://cjhy-isv.isvjcloud.com/sign/signActivity?activityId=${$.activityId}&venderId=${$.venderId}&adsource=&sid=&un_area=`
                 $.activityId = activityIdList3[a];
                 await signActivity3();
+                if ($.errorMessage === '活动太火爆，还是去买买买吧') {
+					console.log($.errorMessage);
+					continue;
+				}
                 await $.wait(8000)
             }
             if ($.bean > 0) {
@@ -488,7 +500,12 @@ function getMyPing2() {
 }
 function getFirstLZCK() {
     return new Promise(resolve => {
-        $.get({ url: $.activityUrl }, (err, resp, data) => {
+        $.get({ 
+            'url': $.activityUrl,
+            'headers': {
+				'user-agent': $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require('./USER_AGENTS')
+					.USER_AGENT : $.getdata('JDUA') ? $.getdata('JDUA') : 'jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1'
+			} }, (err, resp, data) => {
             try {
                 if (err) {
                     console.log(err)
