@@ -10,7 +10,7 @@ cron "10 10 10 10 0" script-path=jd_wx_luckDraw.js,tag=幸运抽奖
 let mode = __dirname.includes('/home/magic/Work/wools/magic/raw')
 const {Env} = mode ? require('../magic') : require('./magic')
 const $ = new Env('M幸运抽奖');
-$.lz = 'LZ_TOKEN_KEY=lztokenpage7a904cedc8e6496a807ca19bce8902ff;LZ_TOKEN_VALUE=oR/A0k2Svv2JYmhRbAwgyw;';
+$.lz = 'LZ_TOKEN_KEY=z;LZ_TOKEN_VALUE=Aa5RE8RuY4X3zA==;';
 $.activityUrl = process.env.M_WX_LUCK_DRAW_URL ? process.env.M_WX_LUCK_DRAW_URL
     : '';
 if (mode) {
@@ -188,7 +188,6 @@ async function api(fn, body, isv) {
     let {data} = await $.request(url, headers, body)
     // $.log(fn, typeof data === 'string' ? '' : JSON.stringify(data))
     await $.wait(200, 300)
-    console.log(data);
     return data;
 }
 
