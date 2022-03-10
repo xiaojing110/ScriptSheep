@@ -5,12 +5,13 @@
 ================Loon==============
 [Script]
 cron "10 10 10 10 0" script-path=jd_wx_luckDraw.js,tag=幸运抽奖
+
 配置文件中变量填写：//export M_WX_LUCK_DRAW_URL=""
 */
 let mode = __dirname.includes('/home/magic/Work/wools/magic/raw')
-const {Env} = mode ? require('../magic') : require('./magic')
+const {Env} = mode ? require('../magic') : require('./utils/magic')
 const $ = new Env('M幸运抽奖');
-$.lz = 'LZ_TOKEN_KEY=z;LZ_TOKEN_VALUE=Aa5RE8RuY4X3zA==;';
+$.lz = 'LZ_TOKEN_KEY=lztokef1eb8494b0af868bd18bdaf8;LZ_TOKEN_VALUE=Aa5RE8RuY4X3zA==;';
 $.activityUrl = process.env.M_WX_LUCK_DRAW_URL ? process.env.M_WX_LUCK_DRAW_URL
     : '';
 if (mode) {
@@ -317,3 +318,4 @@ function taskPostUrl(url, body) {
         }
     }
 }
+
