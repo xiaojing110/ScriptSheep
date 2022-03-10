@@ -188,6 +188,7 @@ async function api(fn, body, isv) {
     let {data} = await $.request(url, headers, body)
     // $.log(fn, typeof data === 'string' ? '' : JSON.stringify(data))
     await $.wait(200, 300)
+    console.log(data);
     return data;
 }
 
