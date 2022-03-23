@@ -24,9 +24,9 @@ if ($.isNode()) {
 }
 let activityList = [
     {'id':'35769dd427aa47e884526067330fa328','endTime':1648742399000},//2022-03-01---2022-03-31 容声冰箱洗衣机自营旗舰店
-    {'id':'e610a59417f44a6d9002fb9e29c08643','endTime':1648742399000},//2022-03-01---2022-03-31 戴·可·思官方旗舰店
     {'id':'52b9321bf03a4e1ca49f4b992cb77c88','endTime':1648742399000},//2022-03-01---2022-03-31 郎牌特曲官方旗舰店
     {'id':'07a97f4c3a464afeab9dd87269ed00fe','endTime':1648742399000},//2022-03-01---2022-03-31 
+    {'id':'84c9820a14b64e219fb3556ac4486830','endTime':1650469923000},//2022-03-21---2022-04-20 皓齿健 
 ];
 !(async () => {
 	activityList = getRandomArrayElements(activityList, activityList.length);
