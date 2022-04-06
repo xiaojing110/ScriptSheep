@@ -115,7 +115,7 @@ async function unsubscribeCards() {
 
 }
 function showMsg() {
-  if (!jdNotify || jdNotify === 'false') {
+  if (!jdNotify || jdNotify === 'true') {
     $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【已注销会员卡】${$.unsubscribeCount}个\n【还剩会员卡】${$.cardsTotalNum-$.unsubscribeCount}个\n`);
   } else {
     $.log(`\n【京东账号${$.index}】${$.nickName}\n【已注销会员卡】${$.unsubscribeCount}个\n【还剩会员卡】${$.cardsTotalNum-$.unsubscribeCount}个\n`);
