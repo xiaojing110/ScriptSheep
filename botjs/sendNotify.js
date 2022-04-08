@@ -182,7 +182,7 @@ if (process.env.appToken) {
  * @param author 作者仓库等信息  例：`本脚本免费使用 By：xxxx`
  * @returns {Promise<unknown>}
  */
-async function sendNotify(text, desp, params = {}, author = `\n\n好物推荐：https://u.jd.com/2dDA7AF\n${format(Date.now(), "yyyy-MM-dd HH:mm:ss")}`) {
+async function sendNotify(text, desp, params = {}, author ='') {
   //提供6种通知
   let remarks = '';
   try {
@@ -390,10 +390,10 @@ function tgBotNotify(text, desp) {
       const options = {
         url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
         json: {
-            chat_id: `${TG_USER_ID}`,
-            text: `${text}\n\n${desp}`,
-            disable_web_page_preview:true,
-          },
+          chat_id: `${TG_USER_ID}`,
+          text: `${text}\n\n${desp}`,
+          disable_web_page_preview:true,
+        },
         headers: {
           'Content-Type': 'application/json',
         },
