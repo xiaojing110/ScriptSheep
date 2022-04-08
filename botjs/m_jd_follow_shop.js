@@ -1,18 +1,6 @@
-/*
-甘露殿-https://t.me/jdredrain
-
-自动车监控脚本-M关注有礼
-https://raw.githubusercontent.com/msechen/jdrain/main/m_jd_follow_shop.js
-
-环境变量
-M_FOLLOW_SHOP_ARGV  活动ID 
-
-即时任务，无需cron
-
-*/
 let mode = __dirname.includes('magic')
 const {Env} = mode ? require('./magic') : require('./magic')
-const $ = new Env('自动车-M关注有礼');
+const $ = new Env('M关注有礼');
 $.followShopArgv = process.env.M_FOLLOW_SHOP_ARGV
     ? process.env.M_FOLLOW_SHOP_ARGV
     : '';
@@ -131,3 +119,4 @@ async function getShopHomeActivityInfo() {
     let {status, data} = await $.request(url, headers, newVar.sign);
     return data;
 }
+
