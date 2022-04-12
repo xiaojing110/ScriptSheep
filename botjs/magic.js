@@ -12,7 +12,7 @@ let testMode = process.env.TEST_MODE?.includes('on') ? true
     : __dirname.includes("magic")
 
 let mode = process.env.MODE ? process.env.MODE : "local"
-
+let pandaToken = process.env.PANDA_TOKEN ? process.env.PANDA_TOKEN : "";
 let wxBlackCookiePin = process.env.M_WX_BLACK_COOKIE_PIN
     ? process.env.M_WX_BLACK_COOKIE_PIN : ''
 
@@ -851,11 +851,10 @@ class Env {
 
     async sign(fn, body = {}) {
         let b = {"fn": fn, "body": body};
-        let h = {"key": "fMQ8sw1y5zF4RZgT"}
+        let h = {'Authorization':`Bearer ${pandaToken}`}
         try {
-            let {data} = await this.request(`http://150.230.105.222:19840/sign`,
-                h, b);
-            return {fn: data.fn, sign: data.body};
+            let {data} = await this.request("https://api.jds.codes/jd/sign", h, b);
+            return {fn: data.fn, sign: data.sign};
         } catch (e) {
             console.log("sign接口异常")
             //console.log("请自行配置sign实现")

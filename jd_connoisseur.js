@@ -22,6 +22,7 @@ const $ = new Env('内容鉴赏官');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+let pandaToken = process.env.PANDA_TOKEN ? process.env.PANDA_TOKEN : "";
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -593,41 +594,43 @@ function taskPostUrl(url, body) {
     }
   }
 }
-function getSign(functionid, body, uuid) {
-  return new Promise(async resolve => {
-    let data = {
-      "functionId":functionid,
-      "body":body,
-      "uuid":uuid,
-      "client":"apple",
-      "clientVersion":"10.1.0"
-    }
-    let HostArr = ['jdsign.cf', 'signer.nz.lu']
-    let Host = HostArr[Math.floor((Math.random() * HostArr.length))]
-    let options = {
-      url: `https://cdn.nz.lu/ddo`,
-      body: JSON.stringify(data),
-      headers: {
-        Host,
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      },
-      timeout: 30 * 1000
-    }
-    $.post(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} getSign API请求失败，请检查网路重试`)
-        } else {
-
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
+function getSign(functionId, body,uuid) {
+	return new Promise((resolve) => {
+		let url = {
+			url: "https://api.jds.codes/jd/sign",
+			body: `{"fn":"${functionId}","body":${body}},"uuid":"${uuid}"}`,
+			followRedirect: false,
+			headers: {
+				'Accept': '*/*',
+				"accept-encoding": "gzip, deflate, br",
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + pandaToken
+			},
+			timeout: 30000
+		}
+		$.post(url, async(err, resp, data) => {
+			try {
+				data = JSON.parse(data);
+				if (data && data.code == 200) {
+					lnrequesttimes = data.request_times;
+					console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
+					if (data.data.sign)
+						sign = data.data.sign || '';
+					if (sign != '')
+						resolve(sign);
+					else
+						console.log("签名获取失败,可能Token使用次数上限或被封.");
+				} else {
+					console.log("签名获取失败.");
+				}
+			} catch (e) {
+				$.logErr(e, resp);
+			}
+			finally {
+				resolve('')
+			}
+		})
+	})
 }
 function randomString(e) {
   e = e || 32;
