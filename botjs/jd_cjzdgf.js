@@ -16,6 +16,7 @@ jd_cjhy_activityUrl 活动地址 必需
 let jd_cjhy_activityId="" // 活动ID
 let jd_cjhy_activityUrl="" // 活动地址
 
+const $ = new Env('自动车-CJ组队瓜分京豆');
 const notify=$.isNode()?require('./sendNotify'):'';
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 CryptoScripts();
