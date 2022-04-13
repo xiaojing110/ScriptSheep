@@ -18,7 +18,7 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-const jdNotify = $.getdata('jdUnbindCardNotify');//是否关闭通知，false打开通知推送，true关闭通知推送
+const jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 let cardPageSize = 20;// 运行一次取消多少个会员卡。数字0表示不注销任何会员卡
 let stopCards = `京东PLUS会员`;//遇到此会员卡跳过注销,多个使用&分开
 const JD_API_HOST = 'https://api.m.jd.com/';
