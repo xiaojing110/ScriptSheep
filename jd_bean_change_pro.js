@@ -12,7 +12,6 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const JXUserAgent = $.isNode() ? (process.env.JX_USER_AGENT ? process.env.JX_USER_AGENT : ``) : ``;
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let pandaToken = process.env.PANDA_TOKEN ? process.env.PANDA_TOKEN : "";
 let NowHour = new Date().getHours();
 let allMessage = '';
 let allMessage2 = '';
@@ -178,7 +177,7 @@ if(DisableIndex!=-1){
 }
 	
 //汪汪乐园
-let EnableJoyPark=true;
+let EnableJoyPark=false;
 DisableIndex = strDisableList.findIndex((item) => item === "汪汪乐园");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭汪汪乐园查询");
@@ -202,7 +201,7 @@ if(DisableIndex!=-1){
 }
 	
 //东东农场
-let EnableJdFruit=true;
+let EnableJdFruit=false;
 DisableIndex = strDisableList.findIndex((item) => item === "东东农场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭东东农场查询");
@@ -248,7 +247,7 @@ if(DisableIndex!=-1){
 }	
 
 //金融养猪
-let EnablePigPet=true;
+let EnablePigPet=false;
 DisableIndex=strDisableList.findIndex((item) => item === "金融养猪");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭金融养猪查询");
@@ -1226,14 +1225,14 @@ function apptaskUrl(functionId = "", body = "") {
 function getSign(functionId, body) {
 	return new Promise((resolve) => {
 		let url = {
-			url: "https://api.jds.codes/jd/sign",
+			url: "http://imagic.eu.org:17840/sign",
 			body: `{"fn":"${functionId}","body":${body}}`,
 			followRedirect: false,
 			headers: {
 				'Accept': '*/*',
 				"accept-encoding": "gzip, deflate, br",
 				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + pandaToken
+//				'Authorization': 'Bearer ' + pandaToken
 			},
 			timeout: 30000
 		}
@@ -1241,10 +1240,10 @@ function getSign(functionId, body) {
 			try {
 				data = JSON.parse(data);
 				if (data && data.code == 200) {
-					lnrequesttimes = data.request_times;
-					console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
-					if (data.data.sign)
-						sign = data.data.sign || '';
+					// lnrequesttimes = data.request_times;
+					// console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
+					if (data.data.body)
+						sign = data.data.body || '';
 					if (sign != '')
 						resolve(sign);
 					else
@@ -2418,28 +2417,6 @@ function GetJxBean() {
                     console.log(JSON.stringify(err));
                     console.log(`GetJxBean请求失败，请检查网路重试`);
                 } else {
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
-                    data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-            data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);      
                     data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
                     if (data) {
                         if (data.errcode == 0) {
