@@ -2,7 +2,6 @@
 let mode = __dirname.includes('magic')
 const {Env} = mode ? require('./magic') : require('./magic')
 const $ = new Env('M集卡抽奖');
-$.lz = 'LZ_TOKEN_KEY=lztokenpage13993013011943fbaedb4406c5aa01b9;LZ_TOKEN_VALUE=MHmwjJTSUs8s4xvc/595hw;';
 $.activityUrl = process.env.M_WX_COLLECT_CARD_URL
     ? process.env.M_WX_COLLECT_CARD_URL
     : '';
@@ -43,7 +42,7 @@ $.logic = async function () {
     }
     $.Token = token?.token
 
-    let actInfo = await api('customer/getSimpleActInfoVo',
+    let actInfo = await $.api('customer/getSimpleActInfoVo',
         `activityId=${$.activityId}`);
     if (!actInfo.result || !actInfo.data) {
         $.log(`获取活动信息失败`);
@@ -53,7 +52,7 @@ $.logic = async function () {
     $.shopId = actInfo.data.shopId;
     $.activityType = actInfo.data.activityType;
 
-    let myPing = await api('customer/getMyPing',
+    let myPing = await $.api('customer/getMyPing',
         `userId=${$.venderId}&token=${$.Token}&fromType=APP`)
     if (!myPing.result) {
         $.putMsg(`获取pin失败`);
@@ -63,7 +62,7 @@ $.logic = async function () {
         encodeURIComponent(myPing.data.secretPin)) : encodeURIComponent(
         myPing.data.secretPin);
 
-    shopInfo = await api(`wxCollectCard/shopInfo`,
+    shopInfo = await $.api(`wxCollectCard/shopInfo`,
         `activityId=${$.activityId}`);
     if (!shopInfo.result) {
         $.putMsg('获取不到店铺信息,结束运行')
@@ -71,14 +70,14 @@ $.logic = async function () {
     }
     $.shopName = shopInfo?.data?.shopName
 
-    await api(
+    await $.api(
         `common/${$.domain.includes('cjhy') ? 'accessLog' : 'accessLogWithAD'}`,
         `venderId=${$.venderId}&code=${$.activityType}&pin=${
             $.Pin}&activityId=${$.activityId}&pageUrl=${encodeURIComponent(
             $.activityUrl)}&subType=app&adSource=`);
 
     $.index > 1 ? $.log(`去助力${$.shareUuid}`) : ''
-    let activityContent = await api(
+    let activityContent = await $.api(
         'wxCollectCard/activityContent',
         `activityId=${$.activityId}&pin=${
             $.Pin}&uuid=${$.shareUuid}`);
@@ -95,12 +94,12 @@ $.logic = async function () {
         $.log('执行可持续发展之道')
         await $.wait(1000, 6000)
     }
-    let drawContent = await api('wxCollectCard/drawContent',
+    let drawContent = await $.api('wxCollectCard/drawContent',
         `activityId=${$.activityId}`);
     if (drawContent.result && drawContent.data) {
         $.content = drawContent.data.content || []
     }
-    let memberInfo = await api($.domain.includes('cjhy')
+    let memberInfo = await $.api($.domain.includes('cjhy')
         ? 'mc/new/brandCard/common/shopAndBrand/getOpenCardInfo'
         : 'wxCommonInfo/getActMemberInfo',
         $.domain.includes('cjhy')
@@ -124,7 +123,7 @@ $.logic = async function () {
         }
     }
     $.shareUuid = $.shareUuid || activityContent.data.uuid
-    let userInfo = await api('wxActionCommon/getUserInfo',
+    let userInfo = await $.api('wxActionCommon/getUserInfo',
         `pin=${$.Pin}`);
     if (!userInfo.result || !userInfo.data) {
         $.putMsg(`获取getUserInfo失败`);
@@ -134,18 +133,18 @@ $.logic = async function () {
     $.attrTouXiang = userInfo.data.yunMidImageUrl
         || 'https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg'
 
-    await api('crm/pageVisit/insertCrmPageVisit',
+    await $.api('crm/pageVisit/insertCrmPageVisit',
         `venderId=${$.venderId}&elementId=${encodeURIComponent(
             '邀请')}&pageId=${$.activityId}&pin=${$.Pin}`);
 
-    await api('wxCollectCard/drawCard',
+    await $.api('wxCollectCard/drawCard',
         `sourceId=${$.shareUuid}&activityId=${$.activityId}&type=1&pinImg=${encodeURIComponent(
             $.attrTouXiang)}&pin=${$.Pin}&jdNick=${encodeURIComponent(
             $.nickname)}`);
     if ($.index > leaders) {
         return
     }
-    let saveSource = await api('wxCollectCard/saveSource',
+    let saveSource = await $.api('wxCollectCard/saveSource',
         `activityId=${$.activityId}&pinImg=${encodeURIComponent(
             $.attrTouXiang)}&pin=${
             $.Pin}&jdNick=${encodeURIComponent($.nickname)}`);
@@ -156,7 +155,7 @@ $.logic = async function () {
     $.shareUuid = $.shareUuid || saveSource.data
 
     for (let i = 0; i < drawCount; i++) {
-        let prize = await api(`wxCollectCard/drawCard`,
+        let prize = await $.api(`wxCollectCard/drawCard`,
             `sourceId=${saveSource.data}&activityId=${$.activityId}&type=0`);
         $.log(JSON.stringify(prize))
         if (prize.result) {
@@ -173,13 +172,13 @@ $.logic = async function () {
             }
             $.log(`${prize}`);
         }
-        await api('crm/pageVisit/insertCrmPageVisit',
+        await $.api('crm/pageVisit/insertCrmPageVisit',
             `venderId=${$.venderId}&elementId=${encodeURIComponent(
                 '抽卡')}&pageId=${$.activityId}&pin=${
                 $.Pin}`);
         await $.wait(1000, 2000)
     }
-    activityContent = await api(
+    activityContent = await $.api(
         'wxCollectCard/activityContent',
         `activityId=${$.activityId}&pin=${
             $.Pin}&uuid=${$.shareUuid}`);
@@ -189,7 +188,7 @@ $.logic = async function () {
     }
 
     if (activityContent.data.canDraw) {
-        let prize = await api(`wxCollectCard/getPrize`,
+        let prize = await $.api(`wxCollectCard/getPrize`,
             `activityId=${$.activityId}&pin=${$.Pin}`);
         $.log(JSON.stringify(prize))
         if (!prize.result) {
@@ -205,7 +204,7 @@ $.logic = async function () {
             }
         }
     } else {
-        activityContent = await api(
+        activityContent = await $.api(
             'wxCollectCard/activityContent',
             `activityId=${$.activityId}&pin=${
                 $.Pin}&uuid=${$.shareUuid}`);
@@ -235,28 +234,5 @@ $.after = async function () {
         $.msg.push($.activityUrl);
     }
 }
-$.run({whitelist: ['1-5'], wait: [1000, 3000]}).catch(
+$.run({whitelist: ['1-30'], wait: [1000, 3000]}).catch(
     reason => $.log(reason));
-
-
-async function api(fn, body, isv) {
-    let url = `https://${$.domain}/${fn}`
-    let ck = $.lz + ($.Pin && "AUTH_C_USER=" + $.Pin + ";" || "")
-    ck = isv ? `IsvToken=${$.Token};` + ck : ck;
-    let headers = {
-        "Host": $.domain,
-        "Accept": "application/json",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Origin": `https://${$.domain}`,
-        "Cookie": ck,
-        "Referer": `${$.activityUrl}`,
-        "User-Agent": $.UA
-    }
-    let {data} = await $.request(url, headers, body)
-    $.log(JSON.stringify(data))
-    await $.wait(200, 300)
-    return data;
-}
