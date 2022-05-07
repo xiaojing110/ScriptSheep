@@ -63,7 +63,7 @@ async function main(_0x3f7ec5) {
         _0x3f7ec5.index = (_0x42703b + 1);
         console.log('\n********开始【京东账号' + _0x3f7ec5.index + '】' + _0x3f7ec5.UserName + '********\n');
         try {
-            await runMain(_0x4aa8b8);
+            await runMain(_0x3f7ec5);
         } catch (_0x404e8e) { }
         await _0x3f7ec5.wait(3000);
     } if (message) {
@@ -73,12 +73,12 @@ async function main(_0x3f7ec5) {
 async function doInfo() {
     $.helpFalg = false;
     for (let _0x32dca4 = 0; _0x32dca4 < cookiesArr.length; _0x32dca4++) {
-        let _0x3e263a = ['', '', '', ''];
+        let _0x3e263a = ['',];
         let _0x429f0a = getRandomArrayElements(_0x3e263a, 1)[0];
         await invite3(cookiesArr[_0x32dca4], _0x429f0a);
         await invite4(cookiesArr[_0x32dca4], _0x429f0a);
         await invite(cookiesArr[_0x32dca4], _0x429f0a);
-        await invite2(_0x4a6b53, _0x429f0a);
+        await invite2(cookiesArr[_0x32dca4], _0x429f0a);
     }
 }
 async function invite(_0x8baf4c, _0x3fd6b4) {
@@ -101,19 +101,11 @@ async function invite2(_0x36e51c, _0x97b630) {
 }
 function invite3(_0x124be8, _0x95cb67) {
     let _0x243f31 = +new Date();
-    let _0x5e0330 = {
-        'url': 'https://api.m.jd.com/?t=' + _0x243f31, 'body': 'functionId=InviteFriendChangeAssertsService&body=' + JSON.stringify({ 'method': 'attendInviteActivity', 'data': { 'inviterPin': encodeURIComponent(_0x95cb67), 'channel': 1, 'token': '', 'frontendInitStatus': '' } }) + '&referer=-1&eid=eidI9b2981202fsec83iRW1nTsOVzCocWda3YHPN471AY78%2FQBhYbXeWtdg%2F3TCtVTMrE1JjM8Sqt8f2TqF1Z5P%2FRPGlzA1dERP0Z5bLWdq5N5B2VbBO&aid=&client=ios&clientVersion=14.4.2&networkType=wifi&fp=-1&uuid=ab048084b47df24880613326feffdf7eee471488&osVersion=14.4.2&d_brand=iPhone&d_model=iPhone10,2&agent=-1&pageClickKey=-1&platform=3&lang=zh_CN&appid=market-task-h5&_t=' + _0x243f31, 'headers': {
-            'Host': 'api.m.jd.com', 'Accept': 'application/json, text/plain, */*', 'Content-type': 'application/x-www-form-urlencoded', 'Origin': 'https://invite-reward.jd.com', 'Accept-Language': 'zh-CN,zh-Hans;q=0.9', 'User-Agent': $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require($).USER_AGENT : $.getdata('JSUA') ? $.getdata('JSUA') : '\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'Referer': 'https://invite-reward.jd.com/', 'Accept-Encoding': 'gzip, deflate, br', 'Cookie': _0x124be8
-        }
-    };
+    let _0x5e0330 = { 'url': 'https://api.m.jd.com/?t=' + _0x243f31, 'body': 'functionId=InviteFriendChangeAssertsService&body=' + JSON.stringify({ 'method': 'attendInviteActivity', 'data': { 'inviterPin': encodeURIComponent(_0x95cb67), 'channel': 1, 'token': '', 'frontendInitStatus': '' } }) + '&referer=-1&eid=eidI9b2981202fsec83iRW1nTsOVzCocWda3YHPN471AY78%2FQBhYbXeWtdg%2F3TCtVTMrE1JjM8Sqt8f2TqF1Z5P%2FRPGlzA1dERP0Z5bLWdq5N5B2VbBO&aid=&client=ios&clientVersion=14.4.2&networkType=wifi&fp=-1&uuid=ab048084b47df24880613326feffdf7eee471488&osVersion=14.4.2&d_brand=iPhone&d_model=iPhone10,2&agent=-1&pageClickKey=-1&platform=3&lang=zh_CN&appid=market-task-h5&_t=' + _0x243f31, 'headers': { 'Host': 'api.m.jd.com', 'Accept': 'application/json, text/plain, */*', 'Content-type': 'application/x-www-form-urlencoded', 'Origin': 'https://invite-reward.jd.com', 'Accept-Language': 'zh-CN,zh-Hans;q=0.9', 'User-Agent': $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require('./JS_USER_AGENTS').USER_AGENT : $.getdata('JSUA') ? $.getdata('JSUA') : '\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'Referer': 'https://invite-reward.jd.com/', 'Accept-Encoding': 'gzip, deflate, br', 'Cookie': _0x124be8 } };
     $.post(_0x5e0330, (_0x53cb25, _0x3d3420, _0x345c93) => { });
 }
 function invite4(_0x4ce7d3, _0x13691e) {
-    let _0x67f7ab = {
-        'url': 'https://api.m.jd.com/', 'body': 'functionId=TaskInviteService&body=' + JSON.stringify({ 'method': 'participateInviteTask', 'data': { 'channel': '1', 'encryptionInviterPin': encodeURIComponent(_0x13691e), 'type': 1 } }) + '&appid=market-task-h5&uuid=&_t=' + Date.now(), 'headers': {
-            'Host': 'api.m.jd.com', 'Accept': 'application/json, text/plain, */*', 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': 'https://assignment.jd.com', 'Accept-Language': 'zh-CN,zh-Hans;q=0.9', 'User-Agent': $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require($).USER_AGENT : $.getdata('JSUA') ? $.getdata('JSUA') : '\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'Referer': 'https://assignment.jd.com/', 'Accept-Encoding': 'gzip, deflate, br', 'Cookie': _0x4ce7d3
-        }
-    };
+    let _0x67f7ab = { 'url': 'https://api.m.jd.com/', 'body': 'functionId=TaskInviteService&body=' + JSON.stringify({ 'method': 'participateInviteTask', 'data': { 'channel': '1', 'encryptionInviterPin': encodeURIComponent(_0x13691e), 'type': 1 } }) + '&appid=market-task-h5&uuid=&_t=' + Date.now(), 'headers': { 'Host': 'api.m.jd.com', 'Accept': 'application/json, text/plain, */*', 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': 'https://assignment.jd.com', 'Accept-Language': 'zh-CN,zh-Hans;q=0.9', 'User-Agent': $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require('./JS_USER_AGENTS').USER_AGENT : $.getdata('JSUA') ? $.getdata('JSUA') : '\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'Referer': 'https://assignment.jd.com/', 'Accept-Encoding': 'gzip, deflate, br', 'Cookie': _0x4ce7d3 } };
     $.post(_0x67f7ab, (_0x29e91a, _0x5baf9c, _0x467f38) => { });
 }
 async function runMain(_0x40ebb9) {
@@ -160,15 +152,15 @@ async function runMain(_0x40ebb9) {
     _0x40ebb9.activityData = _0x11a7bd.data || {};
     _0x40ebb9.actinfo = _0x40ebb9.activityData.actInfo;
     _0x40ebb9.actorInfo = _0x40ebb9.activityData.actorInfo;
-    _0x40ebb9.nowUseValue = (Number(_0x1f5d9c) + Number(_0x40ebb9.actorInfo.energyValue));
+    _0x40ebb9.nowUseValue = (Number(_0x40ebb9.actorInfo.fansLoveValue) + Number(_0x40ebb9.actorInfo.energyValue));
     if (JSON.stringify(_0x40ebb9.activityData) === '{}') {
         console.log('获取活动信息失败');
         return;
     }
     let _0x452779 = new Date(_0x40ebb9.activityData.actInfo.endTime);
-    let _0x3b061a = (_0x452779.getFullYear() + '-' + _0x452779.getMonth() < 10 ? ('0' + _0x1ad482) : (_0x452779.getMonth() + 1) + '-' + _0x452779.getDate() < 10 ? '0' + _0x452779.getDate() : _0x452779.getDate());
+    let _0x3b061a = (_0x452779.getFullYear() + '-' + _0x452779.getMonth() < 10 ? ('0' + _0x452779.getMonth() + 1) : (_0x452779.getMonth() + 1) + '-' + _0x452779.getDate() < 10 ? '0' + _0x452779.getDate() : _0x452779.getDate());
     _0x452779 = new Date(_0x40ebb9.activityData.actInfo.startTime);
-    let _0x29384a = (_0x452779.getFullYear() + '-' + _0x452779.getMonth() < 10 ? '0' + (_0x452779.getMonth() + 1) : (_0x452779.getMonth() + 1)) + '-' + ((_0x452779.getDate() < 10) ? ('0' + _0x4cce68) : _0x452779.getDate());
+    let _0x29384a = (_0x452779.getFullYear() + '-' + _0x452779.getMonth() < 10 ? '0' + (_0x452779.getMonth() + 1) : (_0x452779.getMonth() + 1)) + '-' + ((_0x452779.getDate() < 10) ? ('0' + _0x452779.getDate()) : _0x452779.getDate());
     console.log(_0x40ebb9.actinfo.actName + ',' + _0x3343be.data.shopName + ',当前积分：' + _0x40ebb9.nowUseValue + ',活动时间：' + _0x29384a + '---' + _0x3b061a + '，' + _0x40ebb9.activityData.actInfo.endTime);
     let _0x14474d = [];
     let _0x3fea64 = ['One', 'Two', 'Three'];
@@ -179,16 +171,16 @@ async function runMain(_0x40ebb9) {
             _0x14474d.push(_0xc7c5a0[0].name);
         }
     }
-    console.log('奖品列表：' + _0x4cce68);
+    console.log('奖品列表：' + _0x14474d.toString());
     if (_0x40ebb9.actorInfo.prizeOneStatus && _0x40ebb9.actorInfo.prizeTwoStatus && _0x40ebb9.actorInfo.prizeThreeStatus) {
         console.log('已完成抽奖');
         return;
     }
     if ((_0x174237.data.actMemberStatus === 1) && !_0x174237.data.openCard) {
         console.log('活动需要入会后才能参与');
-        if (Number(_0x1f5d9c) === 1) {
+        if (Number(RUHUI) === 1) {
             console.log('去入会');
-            await join(_0x3dd08e);
+            await join(_0x40ebb9);
             _0x11a7bd = await takePostRequest(_0x40ebb9, 'wxFansInterActionActivity/activityContent');
             _0x40ebb9.activityData = _0x11a7bd.data || {};
             await _0x40ebb9.wait(3000);
@@ -217,12 +209,12 @@ async function luckDraw(_0x13737e) {
         _0x13737e.activityData = activityData.data || {};
         await _0x13737e.wait(3000);
     }
-    let _0x2b7411 = (Number(_0x50516f) + Number(_0x2193f1));
+    let _0x2b7411 = (Number(_0x13737e.activityData.actorInfo.fansLoveValue) + Number(_0x13737e.activityData.actorInfo.energyValue));
     let _0x47ddad = ['One', 'Two', 'Three'];
     let _0x58a1c5 = { 'One': '01', 'Two': '02', 'Three': '03' };
     for (let _0x1b895e = 0; _0x1b895e < _0x47ddad.length; _0x1b895e++) {
         if ((_0x2b7411 >= _0x13737e.activityData.actConfig['prizeScore' + _0x47ddad[_0x1b895e]]) && _0x13737e.activityData.actorInfo['prize' + _0x47ddad[_0x1b895e] + 'Status'] === false) {
-            console.log('\n开始第' + Number(_0x4a455b) + '次抽奖');
+            console.log('\n开始第' + Number(_0x58a1c5[_0x47ddad[_0x1b895e]]) + '次抽奖');
             _0x13737e.body = 'activityId=' + _0x13737e.activityId + '&uuid=' + _0x13737e.activityData.actorInfo.uuid + '&drawType=' + _0x58a1c5[_0x47ddad[_0x1b895e]];
             let _0x55478a = await takePostRequest(_0x13737e, 'wxFansInterActionActivity/startDraw', _0x13737e.body);
             if (_0x55478a.result && _0x55478a.count === 0) {
@@ -245,7 +237,7 @@ async function doTask(_0x23c295) {
     let _0x90a7c2 = 0;
     if (_0x23c295.activityData.task2BrowGoods) {
         if (_0x23c295.activityData.task2BrowGoods.finishedCount !== _0x23c295.activityData.task2BrowGoods.upLimit) {
-            _0x90a7c2 = (Number(_0xc7723b) - Number(_0x23c295.activityData.task2BrowGoods.finishedCount));
+            _0x90a7c2 = (Number(_0x23c295.activityData.task2BrowGoods.upLimit) - Number(_0x23c295.activityData.task2BrowGoods.finishedCount));
             console.log('开始做浏览商品任务');
             _0x23c295.upFlag = true;
             for (let _0x57ea0c = 0; _0x57ea0c < _0x23c295.activityData.task2BrowGoods.taskGoodList.length && _0x90a7c2 > 0; _0x57ea0c++) {
@@ -265,7 +257,7 @@ async function doTask(_0x23c295) {
     }
     if (_0x23c295.activityData.task3AddCart) {
         if (_0x23c295.activityData.task3AddCart.finishedCount !== _0x23c295.activityData.task3AddCart.upLimit) {
-            _0x90a7c2 = (Number(_0xc7723b) - Number(_0x574f8a));
+            _0x90a7c2 = (Number(_0x23c295.activityData.task3AddCart.upLimit) - Number(_0x23c295.activityData.task3AddCart.finishedCount));
             console.log('开始做加购商品任务');
             _0x23c295.upFlag = true;
             for (let _0x2527f5 = 0; (_0x2527f5 < _0x23c295.activityData.task3AddCart.taskGoodList.length) && (_0x90a7c2 > 0); _0x2527f5++) {
@@ -285,7 +277,7 @@ async function doTask(_0x23c295) {
     }
     if (_0x23c295.activityData.task6GetCoupon) {
         if (_0x23c295.activityData.task6GetCoupon.finishedCount !== _0x23c295.activityData.task6GetCoupon.upLimit) {
-            _0x90a7c2 = (Number(_0x46e285) - Number(_0x23c295.activityData.task6GetCoupon.finishedCount));
+            _0x90a7c2 = (Number(_0x23c295.activityData.task6GetCoupon.upLimit) - Number(_0x23c295.activityData.task6GetCoupon.finishedCount));
             console.log('开始做领取优惠券');
             _0x23c295.upFlag = true;
             for (let _0x48cbc6 = 0; (_0x48cbc6 < _0x23c295.activityData.task6GetCoupon.taskCouponInfoList.length) && (_0x90a7c2 > 0); _0x48cbc6++) {
@@ -313,7 +305,7 @@ async function doTask(_0x23c295) {
         console.log('已签到');
     } if (_0x23c295.activityData.task4Share) {
         if (_0x23c295.activityData.task4Share.finishedCount !== _0x23c295.activityData.task4Share.upLimit) {
-            _0x90a7c2 = Number(_0x46e285) - Number(_0x23c295.activityData.task4Share.finishedCount);
+            _0x90a7c2 = Number(_0x23c295.activityData.task4Share.upLimit) - Number(_0x23c295.activityData.task4Share.finishedCount);
             console.log('开始做分享任务');
             _0x23c295.upFlag = true;
             for (let _0x107268 = 0; _0x107268 < _0x90a7c2; _0x107268++) {
