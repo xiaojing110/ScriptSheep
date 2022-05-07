@@ -40,7 +40,7 @@ let activityList = [
             console.log('\n活动URL：' + _0x3d2098);
             $.thisActivityUrl = _0x3d2098;
             $.host = 'lzkjdz-isv.isvjcloud.com';
-            await main(_0x13e852);
+            await main($);
         } else {
             console.log('\n活动ID：' + _0x38a02d + ',已过期');
         }
