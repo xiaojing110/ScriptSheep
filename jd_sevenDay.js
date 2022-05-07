@@ -26,7 +26,8 @@ let activityIdList = [
 // https://lzkj-isv.isvjcloud.com/sign/signActivity2?activityId=
 let activityIdList2 = [
     'd460a9533e304b25839e20a3152af2b5',
-    'dfdeee8572fc4238b663c1ab56637978'
+    'dfdeee8572fc4238b663c1ab56637978',
+    'ed04a55e44b949d69b6bf69d1193a663'
 
 ]
 // https://cjhy-isv.isvjcloud.com/sign/signActivity?activityId=
