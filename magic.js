@@ -853,7 +853,7 @@ class Env {
         let b = {"fn": fn, "body": body};
         let h = {"key": "fMQ8sw1y5zF4RZgT"}
         try {
-            let {data} = await this.request(`http://http://imagic.eu.org:17840/sign`,
+            let {data} = await this.request(`http://imagic.eu.org:17840/sign`,
                 h, b);
             return {fn: data.fn, sign: data.body};
         } catch (e) {
