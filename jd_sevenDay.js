@@ -19,21 +19,55 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
 // https://lzkj-isv.isvjcloud.com/sign/sevenDay/signActivity?activityId=
 let activityIdList = [
-    '5ee33a746d5544cfb76c1dbd3ff2091f',
-    'fd27e77a4e0c4bc38bd0053a777d825e'
-    // 'd1395f4e6b6e4eb993bf313d9d8cfd84',
+    '323f8b4d8d5d45f98332c669169d4bec',
+    '93ec92b03d144314b051e57f4e2beab3',
+    '154849de8f394afc8ff6f45742643226',
+    '160d7d10d95f43e598fcb9d60107438d', 
+    '8134d9aaaf304eec97486b931f384df5', 
+    'a5813c5465954aa187d720ce2eeac26f', 
+    '1acc06bc657c4c019cf237d7dc2a373a', 
+    '64c32fa993e94f77ba9a2cab34584199', 
+    'fb8cbc0f6de34e0d9f33f4bcc0fca33d', 
+    'b224f1b7de3e4472ac9a39d424a272e8'
 ]
 // https://lzkj-isv.isvjcloud.com/sign/signActivity2?activityId=
 let activityIdList2 = [
-    'd460a9533e304b25839e20a3152af2b5',
-    'dfdeee8572fc4238b663c1ab56637978',
-    'ed04a55e44b949d69b6bf69d1193a663'
-
+    '113b9227034341f0956fe7f299e5274f',
+    'aac7a693623b430e9faf688a7fc20085', 
+    'e0bb90e2ee4d44128808b49cce8256f9', 
+    '97d41549077d4748ac794ae4b1019d25', 
+    'dc11ef2f624c4d30bfd4bf59bfb8cf7e', 
+    '6d957ee1f7224a819163bda196f69dcf', 
+    'e80ac40515e844c8a0183d2dd46ba17f', 
+    'ae8a435382ea441889ab9f2c46336822', 
+    '2daf7482d15a43cfac4aa5579ab5b1ae', 
+    '3dd4f710fd644963813a2d27ef77550f', 
+    '9eedfba8f9b44397b420a47615ef45da', 
+    '536b0ee5161748e49afdb074c5e4e2a9', 
+    '5ced0d5e28554c21897644eb344217b2', 
+    '761a61eea8494d4a94ef7a8b061959e5', 
+    '6870035682524fd69a9eba4dc2e2e038'
 ]
 // https://cjhy-isv.isvjcloud.com/sign/signActivity?activityId=
 let activityIdList3 = [
-    'f0a1002a01dd4550917b2fc32833f950',
-    '14e1ca03afba428f90187f4fe1dbd8ac'
+    'd1652484acc24e01b6aee1c2d0179ff2',
+    '3dd3589be4cb4a2582a4e3227ba4e962',
+    '810023f647c440cc8e90867bfd6b619f', 
+    'b6783d89a4a747aa8ddd3db68e4faff2', 
+    'bb35aad5d8d047b198c81a8c3585b7fe', 
+    '5c24acfa02804fb4a21b2882f5b9c447', 
+    '138af09def0e43299a377ca97635c250', 
+    'cf816a1d9e6d4f91b9301c580f3dcebd', 
+    'edf2837ae237408c9e7e830da86a5d83', 
+    '7516daaaeb4040bc8695849b14f0e51f', 
+    '71cd16775a7844aa89f036006c5b8306', 
+    '74e5151341e34a35a13a926a01659465', 
+    '027857eee3444da4ac722d11eb221fcf', 
+    'a025933ecbbc455498e93aa6be4c7155', 
+    '8ee051adb69541ea8d3324e1d0b7acc9', 
+    '7dd0cfe95ea946d1a29f094c6f433060', 
+    '5f3679eb7c154bf6a99adc35bf93fc5e', 
+    '554465cd56b04b98873ac22b19d9307b'
 ]
 let lz_cookie = {}
 
