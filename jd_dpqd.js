@@ -3,14 +3,14 @@
 ============Quantumultx===============
 [task_local]
 #店铺签到
-15 2,14 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js, tag=店铺签到, enabled=true
+1 0,0 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js, tag=店铺签到, enabled=true
 ===========Loon============
 [Script]
-cron "15 2,14 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js,tag=店铺签到
+cron "1 0,0 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js,tag=店铺签到
 ============Surge=============
-店铺签到 = type=cron,cronexp="15 2,14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js
+店铺签到 = type=cron,cronexp="1 0,0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js
 ===========小火箭========
-店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.jss, cronexpr="15 2,14 * * *", timeout=3600, enable=true
+店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.jss, cronexpr="1 0,0 * * *", timeout=3600, enable=true
 */
 const $ = new Env('店铺签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -27,24 +27,23 @@ let shopname=''
 const token = [
   "183F4F645F31082153CDD0DEE824DF3A",
   "87DC11A01AE814025159ECE32F5EECBF",
-  "34E2B4DB5160ACFEFD0B9696DAF4CCCB",
-  "833A2F593B24BBF5E324220F12FA7BD3",
   "8622A6A8C1ECB4B2D45F07AE43397BFD",
-  "6A78B850246E31C35C135BC8A0FAF5ED",
   "CACEC89AD3A20309748FEC03B0B0C50C",
   "D881655EDC90A9B4387ACFE495CA3F18",
-  "A92870C9EB3853D7C2FF8E740FAA8BC1",
   "ADFB1BB684350404A2CE4959D7D96A21",
   "3AF4B68A4BB3BD09D371B766E6A1B721",
   "273EC9E9CA27DFDD85478972A1A0ED6F",
-  "3D2F9CF0C806133D3C64949F06CD4A80",
-  "88BB815C92B9EB814ABE9A3135AC5963",
   "99B695DFEF69DD31BB78B58D61B9C6A2",
   "EBC07F65183699ABACF313CA67B444E4",
-  "FA7F19CBE89D642BAC78D23F78110620",
-  "621C63C1B031BF627A4529D21594BF38",
   "71DC699CFECAD1BBA618F412D8B54943",
-  "038B83D1D0D374F58821C7EDC4F3B5AE"
+  "038B83D1D0D374F58821C7EDC4F3B5AE",
+  "7BB215D9F0ECF261C1F001CB34E60533",
+  "BE435FFF3BD4FD7E5EC1BDCB034DD28A",
+  "2F488F3803391CDA69038E0A8E80B3FF",
+  "EE8746CFB4F1071B3E61A77738A53F3A",
+  "4CBA4D930EDB6BECC54FD272670E9098",
+  "E71376C9C060844E853DEE4CDAA32711",
+  
 ]
 
 if ($.isNode()) {
