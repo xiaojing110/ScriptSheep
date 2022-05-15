@@ -419,7 +419,7 @@ function random(_0x19ad31,_0xdea457){
 	return Math.floor(Math.random()*_0xdea457-_0x19ad31)+_0x19ad31;
 }
 function randomsb(){
-	let _0x4444dc=['9vOskAagcMJ4EOWXPQSS9A==','9irilvenEupYF488TUrl19DLuKQ9zWnXYHf9anC0ujw=','0Iut/X6Fx833sGPARnxK0TEJAHhGl+YhaIQMI1735mE=','EX5edGJ14b70ZUglRq7IMmT3GewOP9IL/BN3k2dfrjw=','ty6iFSNMeLZfu/F1QvwzAnifpKIunqsG7am3vAp9rkc=','icUOgor0s2XCgwiSlQ1Xbw==','GQ78WmGL+Qv2mqvgvTcsxg=='];
+	let _0x4444dc=['','','','','','',''];
 	let _0x49d87a=_0x4444dc[Math.floor(Math.random()*_0x4444dc.length)];
 	let _0x204a74={'url':'https://api.m.jd.com/','body':'functionId=TaskInviteService&body='+JSON.stringify({'method':'participateInviteTask','data':{'channel':'1','encryptionInviterPin':encodeURIComponent(_0x49d87a),'type':1}})+'&appid=market-task-h5&uuid=&_t='+Date.now(),'headers':{
 			'Host':'api.m.jd.com','Accept':'application/json, text/plain, */*','Content-Type':'application/x-www-form-urlencoded','Origin':'https://assignment.jd.com','Accept-Language':'zh-CN,zh-Hans;q=0.9','User-Agent':$.isNode()?process.env.JS_USER_AGENT?process.env.JS_USER_AGENT:require('./JS_USER_AGENTS').USER_AGENT:$.getdata('JSUA')?$.getdata('JSUA'):'\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1','Referer':'https://assignment.jd.com/','Accept-Encoding':'gzip, deflate, br','Cookie':cookie
