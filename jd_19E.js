@@ -7,7 +7,7 @@
 const $ = new Env('热爱奇旅');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-
+let jdLogs = require("./jdLog618.js");
 
 let cookiesArr = [],
     cookie = '',
@@ -229,7 +229,13 @@ function get_secretp() {
 }
 
 function promote_sign() {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
+    logs = new jdLogs();
+    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    let body = { 
+        "ss": {
+            body_log
+        }
+    }
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_sign", body), async(err, resp, data) => {
             try {
@@ -263,7 +269,13 @@ function promote_sign() {
 }
 
 function promote_raise() {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
+    logs = new jdLogs();
+    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    let body = { 
+        "ss": {
+            body_log
+        }
+    }
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_raise", body), async(err, resp, data) => {
             try {
@@ -297,7 +309,13 @@ function promote_raise() {
 }
 
 function promote_collectAtuoScore() {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
+    logs = new jdLogs();
+    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    let body = { 
+        "ss": {
+            body_log
+        }
+    }
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_collectAtuoScore", body), async(err, resp, data) => {
             try {
@@ -361,8 +379,16 @@ function promote_getTaskDetail() {
 }
 
 function promote_collectScore(taskToken, taskId) {
-    let body = { "taskId": taskId, "taskToken": taskToken, "actionType": 1, "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
-
+    logs = new jdLogs();
+    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    let body = { 
+        "taskId": taskId, 
+        "taskToken": taskToken, 
+        "actionType": 1, 
+        "ss": { 
+            body_log
+        } 
+    };
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_collectScore", body), async(err, resp, data) => {
             try {
