@@ -20,17 +20,38 @@ let cookiesArr = [], cookie = '', message = '';
 // https://lzkj-isv.isvjcloud.com/sign/sevenDay/signActivity?activityId=
 activityIdList =  [
     'd3f04569638a4a3399feb878ddfb9755', 
-    'bf1f97a0180b4a159a00431a6ad6ef54'
+    'bf1f97a0180b4a159a00431a6ad6ef54',
+    '20b668b050524ca58b3956dd9a860e26'
 ]
 // https://lzkj-isv.isvjcloud.com/sign/signActivity2?activityId=
 let activityIdList2 = [
     'e80ac40515e844c8a0183d2dd46ba17f', 
-    'd3e0695734f441a8b6a33fcefc6a1cfc'
+    'd3e0695734f441a8b6a33fcefc6a1cfc',
+    'fc02e1884edf414994e3bf47add81f38',
+    '48c9af467c6e446ca9c17038d5edf565',
+    'cd8d76946bce44f0a846a411f2e34111',
+    '85753128f4b14f08a920d9508845ebc2',
+    'fc02e1884edf414994e3bf47add81f38', 
+    '48c9af467c6e446ca9c17038d5edf565', 
+    'cd8d76946bce44f0a846a411f2e34111', 
+    '85753128f4b14f08a920d9508845ebc2'
 ]
 // https://cjhy-isv.isvjcloud.com/sign/signActivity?activityId=
 let activityIdList3 = [
-    '0e251bd8dec64f7dafd8f2e0d201f3f3',
-    '249c64be0e714045adc2fe86abb5ba9e',
+    'eca0fd29170b4a2ba313f02152a17a22', 
+    '65296f092fa04288a3e2eed86ab29fa2', 
+    '690d028b86d94fb59a9b0c64aaf28c41', 
+    '303403ed90184836ad868fdc4f762fae', 
+    '66e3b44b2ecd446096308ed28d5dc1c2', 
+    '1c399b30dbc948f1a34238fcb1b2824a', 
+    '68b91f899ab741a0b025c138b6e3c9d5',
+    'eca0fd29170b4a2ba313f02152a17a22', 
+    '65296f092fa04288a3e2eed86ab29fa2', 
+    '690d028b86d94fb59a9b0c64aaf28c41', 
+    '303403ed90184836ad868fdc4f762fae', 
+    '66e3b44b2ecd446096308ed28d5dc1c2', 
+    '1c399b30dbc948f1a34238fcb1b2824a', 
+    '68b91f899ab741a0b025c138b6e3c9d5'
 ]
 let lz_cookie = {}
 
