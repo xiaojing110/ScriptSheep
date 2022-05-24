@@ -229,7 +229,8 @@ function get_secretp() {
 }
 
 function promote_sign() {
-    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs();
+    logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
     body_log = logs.body();
     let body = { 
         "ss": {
@@ -271,7 +272,8 @@ function promote_sign() {
 }
 
 function promote_raise() {
-    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs();
+    log.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
     let body_log = logs.body();
     let body = {
         "scenceId":4, 
@@ -314,7 +316,8 @@ function promote_raise() {
 }
 
 function promote_collectAtuoScore() {
-    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs();
+    logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
     body_log = logs.body();
     let body = { 
         "ss": {
@@ -386,7 +389,8 @@ function promote_getTaskDetail() {
 }
 
 function promote_collectScore(taskToken, taskId) {
-    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs();
+    logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
     body_log = logs.body();
     let body = { 
         "taskId": taskId, 
