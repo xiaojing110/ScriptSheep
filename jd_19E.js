@@ -229,17 +229,17 @@ function get_secretp() {
 }
 
 function promote_sign() {
-    logs = new jdLogs();
-    logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-    body_log = logs.body();
-    let body = { 
-        "ss": {
-            body_log
-        }
-    }
-    console.log(body_log);
-    console.log(body);
     return new Promise((resolve) => {
+        logs = new jdLogs();
+        logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+        var body_log = logs.body();
+        let body = { 
+            "ss": {
+                body_log
+            }
+        }
+        console.log(body_log);
+        console.log(body);
         $.post(taskPostUrl("promote_sign", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -272,18 +272,18 @@ function promote_sign() {
 }
 
 function promote_raise() {
-    logs = new jdLogs();
-    log.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-    let body_log = logs.body();
-    let body = {
-        "scenceId":4, 
-        "ss": {
-            body_log
-        }
-    }
-    console.log(body_log);
-    console.log(body);
     return new Promise((resolve) => {
+        logs = new jdLogs();
+        log.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+        var body_log = logs.body();
+        let body = {
+            "scenceId":4, 
+            "ss": {
+                body_log
+            }
+        }
+        console.log(body_log);
+        console.log(body);
         $.post(taskPostUrl("promote_raise", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -316,17 +316,17 @@ function promote_raise() {
 }
 
 function promote_collectAtuoScore() {
-    logs = new jdLogs();
-    logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-    body_log = logs.body();
-    let body = { 
-        "ss": {
-            body_log
-        }
-    }
-    console.log(body_log);
-    console.log(body);
     return new Promise((resolve) => {
+        logs = new jdLogs();
+        logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+        var body_log = logs.body();
+        let body = { 
+            "ss": {
+                body_log
+            }
+        }
+        console.log(body_log);
+        console.log(body);
         $.post(taskPostUrl("promote_collectAtuoScore", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -389,20 +389,20 @@ function promote_getTaskDetail() {
 }
 
 function promote_collectScore(taskToken, taskId) {
-    logs = new jdLogs();
-    logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-    body_log = logs.body();
-    let body = { 
-        "taskId": taskId, 
-        "taskToken": taskToken, 
-        "actionType": 1, 
-        "ss": { 
-            body_log
-        } 
-    };
-    console.log(body_log);
-    console.log(body);
     return new Promise((resolve) => {
+        logs = new jdLogs();
+        logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+        var body_log = logs.body();
+        let body = { 
+            "taskId": taskId, 
+            "taskToken": taskToken, 
+            "actionType": 1, 
+            "ss": { 
+                body_log
+            } 
+        };
+        console.log(body_log);
+        console.log(body);
         $.post(taskPostUrl("promote_collectScore", body), async(err, resp, data) => {
             try {
                 if (err) {
