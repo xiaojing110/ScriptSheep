@@ -229,13 +229,15 @@ function get_secretp() {
 }
 
 function promote_sign() {
-    logs = new jdLogs();
-    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    body_log = logs.body();
     let body = { 
         "ss": {
             body_log
         }
     }
+    console.log(body_log);
+    console.log(body);
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_sign", body), async(err, resp, data) => {
             try {
@@ -269,14 +271,16 @@ function promote_sign() {
 }
 
 function promote_raise() {
-    logs = new jdLogs();
-    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    let body_log = logs.body();
     let body = {
         "scenceId":4, 
         "ss": {
             body_log
         }
     }
+    console.log(body_log);
+    console.log(body);
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_raise", body), async(err, resp, data) => {
             try {
@@ -310,13 +314,15 @@ function promote_raise() {
 }
 
 function promote_collectAtuoScore() {
-    logs = new jdLogs();
-    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    body_log = logs.body();
     let body = { 
         "ss": {
             body_log
         }
     }
+    console.log(body_log);
+    console.log(body);
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_collectAtuoScore", body), async(err, resp, data) => {
             try {
@@ -380,8 +386,8 @@ function promote_getTaskDetail() {
 }
 
 function promote_collectScore(taskToken, taskId) {
-    logs = new jdLogs();
-    body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    logs = new jdLogs(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
+    body_log = logs.body();
     let body = { 
         "taskId": taskId, 
         "taskToken": taskToken, 
@@ -390,6 +396,8 @@ function promote_collectScore(taskToken, taskId) {
             body_log
         } 
     };
+    console.log(body_log);
+    console.log(body);
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_collectScore", body), async(err, resp, data) => {
             try {
