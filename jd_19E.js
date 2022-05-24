@@ -12,7 +12,7 @@ let jdLogs = require("./jdLog618.js");
 let cookiesArr = [],
     cookie = '',
     message;
-let secretp = '',
+let secretpid = '',
     inviteId = []
 
 if ($.isNode()) {
@@ -148,16 +148,17 @@ $.shareCodesArr = [];
                                 }
                                 break
                             case 21:
-                                for (var o = 0; o < task.brandMemberVos.length; o++) {
-                                    if (task.brandMemberVos[o].status == 1) {
-                                        console.log(`\n\n ${task.brandMemberVos[o].title}`)
-                                        memberUrl = task.brandMemberVos[o].memberUrl
-                                        memberUrl = transform(memberUrl)
-                                        await join(task.brandMemberVos[o].vendorIds, memberUrl.channel, memberUrl.shopId ? memberUrl.shopId : "")
-                                        await promote_collectScore(task.brandMemberVos[o].taskToken, task.taskId)
-                                    }
+                                // for (var o = 0; o < task.brandMemberVos.length; o++) {
+                                //     if (task.brandMemberVos[o].status == 1) {
+                                //         console.log(`\n\n ${task.brandMemberVos[o].title}`)
+                                //         memberUrl = task.brandMemberVos[o].memberUrl
+                                //         memberUrl = transform(memberUrl)
+                                //         await join(task.brandMemberVos[o].vendorIds, memberUrl.channel, memberUrl.shopId ? memberUrl.shopId : "")
+                                //         await promote_collectScore(task.brandMemberVos[o].taskToken, task.taskId)
+                                //     }
 
-                                }
+                                // }
+                                console.log("跳过入会")
                         }
 
                     }
@@ -189,8 +190,8 @@ function transform(str) {
     var REQUEST = new Object,
         data = str.slice(str.indexOf("?") + 1, str.length - 1),
         aParams = data.substr(1).split("&");
-    for (i = 0; i < aParams.length; i++) {　　
-        var aParam = aParams[i].split("=");　　
+    for (i = 0; i < aParams.length; i++) {
+        var aParam = aParams[i].split("=");
         REQUEST[aParam[0]] = aParam[1]
     }
     return REQUEST
@@ -210,8 +211,8 @@ function get_secretp() {
                         data = JSON.parse(data);
                         if (data.code == 0) {
                             if (data.data && data.data.bizCode === 0) {
-                                secretp = data.data.result.homeMainInfo.secretp
-                                console.log(secretp)
+                                secretpid = data.data.result.homeMainInfo.secretp
+                                console.log(secretpid)
                           }
                         } else 
                         if (data.code != 0) {
@@ -229,17 +230,18 @@ function get_secretp() {
 }
 
 function promote_sign() {
+    logs = new jdLogs();
+    params = {
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    // console.log(params)
+    logs.init(params);
+    let body = logs.body();
+    // console.log(body_log);
+    // console.log(body);
     return new Promise((resolve) => {
-        logs = new jdLogs();
-        logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-        var body_log = logs.body();
-        let body = { 
-            "ss": {
-                body_log
-            }
-        }
-        console.log(body_log);
-        console.log(body);
         $.post(taskPostUrl("promote_sign", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -272,18 +274,21 @@ function promote_sign() {
 }
 
 function promote_raise() {
+    logs = new jdLogs();
+    params1 = {
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    logs.init(params1);
+    
+    let params2 = {
+        "scenceId":4, 
+    }
+    let body = logs.body(params2);
+    // console.log(body_log);
+    // console.log(body);
     return new Promise((resolve) => {
-        logs = new jdLogs();
-        log.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-        var body_log = logs.body();
-        let body = {
-            "scenceId":4, 
-            "ss": {
-                body_log
-            }
-        }
-        console.log(body_log);
-        console.log(body);
         $.post(taskPostUrl("promote_raise", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -316,17 +321,18 @@ function promote_raise() {
 }
 
 function promote_collectAtuoScore() {
+    logs = new jdLogs();
+    params1 = {
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    // console.log(params)
+    logs.init(params1);
+    let body = logs.body();
+    // console.log(body_log);
+    // console.log(body);
     return new Promise((resolve) => {
-        logs = new jdLogs();
-        logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-        var body_log = logs.body();
-        let body = { 
-            "ss": {
-                body_log
-            }
-        }
-        console.log(body_log);
-        console.log(body);
         $.post(taskPostUrl("promote_collectAtuoScore", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -389,20 +395,22 @@ function promote_getTaskDetail() {
 }
 
 function promote_collectScore(taskToken, taskId) {
+    logs = new jdLogs();
+    params1 = {
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    logs.init(params1);
+    let params2 = { 
+        "taskId": taskId, 
+        "taskToken": taskToken, 
+        "actionType": 1,
+    };
+    let body = logs.body(params2);
+    // console.log(body_log);
+    // console.log(body);
     return new Promise((resolve) => {
-        logs = new jdLogs();
-        logs.init(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-        var body_log = logs.body();
-        let body = { 
-            "taskId": taskId, 
-            "taskToken": taskToken, 
-            "actionType": 1, 
-            "ss": { 
-                body_log
-            } 
-        };
-        console.log(body_log);
-        console.log(body);
         $.post(taskPostUrl("promote_collectScore", body), async(err, resp, data) => {
             try {
                 if (err) {
@@ -582,7 +590,7 @@ function join(venderId, channel, shopId) {
                         if (data.indexOf("成功") != -1) {
                             console.log(`\n\n 入会成功\n`)
                         } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
+                            console.log(`\n\n 入会失败:${JSON.stringify(data)}\n`)
                         }
                     }
                 }
