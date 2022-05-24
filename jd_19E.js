@@ -271,7 +271,8 @@ function promote_sign() {
 function promote_raise() {
     logs = new jdLogs();
     body_log = logs.body(sceneid = "RAhomePageh5",secretp = secretp, type = 3);
-    let body = { 
+    let body = {
+        "scenceId":4, 
         "ss": {
             body_log
         }
