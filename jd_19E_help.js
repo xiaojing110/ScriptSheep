@@ -36,7 +36,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-	console.log(`\n自行测试,部分加密\n来源于其他作者,自行衡量是否跑不跑！\n`);
+	console.log(`\n重写加密部分，已没有加密\n`);
     const helpSysInfoArr = []
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -222,28 +222,28 @@ async function travel() {
     } catch (e) {
         console.log(e)
     }
-    if (helpFlag) {
-        try {
-            $.WxUA = getWxUA()
-            const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
-            $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
-            console.log("\n去做微信小程序任务\n")
-            await doWxTask()
-        } catch (e) {
-            console.log(e)
-        }
+    // if (helpFlag) {
+        // try {
+           // $.WxUA = getWxUA()
+           // const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
+           // $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
+           // console.log("\n去做微信小程序任务\n")
+           // await doWxTask()
+        // } catch (e) {
+           // console.log(e)
+       // }
 
-        try {
-            console.log("\n去做金融App任务\n")
-            $.sdkToken = "jdd01" + randomUUID({
-                formatData: "X".repeat(103),
-                charArr: [...Array(36).keys()].map(k => k.toString(36).toUpperCase())
-            }) + "0123456"
-            await doJrAppTask()
-        } catch (e) {
-            console.log(e)
-        }
-    }
+        // try {
+            // console.log("\n去做金融App任务\n")
+            // $.sdkToken = "jdd01" + randomUUID({
+                // formatData: "X".repeat(103),
+                // charArr: [...Array(36).keys()].map(k => k.toString(36).toUpperCase())
+            // }) + "0123456"
+            // await doJrAppTask()
+        // } catch (e) {
+            // console.log(e)
+        // }
+    // }
 
     try {
         //await raise(true)
@@ -652,7 +652,7 @@ async function doApi(functionId, prepend = {}, append = {}, needSs = false, getL
                                 if (/加入.*?会员.*?获得/.test(data?.data?.bizMsg)) {
                                     console.log(data?.data?.bizMsg + `（${data?.data?.bizCode}）`)
                                     $.stopCard = true
-                                } else console.log(formatErr(functionId, data?.data?.bizMsg + `（${data?.data?.bizCode}）`, toCurl(option)))
+                                } else console.log(formatErr(data?.data?.bizMsg + `（${data?.data?.bizCode}）`))
                             } else {
                                 res = data?.data?.result || {}
                             }
@@ -1146,25 +1146,25 @@ function wordsToBytes(value) {
 	return arr;
 }
 function jd_crc32(value) {
-	function encode(key_value) {
-		key_value = key_value.replace(/\r\n/g, '\n');
-		var re_value = '';
-		for (var i = 0; i < key_value.length; i++) {
-			var char = key_value.charCodeAt(i);
+	function utf8_encode(string) {
+		string = string.replace(/\r\n/g, '\n');
+		var utftext = '';
+		for (var i = 0; i < string.length; i++) {
+			var char = string.charCodeAt(i);
 			if (char < 128) {
-				re_value += String.fromCharCode(char);
+				utftext += String.fromCharCode(char);
 			} else if (char > 127 && char < 2048) {
-				re_value += String.fromCharCode(char >> 0x6 | 0xc0);
-				re_value += String.fromCharCode(char & 0x3f | 0x80);
+				utftext += String.fromCharCode(char >> 0x6 | 0xc0);
+				utftext += String.fromCharCode(char & 0x3f | 0x80);
 			} else {
-				re_value += String.fromCharCode((char >> 0xc) | 0xe0);
-				re_value += String.fromCharCode(char >> 0x6 & 0x3f | 0x80);
-				re_value += String.fromCharCode(char & 0x3f | 0x80);
+				utftext += String.fromCharCode((char >> 0xc) | 0xe0);
+				utftext += String.fromCharCode(char >> 0x6 & 0x3f | 0x80);
+				utftext += String.fromCharCode(char & 0x3f | 0x80);
 			}
 		}
-		return re_value;
+		return utftext;
 	};
-	value = encode(value);
+	value = utf8_encode(value);
 	var crcTable = [0, 1996959894, 3993919788, 2567524794, 124634137, 1886057615, 3915621685, 2657392035, 249268274, 2044508324, 3772115230, 2547177864, 162941995, 2125561021, 3887607047, 2428444049, 498536548, 1789927666, 4089016648, 2227061214, 450548861, 1843258603, 4107580753, 2211677639, 325883990, 1684777152, 4251122042, 2321926636, 335633487, 1661365465, 4195302755, 2366115317, 997073096, 1281953886, 3579855332, 2724688242, 1006888145, 1258607687, 3524101629, 2768942443, 901097722, 1119000684, 3686517206, 2898065728, 853044451, 1172266101, 3705015759, 2882616665, 651767980, 1373503546, 3369554304, 3218104598, 565507253, 1454621731, 3485111705, 3099436303, 671266974, 1594198024, 3322730930, 2970347812, 795835527, 1483230225, 3244367275, 3060149565, 1994146192, 31158534, 2563907772, 4023717930, 1907459465, 112637215, 2680153253, 3904427059, 2013776290, 251722036, 2517215374, 3775830040, 2137656763, 141376813, 2439277719, 3865271297, 1802195444, 476864866, 2238001368, 4066508878, 1812370925, 453092731, 2181625025, 4111451223, 1706088902, 314042704, 2344532202, 4240017532, 1658658271, 366619977, 2362670323, 4224994405, 1303535960, 984961486, 2747007092, 3569037538, 1256170817, 1037604311, 2765210733, 3554079995, 1131014506, 879679996, 2909243462, 3663771856, 1141124467, 855842277, 2852801631, 3708648649, 1342533948, 654459306, 3188396048, 3373015174, 1466479909, 544179635, 3110523913, 3462522015, 1591671054, 702138776, 2966460450, 3352799412, 1504918807, 783551873, 3082640443, 3233442989, 3988292384, 2596254646, 62317068, 1957810842, 3939845945, 2647816111, 81470997, 1943803523, 3814918930, 2489596804, 225274430, 2053790376, 3826175755, 2466906013, 167816743, 2097651377, 4027552580, 2265490386, 503444072, 1762050814, 4150417245, 2154129355, 426522225, 1852507879, 4275313526, 2312317920, 282753626, 1742555852, 4189708143, 2394877945, 397917763, 1622183637, 3604390888, 2714866558, 953729732, 1340076626, 3518719985, 2797360999, 1068828381, 1219638859, 3624741850, 2936675148, 906185462, 1090812512, 3747672003, 2825379669, 829329135, 1181335161, 3412177804, 3160834842, 628085408, 1382605366, 3423369109, 3138078467, 570562233, 1426400815, 3317316542, 2998733608, 733239954, 1555261956, 3268935591, 3050360625, 752459403, 1541320221, 2607071920, 3965973030, 1969922972, 40735498, 2617837225, 3943577151, 1913087877, 83908371, 2512341634, 3803740692, 2075208622, 213261112, 2463272603, 3855990285, 2094854071, 198958881, 2262029012, 4057260610, 1759359992, 534414190, 2176718541, 4139329115, 1873836001, 414664567, 2282248934, 4279200368, 1711684554, 285281116, 2405801727, 4167216745, 1634467795, 376229701, 2685067896, 3608007406, 1308918612, 956543938, 2808555105, 3495958263, 1231636301, 1047427035, 2932959818, 3654703836, 1088359270, 936918000, 2847714899, 3736837829, 1202900863, 817233897, 3183342108, 3401237130, 1404277552, 615818150, 3134207493, 3453421203, 1423857449, 601450431, 3009837614, 3294710456, 1567103746, 711928724, 3020668471, 3272380065, 1510334235, 755167117];
 	var x = 0;
 	var crc = 0;
@@ -1182,7 +1182,7 @@ function getBody(random,sceneid) {
 	let time = Date.now();
 	let key = get_key(time, random_Str);
 	let key2 = 'random=' + random + '&token=' + $.joyytoken + '&time=' + time + '&nonce_str=' + random_Str + '&key=' + key + '&is_trust=1';
-	let log = bytesToHex(bytesToWords(jd_md5(key2))).toUpperCase();
+	let log = bytesToHex(bytesToWords(jd_sha1(key2))).toUpperCase();
 	let crc32_log = jd_crc32(log).toString(36);
 	crc32_log = cut_post(crc32_log, 7);
 	let Str2 = '{"tm":[],"tnm":["d5-69,DA,1IX,1.000,t","d7-69,DH,1JZ,1.000,t","d8-6A,DN,1RV,u,t"],"grn":1,"ss":"'+timestamp+'9250","wed":"tttttfuf","wea":"ffttttua","pdn":[9,41,2,3,1,5],"jj":1,"cs":"39710915a734dacc5dba2f8e8b964987","np":"Linux i686","t":1642319530621,"jk":"f78382db5b9f46445838e8bca26b6441","fpb":"016c95c8a80f4ab5ca3ffd8b1","nv":"Apple Computer, Inc.","nav":"727652","scr":[854,480],"ro":["iPhone10,1","iOS","11.3.3","10.1.8","727652","f78382db5b9f46445838e8bca26b6441","a"],"ioa":"fffffftt","aj":"u","ci":"w3.4.0","cf_v":"02","bd":"random='+random+'","mj":[1,0,0],"blog":"a","msg":"a"}';
@@ -1207,29 +1207,45 @@ function encode(Str2, key) {
 		value += String.fromCharCode(Str2[i].charCodeAt() ^ key[i % length].charCodeAt());
 	return value;
 }
-function jd_md5(value) {
+function jd_sha1(value) {
 	value = stringToBytes(value);
-	var _0x1ad5ab = wordsToBytes(value), 
-		_0xdcd2e4 = (8 * value.length), 
-		_0x3c84da = [], 
-		_0x15998d = 1732584193, 
-		_0x1879cc = -271733879, 
-		_0x26a917 = -1732584194,
-		_0x15661f = 271733878, 
-		_0x11a55a = -1009589776;
-	_0x1ad5ab[_0xdcd2e4 >> 0x5] |= (0x80 << 0x18 - _0xdcd2e4 % 32), _0x1ad5ab[15 + _0xdcd2e4 + 0x40 >>> 0x9 << 0x4] = _0xdcd2e4;
-	for (var _0x7669c9 = 0; _0x7669c9 < _0x1ad5ab.length; _0x7669c9 += 16) {
-		for (var _0x2c1219 = _0x15998d, _0x34a65c = _0x1879cc, _0x1da4dd = _0x26a917, _0x64c102 = _0x15661f, _0x471fae = _0x11a55a, _0x165f42 = 0; _0x165f42 < 80; _0x165f42++) {
-			if (_0x165f42 < 16) _0x3c84da[_0x165f42] = _0x1ad5ab[_0x7669c9 + _0x165f42]; else {
-				var _0x30a5f1 = (_0x3c84da[_0x165f42 - 3] ^ _0x3c84da[_0x165f42 - 8] ^ _0x3c84da[_0x165f42 - 14] ^ _0x3c84da[_0x165f42 - 16]);
-				_0x3c84da[_0x165f42] = (_0x30a5f1 << 0x1 | _0x30a5f1 >>> 0x1f);
+	var x = wordsToBytes(value), 
+		len = (8 * value.length), 
+		w = [], 
+		a = 1732584193, 
+		b = -271733879, 
+		c = -1732584194,
+		d = 271733878, 
+		e = -1009589776;
+	x[len >> 0x5] |= (0x80 << 0x18 - len % 32), 
+    x[15 + len + 0x40 >>> 0x9 << 0x4] = len;
+	for (var i = 0; i < x.length; i += 16) {
+        var olda = a, 
+            oldb = b, 
+            oldc = c, 
+            oldd = d, 
+            olde = e;
+		for (j = 0; j < 80; j++) {
+			if (j < 16) 
+                w[j] = x[i + j]; 
+            else {
+				var temp = (w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16]);
+				w[j] = (temp << 0x1 | temp >>> 0x1f);
 			}
-			var _0x33a894 = ((_0x15998d << 0x5 | _0x15998d >>> 0x1b) + _0x11a55a + _0x3c84da[_0x165f42] >>> 0x0 + (_0x165f42 < 20) ? (1518500249 + _0x1879cc & _0x26a917 | ~_0x1879cc & _0x15661f) : (_0x165f42 < 40) ? (1859775393 + _0x1879cc ^ _0x26a917 ^ _0x15661f) : (_0x165f42 < 60) ? (_0x1879cc & _0x26a917 | _0x1879cc & _0x15661f | _0x26a917 & _0x15661f) - 1894007588 : (_0x1879cc ^ _0x26a917 ^ _0x15661f - 899497514));
-			_0x11a55a = _0x15661f, _0x15661f = _0x26a917, _0x26a917 = (_0x1879cc << 0x1e | _0x1879cc >>> 0x2), _0x1879cc = _0x15998d, _0x15998d = _0x33a894;
+			var t = ((a << 0x5 | a >>> 0x1b) + e + w[j] >>> 0x0 + (j < 20) ? (1518500249 + b & c | ~b & d) : (j < 40) ? (1859775393 + b ^ c ^ d) : (j < 60) ? (b & c | b & d | c & d) - 1894007588 : (b ^ c ^ d - 899497514));
+			e = d, 
+            d = c, 
+            c = (b << 0x1e | b >>> 0x2), 
+            b = a, 
+            a = t;
 		}
-		_0x15998d += _0x2c1219, _0x1879cc += _0x34a65c, _0x26a917 += _0x1da4dd, _0x15661f += _0x64c102, _0x11a55a += _0x471fae;
+		a += olda, 
+        b += oldb, 
+        c += oldc, 
+        d += oldd, 
+        e += olde;
 	}
-	return [_0x15998d, _0x1879cc, _0x26a917, _0x15661f, _0x11a55a];
+	return [a, b, c, d, e];
 };
 
 
