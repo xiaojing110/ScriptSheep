@@ -466,7 +466,17 @@ function qryViewkitCallbackResult(taskToken) {
 }
 
 function promote_getBadgeAward(taskToken) {
-    let body = { "awardToken": taskToken };
+    logs = new jdLogs();
+    params = {
+        awardToken: taskToken,
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    // console.log(params)
+    logs.init(params);
+    let body = logs.body();
+    // let body = {  };
 
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_getBadgeAward", body), async(err, resp, data) => {
@@ -505,7 +515,16 @@ function promote_getBadgeAward(taskToken) {
 }
 
 function promote_getFeedDetail(taskId) {
-    let body = { "taskId": taskId.toString() };
+    logs = new jdLogs();
+    params = {
+        taskId: taskId.toString(),
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    // console.log(params)
+    logs.init(params);
+    let body = logs.body();
 
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_getFeedDetail", body), async(err, resp, data) => {
@@ -535,7 +554,17 @@ function promote_getFeedDetail(taskId) {
 }
 
 function promote_getFeedDetail2(taskId) {
-    let body = { "taskId": taskId.toString() };
+    logs = new jdLogs();
+    params = {
+        taskId: taskId.toString(),
+        sceneid : "RAhomePageh5",
+        secretp : secretpid,
+        type :3
+    }
+    // console.log(params)
+    logs.init(params);
+    let body = logs.body();
+    // let body = {  };
 
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_getFeedDetail", body), async(err, resp, data) => {
