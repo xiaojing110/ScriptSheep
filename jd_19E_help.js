@@ -1,7 +1,7 @@
 /*
 
 建议手动先点开一次
-33 0,6-23/3 * * * jd_19E_help.js
+33 0,6-23/2 * * * jd_19E_help.js
 
 */
 
@@ -17,7 +17,7 @@ let appid = '50074'
 var timestamp = Math.round(new Date().getTime()).toString();
 $.curlCmd = ""
 const h = (new Date()).getHours()
-const helpFlag = h >= 9 && h < 12
+const helpFlag = h >= 9 && h < 12 || h == 21 || h == 22 || h ==23
 const puzzleFlag = h >= 13 && h < 18
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
