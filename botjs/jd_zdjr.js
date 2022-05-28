@@ -25,7 +25,7 @@ cron "40 11 * * *" script-path=jd_zdjr.js,tag=组队瓜分京豆
 
 let jd_zdjr_activityId = ''// 活动ID
 let jd_zdjr_activityUrl = ''// 活动地址
-
+const $ = new Env('LZ组队瓜分京豆');
 const notify=$.isNode()?require('./sendNotify'):'';
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 let cookiesArr=[],cookie='',message='',messageTitle='';
