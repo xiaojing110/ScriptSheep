@@ -22,7 +22,6 @@ const $ = new Env('内容鉴赏官');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let pandaToken = process.env.PANDA_TOKEN ? process.env.PANDA_TOKEN : "";
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -44,7 +43,7 @@ let allMessage = '';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  // let res = await getAuthorShareCode('h')
+  // let res = await getAuthorShareCode('')
   // if (!res) {
   //   $.http.get({url: ''}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
   //   await $.wait(1000)
@@ -372,12 +371,10 @@ function interactive_done(type, projectId, assignmentId, itemId, actionType = ''
 }
 async function sign_interactive_done(type, projectId, assignmentId) {
   let functionId = 'interactive_done'
-  let body = JSON.stringify({"assignmentId":assignmentId,"type":type,"projectId":projectId})
-  let uuid = randomString(40)
-  let sign = await getSign(functionId, body, uuid)
-  let url = `${JD_API_HOST}client.action?functionId=${functionId}&client=apple&clientVersion=10.1.0&uuid=${uuid}&${sign}`
+  let body = {"assignmentId":assignmentId,"type":type,"projectId":projectId}
+  let sign = await getSign(functionId, body)
   return new Promise(resolve => {
-    $.post(taskPostUrl(url, body), (err, resp, data) => {
+    $.post(taskPostUrl(functionId, sign), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -442,12 +439,10 @@ function interactive_accept(type, projectId, assignmentId, itemId) {
 }
 async function qryViewkitCallbackResult(encryptProjectId, encryptAssignmentId, itemId) {
   let functionId = 'qryViewkitCallbackResult'
-  let body = JSON.stringify({"dataSource":"babelInteractive","method":"customDoInteractiveAssignmentForBabel","reqParams":`{\"itemId\":\"${itemId}\",\"encryptProjectId\":\"${encryptProjectId}\",\"encryptAssignmentId\":\"${encryptAssignmentId}\"}`})
-  let uuid = randomString(40)
-  let sign = await getSign(functionId, body, uuid)
-  let url = `${JD_API_HOST}client.action?functionId=${functionId}&client=apple&clientVersion=10.1.0&uuid=${uuid}&${sign}`
+  let body = {"dataSource":"babelInteractive","method":"customDoInteractiveAssignmentForBabel","reqParams":`{\"itemId\":\"${itemId}\",\"encryptProjectId\":\"${encryptProjectId}\",\"encryptAssignmentId\":\"${encryptAssignmentId}\"}`}
+  let sign = await getSign(functionId, body)
   return new Promise(resolve => {
-    $.post(taskPostUrl(url, body), (err, resp, data) => {
+    $.post(taskPostUrl(functionId, sign), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -576,10 +571,10 @@ function taskUrl(functionId, body) {
     }
   }
 }
-function taskPostUrl(url, body) {
+function taskPostUrl(functionId, body) {
   return {
-    url,
-    body: `body=${encodeURIComponent(body)}`,
+    url: `${JD_API_HOST}client.action?functionId=${functionId}`,
+    body,
     headers: {
       "Host": "api.m.jd.com",
       "Content-Type": "application/x-www-form-urlencoded",
@@ -594,43 +589,40 @@ function taskPostUrl(url, body) {
     }
   }
 }
-function getSign(functionId, body,uuid) {
-	return new Promise((resolve) => {
-		let url = {
-			url: "https://api.jds.codes/jd/sign",
-			body: `{"fn":"${functionId}","body":${body}},"uuid":"${uuid}"}`,
-			followRedirect: false,
-			headers: {
-				'Accept': '*/*',
-				"accept-encoding": "gzip, deflate, br",
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + pandaToken
-			},
-			timeout: 30000
-		}
-		$.post(url, async(err, resp, data) => {
-			try {
-				data = JSON.parse(data);
-				if (data && data.code == 200) {
-					lnrequesttimes = data.request_times;
-					console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
-					if (data.data.sign)
-						sign = data.data.sign || '';
-					if (sign != '')
-						resolve(sign);
-					else
-						console.log("签名获取失败,可能Token使用次数上限或被封.");
-				} else {
-					console.log("签名获取失败.");
-				}
-			} catch (e) {
-				$.logErr(e, resp);
-			}
-			finally {
-				resolve('')
-			}
-		})
-	})
+function getSign(functionId, body) {
+  return new Promise(async resolve => {
+    let data = {
+      functionId,
+      body: JSON.stringify(body),
+      "client":"apple",
+      "clientVersion":"10.3.0"
+    }
+    let HostArr = ['jdsign.cf', 'signer.nz.lu']
+    let Host = HostArr[Math.floor((Math.random() * HostArr.length))]
+    let options = {
+      url: `https://cdn.nz.lu/ddo`,
+      body: JSON.stringify(data),
+      headers: {
+        Host,
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      },
+      timeout: 30 * 1000
+    }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} getSign API请求失败，请检查网路重试`)
+        } else {
+
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+  })
 }
 function randomString(e) {
   e = e || 32;
