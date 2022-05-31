@@ -4,13 +4,14 @@ const { R_OK } = require('fs').constants;
 const vm = require('vm');
 const UA = require('../USER_AGENTS.js').USER_AGENT;
 
-const URL = 'https://wbbny.m.jd.com/babelDiy/Zeus/2rtpffK8wqNyPBH6wyUDuBKoAbCt/index.html';
+const URL = 'https://wbbny.m.jd.com/babelDiy/Zeus/2fUope8TDN3dUJfNzQswkBLc7uE8/index.html';
 // const REG_MODULE = /(\d+)\:function\(.*(?=smashUtils\.get_risk_result)/gm;
 const SYNTAX_MODULE = '!function(n){var r={};function o(e){if(r[e])';
-const REG_SCRIPT = /<script type="text\/javascript" src="([^><]+\/(app\.\w+\.js))\">/gm;
+// const REG_SCRIPT = /<script type="text\/javascript" src="([^><]+\/(app\.\w+\.js))\">/gm;
+const REG_SCRIPT = "https://storage.360buyimg.com/babel/01226981/3536473/production/dev/index.6560e51e0868c9e0078a.js"
 const REG_ENTRY = /(__webpack_require__\(__webpack_require__\.s=)(\d+)(?=\)})/;
 const needModuleId = 356
-const DATA = {appid:'50085',sceneid:'OY217hPageh5'};
+const DATA = {appid:'50074',sceneid:'RAhomePageh5'};
 let smashUtils;
 
 class MoveMentFaker {
@@ -21,6 +22,7 @@ class MoveMentFaker {
 
   async run() {
     if (!smashUtils) {
+      console.log(111);
       await this.init();
     }
 
@@ -47,64 +49,41 @@ class MoveMentFaker {
 
   async init() {
     try {
-      // console.time('MoveMentFaker');
       process.chdir(__dirname);
-      const html = await MoveMentFaker.httpGet(URL);
-      const script = REG_SCRIPT.exec(html);
+      const jsContent = await this.getJSContent(path.basename(SCRIPT_URL), SCRIPT_URL);
+      const fnMock = new Function;
+      const ctx = {
+        window: { addEventListener: fnMock },
+        document: {
+          addEventListener: fnMock,
+          removeEventListener: fnMock,
+          cookie: this.cookie
+        },
+        navigator: { userAgent: UA }
+      };
 
-      if (script) {
-        const [, scriptUrl, filename] = script;
-        const jsContent = await this.getJSContent(filename, scriptUrl);
-        const fnMock = new Function;
-        const ctx = {
-          window: { addEventListener: fnMock },
-          document: {
-            addEventListener: fnMock,
-            removeEventListener: fnMock,
-            cookie: this.cookie
-          },
-          navigator: { userAgent: UA }
-        };
+      vm.createContext(ctx);
+      vm.runInContext(jsContent, ctx);
+      smashUtils = ctx.window.smashUtils;
+      smashUtils.init();
 
-        vm.createContext(ctx);
-        vm.runInContext(jsContent, ctx);
-        smashUtils = ctx.window.smashUtils;
-        smashUtils.init(DATA);
-
-        // console.log(ctx);
-      }
-
-      // console.log(html);
-      // console.log(script[1],script[2]);
-      // console.timeEnd('MoveMentFaker');
     } catch (e) {
       console.log(e)
     }
   }
-
   async getJSContent(cacheKey, url) {
     try {
       await fs.access(cacheKey, R_OK);
       const rawFile = await fs.readFile(cacheKey, { encoding: 'utf8' });
-
       return rawFile;
     } catch (e) {
       let jsContent = await MoveMentFaker.httpGet(url);
-      const moduleIndex = jsContent.indexOf(SYNTAX_MODULE, 1);
-      const findEntry = REG_ENTRY.test(jsContent);
-      if (!(moduleIndex && findEntry)) {
-        throw new Error('Module not found.');
+      let matchResult = jsContent;
+      if (matchResult && matchResult.length != 0) {
+        jsContent = matchResult[3];
       }
-        // const needModuleId = jsContent.substring(moduleIndex-20, moduleIndex).match(/(\d+):function/)[1]
-      jsContent = jsContent.replace(REG_ENTRY, `$1${needModuleId}`);
       fs.writeFile(cacheKey, jsContent);
       return jsContent;
-
-      REG_ENTRY.lastIndex = 0;
-      const entry = REG_ENTRY.exec(jsContent);
-
-      console.log(moduleIndex, needModuleId);
-      console.log(entry[1], entry[2]);
     }
   }
 
