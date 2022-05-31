@@ -8,7 +8,6 @@
 const CryptoJS = require("crypto-js");
 const $ = new Env('热爱奇旅互助版');
 const notify = $.isNode() ? require('./sendNotify') : '';
-
 //Node.js用户请在jdCookie.js处填写京东ck;
 let cookiesArr = [], cookie = '', message, helpCodeArr = [], helpPinArr = [], wxCookie = "";
 let wxCookieArr = process.env.WXCookie?.split("@") || []
@@ -583,20 +582,6 @@ function getSs(secretp) {
     }
 }
 
-function getSs2(secretp,log_res) {
-    // $.random = Math.floor(1000000 + 9000000 * Math.random()).toString();
-    // $.sceneid = $.subSceneid ?? "RAhomePageh5"
-    $.random = log_res['random']
-    const extraData = {
-        log : log_res['log'],
-    }
-    return {
-        extraData,
-        secretp,
-        random: $.random
-    }
-}
-
 function getSafeStr() {
     $.random = Math.floor(1000000 + 9000000 * Math.random()).toString();
     const log = getBody($.random,"HYJGJSh5")
@@ -618,40 +603,10 @@ function getWxSs(secretp) {
     }
 }
 
-
-async function getlog(bodyMain){
-    const option = {
-        url : "http://jd.moresound.ml/api.php?type=log",
-        body: bodyMain,
-        headers: {
-            'Host': 'jd.moresound.ml',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'zh-cn',
-            'Accept-Encoding': 'gzip, deflate, br',
-        }
-    }
-    $.curlCmd = toCurl(option)
-    return new Promise(resolve => {
-        $.post(option, (err, resp, data) => {
-            let res = null
-            try {
-                console.log(data)
-                res = JSON.parse(data)
-            } catch (e) {
-                console.log(formatErr(functionId, e.toString(), toCurl(option)))
-            } finally {
-                resolve(res)
-            }
-        })
-    })
-}
-
 async function doApi(functionId, prepend = {}, append = {}, needSs = false, getLast = false) {
     functionId = `promote_${functionId}`
     const url = JD_API_HOST + `?functionId=${functionId}`
-    const logbody = objToStr2({
+    const bodyMain = objToStr2({
         functionId,
         body: encodeURIComponent(JSON.stringify({
             ...prepend,
@@ -662,21 +617,6 @@ async function doApi(functionId, prepend = {}, append = {}, needSs = false, getL
         clientVersion: "1.0.0",
         appid :"signed_wh5"
     })
-
-    log_res = await getlog(logbody)
-
-    const bodyMain = objToStr2({
-        functionId,
-        body: encodeURIComponent(JSON.stringify({
-            ...prepend,
-            ss: needSs ? JSON.stringify(getSs2($.secretp,log_res)) : undefined,
-            ...append,
-        })),
-        client: "m",
-        clientVersion: "1.0.0",
-        appid :"signed_wh5"
-    })
-    console.log(bodyMain)
     const option = {
         url,
         body: bodyMain,
@@ -1245,12 +1185,12 @@ function getBody(random,sceneid) {
 	let log = bytesToHex(bytesToWords(jd_sha1(key2))).toUpperCase();
 	let crc32_log = jd_crc32(log).toString(36);
 	crc32_log = cut_post(crc32_log, 7);
-	let Str2 = '{"tm":[],"tnm":["d7-5Q,9D,1N2,1.000,t","d5-65,69,2KA,1.000,t","d7-65,69,2M0,1.000,t"],"grn":2,"ss":'+time+'4672","wed":"tttttfuf","wea":"ffttttua","pdn":[9,396,2,3,1,5],"jj":1,"cs":"dffbf63472dffe41e399706fc67cd31d","np":"Linux aarch64","t":1653742735677,"jk":"--8ffd32cf24b7f4b9-693650d500cf77936da84fab6bb62067e544f","fpb":"mFlhT0pp_3dsREZvHE6QsxQ","nv":"Google Inc.","nav":"96906","scr":[892,412],"ro":["GM1910","android","11","10.5.4","96906","8366664633233666-2343267366432693","1"],"ioa":"fffffftt","aj":"u","ci":"w3.5.4","cf_v":"01","bd":"random='+random+'","mj":[2,0,0],"blog":"a","msg":""}'
+	let Str2 = '{"tm":[],"tnm":["d5-69,DA,1IX,1.000,t","d7-69,DH,1JZ,1.000,t","d8-6A,DN,1RV,u,t"],"grn":1,"ss":"'+timestamp+'9250","wed":"tttttfuf","wea":"ffttttua","pdn":[9,41,2,3,1,5],"jj":1,"cs":"39710915a734dacc5dba2f8e8b964987","np":"Linux i686","t":1642319530621,"jk":"f78382db5b9f46445838e8bca26b6441","fpb":"016c95c8a80f4ab5ca3ffd8b1","nv":"Apple Computer, Inc.","nav":"727652","scr":[854,480],"ro":["iPhone10,1","iOS","11.3.3","10.1.8","727652","f78382db5b9f46445838e8bca26b6441","a"],"ioa":"fffffftt","aj":"u","ci":"w3.4.0","cf_v":"02","bd":"random='+random+'","mj":[1,0,0],"blog":"a","msg":"a"}';
 	let data1 = CryptoJS['enc']['Utf8']['parse'](unescape(encodeURIComponent(encode(Str2, key))));
 	data1 = CryptoJS['enc']['Base64']['stringify'](data1);
 	let crc32_data1 = jd_crc32(data1).toString(36);
 	crc32_data1 = cut_post(crc32_data1, 7);
-	log = ((((time.toString() + '~1' + random_Str + $.joyytoken) + '~A,2~' + log) + '~' + crc32_log + '~C~') + data1 + '~' + crc32_data1);
+	log = ((((time.toString() + '~1' + random_Str + $.joyytoken) + '~9,1~' + log) + '~' + crc32_log + '~C~') + data1 + '~' + crc32_data1);
 	// s = JSON.stringify({
 	// 	'extraData': {
 	// 		'log': encodeURIComponent(log),
