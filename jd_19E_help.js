@@ -1185,12 +1185,12 @@ function getBody(random,sceneid) {
 	let log = bytesToHex(bytesToWords(jd_sha1(key2))).toUpperCase();
 	let crc32_log = jd_crc32(log).toString(36);
 	crc32_log = cut_post(crc32_log, 7);
-	let Str2 = '{"tm":[],"tnm":["d5-69,DA,1IX,1.000,t","d7-69,DH,1JZ,1.000,t","d8-6A,DN,1RV,u,t"],"grn":1,"ss":"'+timestamp+'9250","wed":"tttttfuf","wea":"ffttttua","pdn":[9,41,2,3,1,5],"jj":1,"cs":"39710915a734dacc5dba2f8e8b964987","np":"Linux i686","t":1642319530621,"jk":"f78382db5b9f46445838e8bca26b6441","fpb":"016c95c8a80f4ab5ca3ffd8b1","nv":"Apple Computer, Inc.","nav":"727652","scr":[854,480],"ro":["iPhone10,1","iOS","11.3.3","10.1.8","727652","f78382db5b9f46445838e8bca26b6441","a"],"ioa":"fffffftt","aj":"u","ci":"w3.4.0","cf_v":"02","bd":"random='+random+'","mj":[1,0,0],"blog":"a","msg":"a"}';
-	let data1 = CryptoJS['enc']['Utf8']['parse'](unescape(encodeURIComponent(encode(Str2, key))));
+	let Str2 = '{"tm":[],"tnm":["d5-69,DA,1IX,1.000,t","d7-69,DH,1JZ,1.000,t","d8-6A,DN,1RV,u,t"],"grn":1,"ss":"'+timestamp+'9250","wed":"tttttfuf","wea":"ffttutua","pdn":[9,41,2,3,1,5],"jj":1,"cs":"39710915a734dacc5dba2f8e8b964987","np":"Linux i686","t":1642319530621,"jk":"f78382db5b9f46445838e8bca26b6441","fpb":"016c95c8a80f4ab5ca3ffd8b1","nv":"Apple Computer, Inc.","nav":"727652","scr":[854,480],"ro":["iPhone10,1","iOS","11.3.3","10.1.8","727652","f78382db5b9f46445838e8bca26b6441","a"],"ioa":"fffffftt","aj":"u","ci":"w3.4.0","cf_v":"02","bd":"random='+random+'","mj":[1,0,0],"blog":"a","msg":"a"}';
+    let data1 = CryptoJS['enc']['Utf8']['parse'](unescape(encodeURIComponent(encode(Str2, key))));
 	data1 = CryptoJS['enc']['Base64']['stringify'](data1);
 	let crc32_data1 = jd_crc32(data1).toString(36);
 	crc32_data1 = cut_post(crc32_data1, 7);
-	log = ((((time.toString() + '~1' + random_Str + $.joyytoken) + '~9,1~' + log) + '~' + crc32_log + '~C~') + data1 + '~' + crc32_data1);
+	log = ((((time.toString() + '~1' + random_Str + $.joyytoken) + '~A,2~' + log) + '~' + crc32_log + '~C~') + data1 + '~' + crc32_data1);
 	// s = JSON.stringify({
 	// 	'extraData': {
 	// 		'log': encodeURIComponent(log),
