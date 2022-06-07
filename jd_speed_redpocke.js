@@ -399,8 +399,8 @@ function cashOut(id,poolBaseId,prizeGroupId,prizeBaseId,) {
 
 function invite2() {
   let inviterIdArr = [
-    "9vOskAagcMJ4EOWXPQSS9A==",
-    "9irilvenEupYF488TUrl19DLuKQ9zWnXYHf9anC0ujw="
+    "",
+    ""
   ]
   let inviterId = inviterIdArr[Math.floor((Math.random() * inviterIdArr.length))]
   let options = {
