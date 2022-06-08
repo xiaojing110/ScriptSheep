@@ -357,8 +357,8 @@ function joinShop(openCardLink) {
     await $.wait(1000)
     await getshopactivityId()
     let activityId = ``
-    let h5st = "20220412164641157%3B197ee697d50ca316f3582488c7fa9d34%3B169f1%3Btk02wd9451deb18n1P31JunSGTfZhmebuivwsEwYWUQF1ZkpdtuSmKOES5DnIMFdyOvKikdguelIiBUnJbeCgoNlcEvv%3B6e090cbde337590b51a514718fee391d46fece6b953ed1084a052f6d76ffbd92%3B3.0%3B1649753201157"
-    //let h5st = await h5stSign(body) || 'undefined'
+    //let h5st = "20220412164641157%3B197ee697d50ca316f3582488c7fa9d34%3B169f1%3Btk02wd9451deb18n1P31JunSGTfZhmebuivwsEwYWUQF1ZkpdtuSmKOES5DnIMFdyOvKikdguelIiBUnJbeCgoNlcEvv%3B6e090cbde337590b51a514718fee391d46fece6b953ed1084a052f6d76ffbd92%3B3.0%3B1649753201157"
+    let h5st = await geth5st()
     const options = {
       url: `https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=${body}&clientVersion=9.2.0&client=H5&uuid=88888&h5st=${h5st}`,
       headers: {
@@ -433,344 +433,374 @@ function getshopactivityId() {
   })
 }
 
-    function getActMemberInfo() {
-      return new Promise((resolve) => {
-        let options = {
-          url: `https://lzkjdz-isv.isvjd.com/wxCommonInfo/getActMemberInfo`,
-          headers: {
-            cookie:
-              activityCookie + ";IsvToken=" + $.Token + ";AUTH_C_USER=" + $.Pin,
-            Connection: `keep-alive`,
-            "Accept-Encoding": `gzip, deflate, br`,
-            "Content-Type": `application/x-www-form-urlencoded; charset=UTF-8`,
-            Origin: `https://lzkj-isv.isvjd.com`,
-            "User-Agent": $.UA,
-            "Accept-Language": `zh-cn`,
-            Host: `lzkjdz-isv.isvjd.com`,
-            Referer: `https://lzkjdz-isv.isvjd.com/wxTeam/activity2/${activityId}?activityId=${activityId}&adsource=cjhdc&isOpenCardBack=iocb`,
-            Accept: `application/json, text/javascript, */*; q=0.01`,
-          },
-          body: `venderId=${$.userId}&activityId=${activityId}&pin=${encodeURIComponent($.Pin)}`,
-        };
-        $.post(options, async (err, resp, data) => {
-          try {
-            if (err) {
-              console.log("" + JSON.stringify(err));
-              console.log($.name + " 1 API请求失败，请检查网路重试");
-            } else {
-              if (data && safeGet(data)) {
-                data = JSON.parse(data);
-                if (data.data) {
-                  if (data.data.openCard) return;
-                  if (data.data.openCardUrl) {
-                    $.channel = data.data.openCardUrl
-                      .match(/channel=\d+/)[0]
-                      .split("=")[1];
-                  } else {
-                    console.log("店家不返回开卡地址。活动有问题。。");
-                    $.end = true;
-                    return;
-                  }
-                } else {
-                  console.log("异常1：" + JSON.stringify(data));
-                }
-              }
-            }
-          } catch (e) {
-            $.logErr(e, resp);
-          } finally {
-            resolve();
-          }
-        });
-      });
-    }
+function generateFp(){
+	let _0x29b403='0123456789';
+	let _0xb1ece4=13;
+	let _0x17b84a='';
+	for(;_0xb1ece4--;)_0x17b84a+=_0x29b403[Math.random()*_0x29b403.length|0x0];
+	return (_0x17b84a+Date.now()).slice(0,16);
+}
+function geth5st(){
+	let _0x2beee2=Date.now();
+	let _0x1b782c=generateFp();
+	let _0x14e516=new Date(_0x2beee2).Format('yyyyMMddhhmmssSSS');
+	let _0x49d9e2=[';ef79a;tk02w92631bfa18nhD4ubf3QfNiU8ED2PI270ygsn+vamuBQh0lVE6v7UAwckz3s2OtlFEfth5LbQdWOPNvPEYHuU2Tw;b01c7c4f99a8ffb2b5e69282f45a14e1b87c90a96217006311ae4cfdcbd1a932;3.0;',';169f1;tk02wc0f91c8a18nvWVMGrQO1iFlpQre2Sh2mGtNro1l0UpZqGLRbHiyqfaUQaPy64WT7uz7E/gujGAB50kyO7hwByWK;77c8a05e6a66faeed00e4e280ad8c40fab60723b5b561230380eb407e19354f7;3.0;'];
+	let _0x5ee515=_0x49d9e2[random(0,_0x49d9e2.length)];
+	return encodeURIComponent((_0x14e516+';')+_0x1b782c+_0x5ee515+Date.now());
+}
+Date.prototype.Format=function(_0x1ec4bb){
+	var _0x2273ef,_0x25ac60=this,_0x334d9c=_0x1ec4bb,_0x3fc1ee={'M+':_0x25ac60.getMonth()+1,'d+':_0x25ac60.getDate(),'D+':_0x25ac60.getDate(),'h+':_0x25ac60.getHours(),'H+':_0x25ac60.getHours(),'m+':_0x25ac60.getMinutes(),'s+':_0x25ac60.getSeconds(),'w+':_0x25ac60.getDay(),'q+':Math.floor(_0x25ac60.getMonth()+3/3),'S+':_0x25ac60.getMilliseconds()};
+	/(y+)/i.test(_0x334d9c)&&(_0x334d9c=_0x334d9c.replace(RegExp.$1,''.concat(_0x25ac60.getFullYear()).substr(4-RegExp.$1.length)));
+	for(var _0xd76021 in _0x3fc1ee){
+		if(new RegExp('('.concat(_0xd76021,')')).test(_0x334d9c)){
+			var _0x6ee06d,_0x2c5f41=('S+'===_0xd76021)?'000':'00';
+			_0x334d9c=_0x334d9c.replace(RegExp.$1,(1==RegExp.$1.length)?_0x3fc1ee[_0xd76021]:(''.concat(_0x2c5f41)+_0x3fc1ee[_0xd76021]).substr(''.concat(_0x3fc1ee[_0xd76021]).length));
+		}
+	}
+	return _0x334d9c;
+};
+function random(_0x49d667,_0x34bf6a){
+	return Math.floor(Math.random()*_0x34bf6a-_0x49d667)+_0x49d667;
+};
 
-    function getUserInfo() {
-      return new Promise((resolve) => {
-        let body = `pin=${
-          prefix === "cjhydz"
-            ? encodeURIComponent(encodeURIComponent($.Pin))
-            : encodeURIComponent($.Pin)
-        }`;
-        $.post(
-          taskPostUrl("/wxActionCommon/getUserInfo", body),
-          async (err, resp, data) => {
-            try {
-              if (err) {
-                console.log("" + JSON.stringify(err));
-                console.log($.name + "\x206-1\x20API请求失败，请检查网路重试");
-              } else {
-                if (safeGet(data)) {
-                  data = JSON.parse(data);
-                  if (data.result && data.data) {
-                    $.attrTouXiang = data.data.yunMidImageUrl
-                      ? data.data.yunMidImageUrl
-                      : "https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg";
-                    $.nickName = data.data.nickname;
-                  } else {
-                    console.log("异常6-2：" + JSON.stringify(data));
-                  }
-                }
-              }
-            } catch (e) {
-              $.logErr(e, resp);
-            } finally {
-              resolve();
-            }
-          }
-        );
-      });
-    }
-
-    function joinTeam(count = 0x0) {
-      return new Promise((resolve) => {
-        let pin = encodeURIComponent($.Pin);
-        let hisPin = encodeURIComponent(encodeURIComponent($.his));
-        if (count == 1) {
-          pin = encodeURIComponent(encodeURIComponent($.Pin));
-        }
-        let body = `activityId=${activityId}&inviterNick=${encodeURIComponent(
-          $.hisNickName
-        )}&inviteeNick=${encodeURIComponent(
-          $.nickName
-        )}&inviter=${hisPin}&invitee=${pin}&inviterImg=${encodeURIComponent(
-          $.hisInviterImg
-        )}&inviteeImg=${encodeURIComponent($.attrTouXiang)}`;
-        $.post(
-          taskPostUrl("/microDz/invite/activity/wx/acceptInvite", body),
-          async (err, resp, data) => {
-            try {
-              if (err) {
-                console.log("" + JSON.stringify(err));
-                console.log($.name + "\x207\x20API请求失败，请检查网路重试");
-              } else {
-                if (safeGet(data)) {
-                  data = JSON.parse(data);
-                  if (data.result && data.data) {
-                    message += "【京东账号" + $.index + "】 加入队伍\n";
-                    $.log("加入队伍成功");
-                  } else {
-                    if (
-                      data.errorMessage.indexOf("店铺会员") > -1 &&
-                      count != 3
-                    ) {
-                      $.errorJoinShop = '';
-					  await joinShop();
-						if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
-							console.log('第1次 重新开卡')
-							await $.wait(1000)
-							await joinShop()
+function getActMemberInfo() {
+	return new Promise((resolve) => {
+		let options = {
+			url: `https://lzkjdz-isv.isvjd.com/wxCommonInfo/getActMemberInfo`,
+			headers: {
+				cookie:
+					activityCookie + ";IsvToken=" + $.Token + ";AUTH_C_USER=" + $.Pin,
+				Connection: `keep-alive`,
+				"Accept-Encoding": `gzip, deflate, br`,
+				"Content-Type": `application/x-www-form-urlencoded; charset=UTF-8`,
+				Origin: `https://lzkj-isv.isvjd.com`,
+				"User-Agent": $.UA,
+				"Accept-Language": `zh-cn`,
+				Host: `lzkjdz-isv.isvjd.com`,
+				Referer: `https://lzkjdz-isv.isvjd.com/wxTeam/activity2/${activityId}?activityId=${activityId}&adsource=cjhdc&isOpenCardBack=iocb`,
+				Accept: `application/json, text/javascript, */*; q=0.01`,
+			},
+			body: `venderId=${$.userId}&activityId=${activityId}&pin=${encodeURIComponent($.Pin)}`,
+		};
+		$.post(options, async (err, resp, data) => {
+			try {
+				if (err) {
+					console.log("" + JSON.stringify(err));
+					console.log($.name + " 1 API请求失败，请检查网路重试");
+				} else {
+					if (data && safeGet(data)) {
+						data = JSON.parse(data);
+						if (data.data) {
+							if (data.data.openCard) return;
+							if (data.data.openCardUrl) {
+								$.channel = data.data.openCardUrl
+									.match(/channel=\d+/)[0]
+									.split("=")[1];
+							} else {
+								console.log("店家不返回开卡地址。活动有问题。。");
+								$.end = true;
+								return;
+							}
+						} else {
+							console.log("异常1：" + JSON.stringify(data));
 						}
-						if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
-							console.log('第2次 重新开卡')
-							await $.wait(1000)
-							await joinShop()
+					}
+				}
+			} catch (e) {
+				$.logErr(e, resp);
+			} finally {
+				resolve();
+			}
+		});
+	});
+}
+
+function getUserInfo() {
+	return new Promise((resolve) => {
+		let body = `pin=${
+			prefix === "cjhydz"
+				? encodeURIComponent(encodeURIComponent($.Pin))
+				: encodeURIComponent($.Pin)
+		}`;
+		$.post(
+			taskPostUrl("/wxActionCommon/getUserInfo", body),
+			async (err, resp, data) => {
+				try {
+					if (err) {
+						console.log("" + JSON.stringify(err));
+						console.log($.name + "\x206-1\x20API请求失败，请检查网路重试");
+					} else {
+						if (safeGet(data)) {
+							data = JSON.parse(data);
+							if (data.result && data.data) {
+								$.attrTouXiang = data.data.yunMidImageUrl
+									? data.data.yunMidImageUrl
+									: "https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg";
+								$.nickName = data.data.nickname;
+							} else {
+								console.log("异常6-2：" + JSON.stringify(data));
+							}
 						}
-						if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
-							console.log('第3次 重新开卡')
-							await $.wait(1000)
-							await joinShop()
+					}
+				} catch (e) {
+					$.logErr(e, resp);
+				} finally {
+					resolve();
+				}
+			}
+		);
+	});
+}
+
+function joinTeam(count = 0x0) {
+	return new Promise((resolve) => {
+		let pin = encodeURIComponent($.Pin);
+		let hisPin = encodeURIComponent(encodeURIComponent($.his));
+		if (count == 1) {
+			pin = encodeURIComponent(encodeURIComponent($.Pin));
+		}
+		let body = `activityId=${activityId}&inviterNick=${encodeURIComponent(
+			$.hisNickName
+		)}&inviteeNick=${encodeURIComponent(
+			$.nickName
+		)}&inviter=${hisPin}&invitee=${pin}&inviterImg=${encodeURIComponent(
+			$.hisInviterImg
+		)}&inviteeImg=${encodeURIComponent($.attrTouXiang)}`;
+		$.post(
+			taskPostUrl("/microDz/invite/activity/wx/acceptInvite", body),
+			async (err, resp, data) => {
+				try {
+					if (err) {
+						console.log("" + JSON.stringify(err));
+						console.log($.name + "\x207\x20API请求失败，请检查网路重试");
+					} else {
+						if (safeGet(data)) {
+							data = JSON.parse(data);
+							if (data.result && data.data) {
+								message += "【京东账号" + $.index + "】 加入队伍\n";
+								$.log("加入队伍成功");
+							} else {
+								if (
+									data.errorMessage.indexOf("店铺会员") > -1 &&
+									count != 3
+								) {
+									$.errorJoinShop = '';
+				await joinShop();
+				if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
+					console.log('第1次 重新开卡')
+					await $.wait(1000)
+					await joinShop()
+				}
+				if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
+					console.log('第2次 重新开卡')
+					await $.wait(1000)
+					await joinShop()
+				}
+				if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
+					console.log('第3次 重新开卡')
+					await $.wait(1000)
+					await joinShop()
+				}
+									await joinTeam(3);
+								} else if (data.errorMessage.indexOf("队伍已经满员") > -1) {
+									$.maxTeam = true;
+								} else if (
+									data.errorMessage.indexOf("奖品与您擦肩而过") > -1 &&
+									count == 0
+								) {
+									await joinTeam(1);
+								} else {
+									console.log("异常7：" + JSON.stringify(data));
+									if (!data.data.rewardPoint) againUserIndex.push($.index);
+									if (data.errorMessage.includes("奖品发送完毕"))
+										process.exit(1);
+									message +=
+										"【京东账号" +
+										$.index +
+										"】\x20" +
+										data.errorMessage +
+										"\x0a";
+								}
+							}
 						}
-                      await joinTeam(3);
-                    } else if (data.errorMessage.indexOf("队伍已经满员") > -1) {
-                      $.maxTeam = true;
-                    } else if (
-                      data.errorMessage.indexOf("奖品与您擦肩而过") > -1 &&
-                      count == 0
-                    ) {
-                      await joinTeam(1);
-                    } else {
-                      console.log("异常7：" + JSON.stringify(data));
-                      if (!data.data.rewardPoint) againUserIndex.push($.index);
-                      if (data.errorMessage.includes("奖品发送完毕"))
-                        process.exit(1);
-                      message +=
-                        "【京东账号" +
-                        $.index +
-                        "】\x20" +
-                        data.errorMessage +
-                        "\x0a";
-                    }
-                  }
-                }
-              }
-            } catch (e) {
-              $.logErr(e, resp);
-            } finally {
-              resolve();
-            }
-          }
-        );
-      });
-    }
+					}
+				} catch (e) {
+					$.logErr(e, resp);
+				} finally {
+					resolve();
+				}
+			}
+		);
+	});
+}
 
-    function getOpenCardAllStatuesNew() {
-      return new Promise((resolve) => {
-        let options = {
-          url: `https://cjhydz-isv.isvjcloud.com/microDz/invite/activity/wx/getOpenCardAllStatuesNew`,
-          headers: {
-            cookie:
-              activityCookie + ";IsvToken=" + $.Token + ";AUTH_C_USER=" + $.Pin,
-            Connection: `keep-alive`,
-            "Accept-Encoding": `gzip, deflate, br`,
-            "Content-Type": `application/x-www-form-urlencoded; charset=UTF-8`,
-            "User-Agent": $.UA,
-            "Accept-Language": `zh-cn`,
-            Referer: `https://cjhydz-isv.isvjcloud.com/microDz/invite/activity/wx/view/index?activityId=${activityId}`,
-            Accept: `application/json, text/javascript, */*; q=0.01`,
-          },
-          body: `isInvited=1&activityId=${activityId}&pin=${encodeURIComponent(
-            encodeURIComponent($.Pin)
-          )}`,
-        };
-        $.post(options, async (err, resp, data) => {
-          try {
-            if (err) {
-              console.log("" + JSON.stringify(err));
-              console.log($.name + " 1 API请求失败，请检查网路重试");
-            } else {
-              if (data && safeGet(data)) {
-                data = JSON.parse(data);
-                if (data.data && data.data.isCanJoin) {
-                  (data.data.list || []).forEach((v) => {
-                    if (v.openCardLink) {
-                      $.card.push(v.openCardLink);
-                    }
-                  });
-                  //console.log($.card)
-                }
-              }
-            }
-          } catch (e) {
-            // $.card = [
-            //   'https://shopmember.m.jd.com/shopcard/?venderId=1000006644&shopId=1000006644&channel=8802',
-            //   'https://shopmember.m.jd.com/shopcard/?venderId=1000000192&shopId=1000000192&channel=8802',
-            //   'https://shopmember.m.jd.com/shopcard/?venderId=1000099547&shopId=1000099547&channel=8802'
-            // ]
-            $.logErr(e, resp);
-          } finally {
-            resolve();
-          }
-        });
-      });
-    }
+function getOpenCardAllStatuesNew() {
+	return new Promise((resolve) => {
+		let options = {
+			url: `https://cjhydz-isv.isvjcloud.com/microDz/invite/activity/wx/getOpenCardAllStatuesNew`,
+			headers: {
+				cookie:
+					activityCookie + ";IsvToken=" + $.Token + ";AUTH_C_USER=" + $.Pin,
+				Connection: `keep-alive`,
+				"Accept-Encoding": `gzip, deflate, br`,
+				"Content-Type": `application/x-www-form-urlencoded; charset=UTF-8`,
+				"User-Agent": $.UA,
+				"Accept-Language": `zh-cn`,
+				Referer: `https://cjhydz-isv.isvjcloud.com/microDz/invite/activity/wx/view/index?activityId=${activityId}`,
+				Accept: `application/json, text/javascript, */*; q=0.01`,
+			},
+			body: `isInvited=1&activityId=${activityId}&pin=${encodeURIComponent(
+				encodeURIComponent($.Pin)
+			)}`,
+		};
+		$.post(options, async (err, resp, data) => {
+			try {
+				if (err) {
+					console.log("" + JSON.stringify(err));
+					console.log($.name + " 1 API请求失败，请检查网路重试");
+				} else {
+					if (data && safeGet(data)) {
+						data = JSON.parse(data);
+						if (data.data && data.data.isCanJoin) {
+							(data.data.list || []).forEach((v) => {
+								if (v.openCardLink) {
+									$.card.push(v.openCardLink);
+								}
+							});
+							//console.log($.card)
+						}
+					}
+				}
+			} catch (e) {
+				// $.card = [
+				//   'https://shopmember.m.jd.com/shopcard/?venderId=1000006644&shopId=1000006644&channel=8802',
+				//   'https://shopmember.m.jd.com/shopcard/?venderId=1000000192&shopId=1000000192&channel=8802',
+				//   'https://shopmember.m.jd.com/shopcard/?venderId=1000099547&shopId=1000099547&channel=8802'
+				// ]
+				$.logErr(e, resp);
+			} finally {
+				resolve();
+			}
+		});
+	});
+}
 
-    function taskPostUrl(url, body) {
-      return {
-        url: "" + activityUrl + url,
-        body: body,
-        headers: {
-          Accept: "application/json",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Accept-Language": "zh-cn",
-          Connection: "keep-alive",
-          Host: `${prefix}-isv.isvjcloud.com`,
-          Origin: `https://${prefix}-isv.isvjcloud.com`,
-          "Content-Type": "application/x-www-form-urlencoded",
-          Referer:
-            activityUrl +
-            "/microDz/invite/activity/wx/view/index?activityId=" +
-            activityId,
-          Cookie:
-            cookie +
-            activityCookie +
-            ";IsvToken=" +
-            $.Token +
-            ";AUTH_C_USER=" +
-            $.AUTH_C_USER,
-          "User-Agent": $.UA,
-        },
-      };
-    }
+function taskPostUrl(url, body) {
+	return {
+		url: "" + activityUrl + url,
+		body: body,
+		headers: {
+			Accept: "application/json",
+			"Accept-Encoding": "gzip, deflate, br",
+			"Accept-Language": "zh-cn",
+			Connection: "keep-alive",
+			Host: `${prefix}-isv.isvjcloud.com`,
+			Origin: `https://${prefix}-isv.isvjcloud.com`,
+			"Content-Type": "application/x-www-form-urlencoded",
+			Referer:
+				activityUrl +
+				"/microDz/invite/activity/wx/view/index?activityId=" +
+				activityId,
+			Cookie:
+				cookie +
+				activityCookie +
+				";IsvToken=" +
+				$.Token +
+				";AUTH_C_USER=" +
+				$.AUTH_C_USER,
+			"User-Agent": $.UA,
+		},
+	};
+}
 
-    function taskUrl(url, body) {
-      return {
-        url: "https://api.m.jd.com/client.action" + url,
-        body: body,
-        headers: {
-          Accept: "*/*",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Accept-Language": "zh-cn",
-          Connection: "keep-alive",
-          "Content-Type": "application/x-www-form-urlencoded",
-          Host: "api.m.jd.com",
-          Cookie: cookie,
-          "User-Agent": $.UA,
-        },
-      };
-    }
+function taskUrl(url, body) {
+	return {
+		url: "https://api.m.jd.com/client.action" + url,
+		body: body,
+		headers: {
+			Accept: "*/*",
+			"Accept-Encoding": "gzip, deflate, br",
+			"Accept-Language": "zh-cn",
+			Connection: "keep-alive",
+			"Content-Type": "application/x-www-form-urlencoded",
+			Host: "api.m.jd.com",
+			Cookie: cookie,
+			"User-Agent": $.UA,
+		},
+	};
+}
 
-    function safeGet(data) {
-      try {
-        if (typeof JSON.parse(data) == "object") {
-          return true;
-        }
-      } catch (e) {
-        console.log(e);
-        console.log("京东服务器访问数据为空，请检查自身设备网络情况");
-        return false;
-      }
-    }
+function safeGet(data) {
+	try {
+		if (typeof JSON.parse(data) == "object") {
+			return true;
+		}
+	} catch (e) {
+		console.log(e);
+		console.log("京东服务器访问数据为空，请检查自身设备网络情况");
+		return false;
+	}
+}
 
-    function accessLog() {
-      return new Promise(async (resolve) => {
-        const options = {
-          url: `https://${prefix}-isv.isvjcloud.com/common/accessLog`,
-          headers: {
-            Accept: "application/json",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-cn",
-            Connection: "keep-alive",
-            Host: `${prefix}-isv.isvjcloud.com`,
-            Origin: `https://${prefix}-isv.isvjcloud.com`,
-            "Content-Type": "application/x-www-form-urlencoded",
-            Referer:
-              activityUrl +
-              "/microDz/invite/activity/wx/view/index?activityId=" +
-              activityId,
-            Cookie:
-              cookie +
-              activityCookie +
-              ";IsvToken=" +
-              $.Token +
-              ";AUTH_C_USER=" +
-              $.AUTH_C_USER,
-            "User-Agent": $.UA,
-          },
-          body: `venderId=1&code=99&pin=${encodeURIComponent(
-            encodeURIComponent($.Pin)
-          )}&activityId=${activityId}&pageUrl=https%3A%2F%2F${prefix}-isv.isvjcloud.com%2FmicroDz%2Finvite%2Factivity%2Fwx%2Fview%2Findex%3FactivityId%3D${activityId}&subType=app`,
-        };
-        $.post(options, (err, resp, data) => {
-          try {
-            if (err) {
-              console.log("" + JSON.stringify(err));
-              console.log($.name + "\x20API请求失败，请检查网路重试");
-            } else {
-              if (resp.status == 200) {
-                refreshToken(resp);
-              }
-            }
-          } catch (e) {
-            $.logErr(e, resp);
-          } finally {
-            resolve();
-          }
-        });
-      });
-    }
+function accessLog() {
+	return new Promise(async (resolve) => {
+		const options = {
+			url: `https://${prefix}-isv.isvjcloud.com/common/accessLog`,
+			headers: {
+				Accept: "application/json",
+				"Accept-Encoding": "gzip, deflate, br",
+				"Accept-Language": "zh-cn",
+				Connection: "keep-alive",
+				Host: `${prefix}-isv.isvjcloud.com`,
+				Origin: `https://${prefix}-isv.isvjcloud.com`,
+				"Content-Type": "application/x-www-form-urlencoded",
+				Referer:
+					activityUrl +
+					"/microDz/invite/activity/wx/view/index?activityId=" +
+					activityId,
+				Cookie:
+					cookie +
+					activityCookie +
+					";IsvToken=" +
+					$.Token +
+					";AUTH_C_USER=" +
+					$.AUTH_C_USER,
+				"User-Agent": $.UA,
+			},
+			body: `venderId=1&code=99&pin=${encodeURIComponent(
+				encodeURIComponent($.Pin)
+			)}&activityId=${activityId}&pageUrl=https%3A%2F%2F${prefix}-isv.isvjcloud.com%2FmicroDz%2Finvite%2Factivity%2Fwx%2Fview%2Findex%3FactivityId%3D${activityId}&subType=app`,
+		};
+		$.post(options, (err, resp, data) => {
+			try {
+				if (err) {
+					console.log("" + JSON.stringify(err));
+					console.log($.name + "\x20API请求失败，请检查网路重试");
+				} else {
+					if (resp.status == 200) {
+						refreshToken(resp);
+					}
+				}
+			} catch (e) {
+				$.logErr(e, resp);
+			} finally {
+				resolve();
+			}
+		});
+	});
+}
 
-    function refreshToken(resp) {
-      let cookies = resp.headers["set-cookie"];
-      if (cookies) {
-        activityCookie = cookies
-          .map((v) => {
-            return v.split(";")[0];
-          })
-          .join(";");
-      }
-    }
-  });
+function refreshToken(resp) {
+	let cookies = resp.headers["set-cookie"];
+	if (cookies) {
+		activityCookie = cookies
+			.map((v) => {
+				return v.split(";")[0];
+			})
+			.join(";");
+			}
+		}
+	});
 }
 function getUA(){
   $.UA = `jdapp;iPhone;10.2.2;14.3;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone12,1;addressid/4199175193;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
