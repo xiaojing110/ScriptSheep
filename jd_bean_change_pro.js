@@ -84,14 +84,14 @@ if ($.isNode()) {
 	if (process.env.WP_APP_TOKEN_ONE) {		
 		WP_APP_TOKEN_ONE = process.env.WP_APP_TOKEN_ONE;
 	}
-	if(process.env.BEANCHANGE_ExJxBeans=="true"){
+	/* if(process.env.BEANCHANGE_ExJxBeans=="true"){
 		if (time >= 17){ 
 			console.log(`检测到设定了临期京豆转换喜豆...`);
 			doExJxBeans = process.env.BEANCHANGE_ExJxBeans;
 		} else{
 			console.log(`检测到设定了临期京豆转换喜豆,但时间未到17点后，暂不执行转换...`);
 		}
-	}
+	} */
 }
 if(WP_APP_TOKEN_ONE)
 	console.log(`检测到已配置Wxpusher的Token，启用一对一推送...`);
@@ -178,11 +178,11 @@ if(DisableIndex!=-1){
 	
 //汪汪乐园
 let EnableJoyPark=false;
-DisableIndex = strDisableList.findIndex((item) => item === "汪汪乐园");
+/* DisableIndex = strDisableList.findIndex((item) => item === "汪汪乐园");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭汪汪乐园查询");
 	EnableJoyPark=false
-}
+} */
 
 //京东赚赚
 let EnableJdZZ=true;
@@ -201,7 +201,7 @@ if(DisableIndex!=-1){
 }
 	
 //东东农场
-let EnableJdFruit=false;
+let EnableJdFruit=true;
 DisableIndex = strDisableList.findIndex((item) => item === "东东农场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭东东农场查询");
@@ -283,6 +283,20 @@ if(DisableIndex!=-1){
 	RemainMessage="";
 }
 
+//汪汪赛跑
+let EnableJoyRun=true;
+DisableIndex=strDisableList.findIndex((item) => item === "汪汪赛跑");
+if(DisableIndex!=-1){
+	console.log("检测到设定关闭汪汪赛跑查询");
+	EnableJoyRun=false
+}
+
+let EnableCheckEcard=true;
+DisableIndex=strDisableList.findIndex((item) => item === "E卡查询");
+if(DisableIndex!=-1){
+	console.log("检测到设定关闭E卡查询");
+	EnableCheckEcard=false
+}
 	
 !(async() => {
 	if (!cookiesArr[0]) {
@@ -344,6 +358,8 @@ if(DisableIndex!=-1){
 			$.YunFeiTitle2="";
 			$.YunFeiQuan2 = 0;
 			$.YunFeiQuanEndTime2 = "";
+			$.JoyRunningAmount = "";
+			$.ECardinfo = "";
 			TempBaipiao = "";
 			strGuoqi="";
 			console.log(`******开始查询【京东账号${$.index}】${$.nickName || $.UserName}*********`);
@@ -378,7 +394,9 @@ if(DisableIndex!=-1){
 		         getDdFactoryInfo(), // 京东工厂
 		         jdCash(), //领现金
 		         GetJxBeaninfo(), //喜豆查询
-		         GetPigPetInfo() //金融养猪
+		         GetPigPetInfo(), //金融养猪
+				 GetJoyRuninginfo(), //汪汪赛跑 
+				 CheckEcard() //E卡查询
 		     ])
 			
 			await showMsg();
@@ -719,19 +737,27 @@ async function showMsg() {
 	if ($.JdMsScore != 0) {
 		ReturnMessage += `【京东秒杀】${$.JdMsScore}币(≈${($.JdMsScore / 1000).toFixed(2)}元)\n`;
 	}
+	if($.ECardinfo)
+		ReturnMessage += `【礼卡余额】${$.ECardinfo}\n`;
 
-	if ($.joylevel || $.jdCash) {
+	if ($.joylevel || $.jdCash || $.JoyRunningAmount) {
 		ReturnMessage += `【其他信息】`;
 		if ($.joylevel) {
-			ReturnMessage += `汪汪:${$.joylevel}级`;
-			if ($.jdCash) {
-				ReturnMessage += ",";
-			}
+			ReturnMessage += `汪汪:${$.joylevel}级`;			
 		}
 		if ($.jdCash) {
+			if ($.joylevel) {
+				ReturnMessage += ",";
+			}			
 			ReturnMessage += `领现金:${$.jdCash}元`;
 		}
-
+		if ($.JoyRunningAmount) {
+			if ($.joylevel || $.jdCash) {
+				ReturnMessage += ",";
+			}			
+			ReturnMessage += `汪汪赛跑:${$.JoyRunningAmount}元`;
+		}
+		
 		ReturnMessage += `\n`;
 
 	}
@@ -1205,6 +1231,58 @@ async function jdCash() {
 			})
 		})
 }
+
+async function CheckEcard() {
+    if (!EnableCheckEcard)
+        return;
+    var balEcard = 0;
+    var body = "pageNo=1&queryType=1&cardType=-1&pageSize=20";
+    var stroption = {
+        url: 'https://mygiftcard.jd.com/giftcard/queryGiftCardItem/app?source=JDAP',
+        body,
+        headers: {
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "zh-CN,zh-Hans;q=0.9",
+            "content-length": "44",
+            "content-type": "application/x-www-form-urlencoded",
+            "cookie": cookie,
+            "origin": "https://mygiftcard.jd.com",
+            "referer": "https://mygiftcard.jd.com/giftcardForM.html?source=JDAP&sid=9f55a224c8286baa2fe3a7545bbd411w&un_area=16_1303_48712_48758",
+            "user-agent": "jdapp;iPhone;10.1.2;15.0;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
+        },
+        timeout: 10000
+    }
+    return new Promise((resolve) => {
+        $.post(stroption, async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`jdCash API请求失败，请检查网路重试`)
+                } else {
+                    //console.log(data);
+                    data = JSON.parse(data);
+                    let useable = data.couponVOList;
+                    if (useable) {
+                        for (let k = 0; k < useable.length; k++) {
+							if(useable[k].balance>0)
+								balEcard += useable[k].balance;
+                        }
+						if(balEcard)
+							$.ECardinfo = '共' + useable.length + '张E卡,合计' + parseFloat(balEcard).toFixed(2) + '元';
+                    }
+
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            }
+            finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
 function apptaskUrl(functionId = "", body = "") {
   return {
     url: `${JD_API_HOST}?functionId=${functionId}`,
@@ -1672,22 +1750,27 @@ function getCoupon() {
 					    }
 
 					}
-                    /* if (useable[i].couponTitle.indexOf('极速版APP活动') > -1) {						
-                        $.couponEndTime = useable[i].endTime;
-                        $.startIndex = useable[i].couponTitle.indexOf('-') - 3;
-                        $.endIndex = useable[i].couponTitle.indexOf('元') + 1;
-                        $.couponName = useable[i].couponTitle.substring($.startIndex, $.endIndex);
-
-                        if ($.couponEndTime < $.todayEndTime) {
-                            $.message += `【极速版券】${$.couponName}(今日过期)\n`;
-                        } else if ($.couponEndTime < $.tomorrowEndTime) {
-                            $.message += `【极速版券】${$.couponName}(明日将过期)\n`;
-                        } else {
-                            $.couponEndTime = timeFormat(parseInt($.couponEndTime));
-                            $.message += `【极速版券】${$.couponName}(有效期至${$.couponEndTime})\n`;
+                    if (useable[i].couponTitle.indexOf('极速版APP活动') > -1 && useable[i].limitStr=='仅可购买活动商品') {						
+                        $.beginTime = useable[i].beginTime;
+                        if ($.beginTime < new Date().getTime() && useable[i].coupontype === 1) {                            
+							if (useable[i].platFormInfo) 
+								$.platFormInfo = useable[i].platFormInfo;
+							var decquota=parseFloat(useable[i].quota).toFixed(2);
+							var decdisc= parseFloat(useable[i].discount).toFixed(2);
+							
+							$.message += `【极速版券】满${decquota}减${decdisc}元`;
+							
+							if (useable[i].endTime < $.todayEndTime) {
+								$.message += `(今日过期,${$.platFormInfo})\n`;
+							} else if (useable[i].endTime < $.tomorrowEndTime) {
+								$.message += `(明日将过期,${$.platFormInfo})\n`;
+							} else {
+								$.message += `(${$.platFormInfo})\n`;
+							}
+							
                         }
 
-                    } */
+                    }
                     //8是支付券， 7是白条券
                     if (useable[i].couponStyle == 7 || useable[i].couponStyle == 8) {
                         $.beginTime = useable[i].beginTime;
@@ -2485,7 +2568,57 @@ async function jxbean() {
 
 }
 
-
+function GetJoyRuninginfo() {
+	if (!EnableJoyRun)
+		return;
+	
+    const headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+        "Connection": "keep-alive",
+        "Content-Length": "376",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": cookie,
+        "Host": "api.m.jd.com",
+        "Origin": "https://joypark.jd.com",
+        "Referer": "https://joypark.jd.com/",
+        "User-Agent": $.UA
+		}
+	var DateToday = new Date();
+	const body = {
+        'linkId': 'L-sOanK_5RJCz7I314FpnQ',
+		'isFromJoyPark':true,
+		'joyLinkId':'LsQNxL7iWDlXUs6cFl-AAg'
+    };
+    const options = {
+        url: `https://api.m.jd.com/?functionId=runningPageHome&body=${encodeURIComponent(JSON.stringify(body))}&t=${DateToday.getTime()}&appid=activities_platform&client=ios&clientVersion=3.8.12`,
+        headers,
+    }
+    return new Promise(resolve => {
+        $.get(options, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (data) {
+						//console.log(data);
+                        data = JSON.parse(data);
+                        if (data.data.runningHomeInfo.prizeValue) {
+							$.JoyRunningAmount=data.data.runningHomeInfo.prizeValue * 1;							
+						}
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            }
+            finally {
+                resolve(data)
+            }
+        })
+    })
+}
 	
 function randomString(e) {
 	e = e || 32;
