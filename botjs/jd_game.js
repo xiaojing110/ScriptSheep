@@ -19,7 +19,7 @@ cron "31 1 1 1 1" script-path=https://raw.githubusercontent.com/KingRan/KR/main/
 ============小火箭=========
 通用游戏任务 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_game.js, cronexpr="31 1 1 1 1", timeout=3600, enable=true
 */
-const $ = new Env('通用游戏任务-加密');
+const $ = new Env('通用游戏任务');
 
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
