@@ -23,9 +23,11 @@ if ($.isNode()) {
 		...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
 let activityList = [
-	{ 'id': 'cebd38c28cf0468c8082082eebde4c32', 'endTime': 1656626274000 },//
-	{ 'id': 'c88ffa4a17b04cc994a6e66f161471', 'endTime': 1656626274000 },//
-	{ 'id': '4f49c21967e24e62aa60efc28b015c82', 'endTime': 1656626274000 },//
+	{ 'id': '20f3bf50733f4b9bbd333b3705d14272', 'endTime': 1656626274000 },//
+	{ 'id': '016de52c3bd94dd1892fd503a8dfa1e5', 'endTime': 1656626274000 },//
+	{ 'id': 'b7ec89d5067f4f86bb77c8c371832280', 'endTime': 1656626274000 },//
+	{ 'id': 'c923f03a1cc144edab77975e6c792436', 'endTime': 1656626274000 },//
+
 
 ];
 !(async () => {
@@ -51,44 +53,44 @@ let activityList = [
 	$.done();
 });
 async function main(_0x3f7ec5) {
-    _0x3f7ec5.cookiesArr = cookiesArr;
-    message = '';
-    _0x3f7ec5.activityId = getUrlData(_0x3f7ec5.thisActivityUrl, 'activityId');
-    _0x3f7ec5.runFlag = true;
-    if (_0x3f7ec5.helpFalg) {
-        doInfo();
-    } for (let _0x42703b = 0; _0x42703b < _0x3f7ec5.cookiesArr.length && (_0x42703b < RUNCK) && _0x3f7ec5.activityId && _0x3f7ec5.runFlag; _0x42703b++) {
-        _0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[_0x42703b];
-        _0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
-        _0x3f7ec5.index = (_0x42703b + 1);
-        console.log('\n********开始【京东账号' + _0x3f7ec5.index + '】' + _0x3f7ec5.UserName + '********\n');
-        try {
-            await runMain(_0x3f7ec5);
-        } catch (_0x404e8e) { }
-        await _0x3f7ec5.wait(3000);
-    } if (message) {
-        await notify.sendNotify('粉丝互动ID：' + _0x3f7ec5.activityId, message);
-    }
+	_0x3f7ec5.cookiesArr = cookiesArr;
+	message = '';
+	_0x3f7ec5.activityId = getUrlData(_0x3f7ec5.thisActivityUrl, 'activityId');
+	_0x3f7ec5.runFlag = true;
+	if (_0x3f7ec5.helpFalg) {
+		doInfo();
+	} for (let _0x42703b = 0; _0x42703b < _0x3f7ec5.cookiesArr.length && (_0x42703b < RUNCK) && _0x3f7ec5.activityId && _0x3f7ec5.runFlag; _0x42703b++) {
+		_0x3f7ec5.cookie = _0x3f7ec5.cookiesArr[_0x42703b];
+		_0x3f7ec5.UserName = decodeURIComponent(_0x3f7ec5.cookie.match(/pt_pin=(.+?);/) && _0x3f7ec5.cookie.match(/pt_pin=(.+?);/)[1]);
+		_0x3f7ec5.index = (_0x42703b + 1);
+		console.log('\n********开始【京东账号' + _0x3f7ec5.index + '】' + _0x3f7ec5.UserName + '********\n');
+		try {
+			await runMain(_0x3f7ec5);
+		} catch (_0x404e8e) { }
+		await _0x3f7ec5.wait(3000);
+	} if (message) {
+		await notify.sendNotify('粉丝互动ID：' + _0x3f7ec5.activityId, message);
+	}
 }
 async function doInfo() {
-    $.helpFalg = false;
-    for (let _0x32dca4 = 0; _0x32dca4 < cookiesArr.length; _0x32dca4++) {
-        let _0x3e263a = ['',];
-        let _0x429f0a = getRandomArrayElements(_0x3e263a, 1)[0];
-        await invite3(cookiesArr[_0x32dca4], _0x429f0a);
-        await invite4(cookiesArr[_0x32dca4], _0x429f0a);
-        await invite(cookiesArr[_0x32dca4], _0x429f0a);
-        await invite2(cookiesArr[_0x32dca4], _0x429f0a);
-    }
+	$.helpFalg = false;
+	for (let _0x32dca4 = 0; _0x32dca4 < cookiesArr.length; _0x32dca4++) {
+		let _0x3e263a = ['', '', '', ''];
+		let _0x429f0a = getRandomArrayElements(_0x3e263a, 1)[0];
+		await invite3(cookiesArr[_0x32dca4], _0x429f0a);
+		await invite4(cookiesArr[_0x32dca4], _0x429f0a);
+		await invite(cookiesArr[_0x32dca4], _0x429f0a);
+		await invite2(cookiesArr[_0x32dca4], _0x429f0a);
+	}
 }
 async function invite(_0x8baf4c, _0x3fd6b4) {
-    let _0x11b30c = Date.now();
-    var _0x5156ef = {
-        'Host': 'api.m.jd.com', 'accept': 'application/json, text/plain, */*', 'content-type': 'application/x-www-form-urlencoded', 'origin': 'https://invite-reward.jd.com', 'accept-language': 'zh-cn', 'user-agent': $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require('./JS_USER_AGENTS').USER_AGENT : $.getdata('JSUA') ? $.getdata('JSUA') : '\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'referer': 'https://invite-reward.jd.com/', 'Cookie': _0x8baf4c
-    };
-    var _0xd439b2 = 'functionId=InviteFriendApiService&body={"method":"attendInviteActivity","data":{"inviterPin":"' + encodeURIComponent(_0x3fd6b4) + '","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIf3dd8121b7sdmiBLGdxRR46OlWyh62kFAZogTJFnYqqRkwgr63%2BdGmMlcv7EQJ5v0HBic81xHXzXLwKM6fh3i963zIa7Ym2v5ehnwo2B7uDN92Q0&aid=&client=ios&clientVersion=14.4&networkType=wifi&fp=-1&appid=market-task-h5&_t=' + _0x11b30c;
-    var _0x2ef366 = { 'url': 'https://api.m.jd.com/?t=' + Date.now(), 'headers': _0x5156ef, 'body': _0xd439b2 };
-    $.post(_0x2ef366, (_0x2d0d4b, _0x2fae2e, _0x252f14) => { });
+	let _0x11b30c = Date.now();
+	var _0x5156ef = {
+		'Host': 'api.m.jd.com', 'accept': 'application/json, text/plain, */*', 'content-type': 'application/x-www-form-urlencoded', 'origin': 'https://invite-reward.jd.com', 'accept-language': 'zh-cn', 'user-agent': $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require('./JS_USER_AGENTS').USER_AGENT : $.getdata('JSUA') ? $.getdata('JSUA') : '\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'referer': 'https://invite-reward.jd.com/', 'Cookie': _0x8baf4c
+	};
+	var _0xd439b2 = 'functionId=InviteFriendApiService&body={"method":"attendInviteActivity","data":{"inviterPin":"' + encodeURIComponent(_0x3fd6b4) + '","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIf3dd8121b7sdmiBLGdxRR46OlWyh62kFAZogTJFnYqqRkwgr63%2BdGmMlcv7EQJ5v0HBic81xHXzXLwKM6fh3i963zIa7Ym2v5ehnwo2B7uDN92Q0&aid=&client=ios&clientVersion=14.4&networkType=wifi&fp=-1&appid=market-task-h5&_t=' + _0x11b30c;
+	var _0x2ef366 = { 'url': 'https://api.m.jd.com/?t=' + Date.now(), 'headers': _0x5156ef, 'body': _0xd439b2 };
+	$.post(_0x2ef366, (_0x2d0d4b, _0x2fae2e, _0x252f14) => { });
 }
 async function invite2(_0x36e51c, _0x97b630) {
 	let _0x577470 = Date.now();
