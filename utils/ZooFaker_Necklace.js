@@ -838,7 +838,7 @@ let utils = {
             $.joyytoken = JSON.parse(await this.gettoken($.UA))["joyytoken"];
             $.joyytoken_count = 0;
         }
-        $.joyytoken_count++;
+        $.joyytoken_count=1;
         let riskData;
         switch ($.action) {
             case 'startTask':

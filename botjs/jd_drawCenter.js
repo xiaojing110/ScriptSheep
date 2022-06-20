@@ -38,18 +38,18 @@ let drawCenterActivityId='';
 let llnothing=true;
 let Allmessage='';
 if($.isNode()){
-	Object.keys(jdCookieNode).forEach(OOOOQQ=>{
-		cookiesArr.push(jdCookieNode[OOOOQQ]);
+	Object.keys(jdCookieNode).forEach(Q0OO00=>{
+		cookiesArr.push(jdCookieNode[Q0OO00]);
 	});
 	if(process.env.JD_DEBUG&&process.env.JD_DEBUG==='false')console.log=()=>{};
 }else{
 	let cookiesData=$.getdata('CookiesJD')||'[]';
 	cookiesData=JSON.parse(cookiesData);
-	cookiesArr=cookiesData.map(OOQQOO=>OOQQOO.cookie);
+	cookiesArr=cookiesData.map(Q0QQO0=>Q0QQO0.cookie);
 	cookiesArr.reverse();
 	cookiesArr.push(...[$.getdata('CookieJD2'),$.getdata('CookieJD')]);
 	cookiesArr.reverse();
-	cookiesArr=cookiesArr.filter(OOQQQ0=>!!OOQQQ0);
+	cookiesArr=cookiesArr.filter(OQOQO0=>!!OQOQO0);
 }
 if(process.env.jd_drawCenter_activityId&&process.env.jd_drawCenter_activityId!=''){
 	drawCenterActivityId=process.env.jd_drawCenter_activityId.split(',');
@@ -59,14 +59,14 @@ if(process.env.jd_drawCenter_activityId&&process.env.jd_drawCenter_activityId!='
 		$.msg($.name,'【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/bean/signIndex.action',{'open-url':'https://bean.m.jd.com/bean/signIndex.action'});
 		return;
 	}
-	console.log('入口: https://lzkj-isv.isvjd.com/drawCenter/activity/entry.html?activityId='+drawCenterActivityId);
-	for(let Q0OQ0O=0;Q0OQ0O<cookiesArr.length;Q0OQ0O++){
-		if(cookiesArr[Q0OQ0O]){
-			cookie=cookiesArr[Q0OQ0O];
-			originCookie=cookiesArr[Q0OQ0O];
+	console.log('活动入口: https://lzkj-isv.isvjd.com/drawCenter/activity/entry.html?activityId='+drawCenterActivityId);
+	for(let OQ0000=0;OQ0000<cookiesArr.length;OQ0000++){
+		if(cookiesArr[OQ0000]){
+			cookie=cookiesArr[OQ0000];
+			originCookie=cookiesArr[OQ0000];
 			newCookie='';
 			$.UserName=decodeURIComponent(cookie.match(/pt_pin=(.+?);/)&&cookie.match(/pt_pin=(.+?);/)[1]);
-			$.index=(Q0OQ0O+1);
+			$.index=(OQ0000+1);
 			$.isLogin=true;
 			$.nickName='';
 			await checkCookie();
@@ -78,7 +78,6 @@ if(process.env.jd_drawCenter_activityId&&process.env.jd_drawCenter_activityId!='
 				}
 				continue;
 			}
-			// await randomsb();
 			authorCodeList=[''];
 			$.bean=0;
 			$.ADID=getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',1);
@@ -102,8 +101,8 @@ if(process.env.jd_drawCenter_activityId&&process.env.jd_drawCenter_activityId!='
 			await notify.sendNotify($.name,message,'','\n');
 		}
 	}
-})().catch(OQO000=>{
-	$.log('','❌ '+$.name+', 失败! 原因: '+OQO000+'!','');
+})().catch(Q0Q000=>{
+	$.log('','❌ '+$.name+', 失败! 原因: '+Q0Q000+'!','');
 }).finally(()=>{
 	$.done();
 });
@@ -124,75 +123,80 @@ async function run(){
 			if($.index===1){
 				console.log('助力码：'+ownCode);
 			}
-			$.log('当前活动：'+$.activityName+'\n');
+			console.log('当前活动：'+$.activityName);
 			if($.activityContent){
 				if(isdoTask){
 					await $.wait(500);
 					await task('myInfo','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin));
-					for(var OOQ0OQO=0;OOQ0OQO<$.taskList.length;OOQ0OQO++){
-						$.maxNeed=$.taskList[OOQ0OQO].maxNeed;
-						$.curNum=$.taskList[OOQ0OQO].curNum;
+					for(var Q00O000=0;Q00O000<$.taskList.length;Q00O000++){
+						$.taskType=$.taskList[Q00O000].taskType;
+						$.maxNeed=$.taskList[Q00O000].maxNeed;
+						$.curNum=$.taskList[Q00O000].curNum;
 						$.remaining=($.maxNeed-$.curNum);
 						if($.curNum==$.maxNeed)continue;
 						await $.wait(500);
-						switch($.taskList[OOQ0OQO].taskType){
+						switch($.taskType){
 							case 'share2help':
 								if($.index===1)break;
-								$.log('去助力 -> '+ownCode);
+								$.log('\n去助力 -> '+ownCode);
 								await task('helpFriend','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&shareUuid='+encodeURIComponent($.authorCode));
 								break;
 							case 'dailysign':
-								$.log('每日签到');
+								$.log('\n进行每日签到');
 								await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=dailysign&param=');
 								break;
 							case 'followshop':
-								$.log('去关注店铺');
+								$.log('\n去关注店铺');
 								await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=followshop&param=');
 								break;
 							case 'scanshop':
-								$.log('去浏览店铺');
+								$.log('\n去浏览店铺');
 								await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=scanshop&param=');
 								break;
 							case 'add2cart':
+								console.log('');
 								await task('getProduct','type=1&activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin));
-								for(let OQ00OQO=0;OQ00OQO<$.getProduct.length;OQ00OQO++){
+								for(let Q00OQQQ=0;Q00OQQQ<$.getProduct.length;Q00OQQQ++){
 													await $.wait(500);
-													$.log('去加购商品：'+$.getProduct[OQ00OQO].name);
-													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=add2cart&param='+$.getProduct[OQ00OQO].skuId);
-													if(OQ00OQO==$.remaining-1)break;
+													$.log('去加购商品：'+$.getProduct[Q00OQQQ].name);
+													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=add2cart&param='+$.getProduct[Q00OQQQ].skuId);
+													if(Q00OQQQ==$.remaining-1)break;
 												}
 								break;
 							case 'ordersku':
+								console.log('');
 								await task('getProduct','type=2&activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin));
-								for(let Q000QQ0=0;Q000QQ0<$.getProduct.length;Q000QQ0++){
+								for(let Q00OQQO=0;Q00OQQO<$.getProduct.length;Q00OQQO++){
 													await $.wait(500);
-													$.log('去预约商品：'+$.getProduct[Q000QQ0].name);
-													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=ordersku&param='+$.getProduct[Q000QQ0].skuId);
-													if(Q000QQ0==$.remaining-1)break;
+													$.log('去预约商品：'+$.getProduct[Q00OQQO].name);
+													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=ordersku&param='+$.getProduct[Q00OQQO].skuId);
+													if(Q00OQQO==$.remaining-1)break;
 												}
 								break;
 							case 'followsku':
+								console.log('');
 								await task('getProduct','type=3&activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin));
-								for(let OQ00OQQ=0;OQ00OQQ<$.getProduct.length;OQ00OQQ++){
+								for(let QQOQ0QO=0;QQOQ0QO<$.getProduct.length;QQOQ0QO++){
 													await $.wait(500);
-													$.log('去关注商品：'+$.getProduct[OQ00OQQ].name);
-													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=followsku&param='+$.getProduct[OQ00OQQ].skuId);
-													if(OQ00OQQ==$.remaining-1)break;
+													$.log('去关注商品：'+$.getProduct[QQOQ0QO].name);
+													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=followsku&param='+$.getProduct[QQOQ0QO].skuId);
+													if(QQOQ0QO==$.remaining-1)break;
 												}
 								break;
 							case 'scansku':
+								console.log('');
 								await task('getProduct','type=4&activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin));
-								for(let O00QO00=0;O00QO00<$.getProduct.length;O00QO00++){
+								for(let QQOQ0QQ=0;QQOQ0QQ<$.getProduct.length;QQOQ0QQ++){
 													await $.wait(500);
-													$.log('去浏览商品：'+$.getProduct[O00QO00].name);
-													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=scansku&param='+$.getProduct[O00QO00].skuId);
-													if(O00QO00==$.remaining-1)break;
+													$.log('去浏览商品：'+$.getProduct[QQOQ0QQ].name);
+													await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId=scansku&param='+$.getProduct[QQOQ0QQ].skuId);
+													if(QQOQ0QQ==$.remaining-1)break;
 												}
 								break;
 							case 'scanurl':
-								$.venue_name=JSON.parse($.taskList[OOQ0OQO].params).name;
-								$.log('去浏览会场：'+$.venue_name);
-								await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId='+$.taskList[OOQ0OQO].taskId+'&param=');
+								$.venue_name=JSON.parse($.taskList[Q00O000].params).name;
+								$.log('\n去浏览会场：'+$.venue_name);
+								await task('doTask','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&taskId='+$.taskList[Q00O000].taskId+'&param=');
 								break;
 							default:
 								break;
@@ -204,10 +208,10 @@ async function run(){
 					if($.chance>=1){
 						$.log('\n任务做完了，当前共有 '+$.chance+' 次抽奖机会，开始抽奖吧～\n');
 					}else{
-						$.log('没有抽奖机会了~');
+						$.log('\n没有抽奖机会了～');
 					}
 					await $.wait(500);
-					for(let Q00QQOQ=0;Q00QQOQ<$.chance;Q00QQOQ++){
+					for(let QOQ00QO=0;QOQ00QO<$.chance;QOQ00QO++){
 						await task('draw/luckyDraw','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin));
 						await $.wait(2500);
 					}
@@ -222,242 +226,234 @@ async function run(){
 		$.log('没有成功获取到用户鉴权信息');
 	}
 }
-function task(QQ000O0,OQ0QOQ0,OOQQOO0=0){
-	return new Promise(OQ0QOQO=>{
-		$.post(taskUrl(QQ000O0,OQ0QOQ0,OOQQOO0),async(O0QOQOQ,Q00QOO0,O0QOQOO)=>{
+function task(QQO0O0O,O00OO0Q,Q000OOQ=0){
+	return new Promise(QOQ0O0Q=>{
+		$.post(taskUrl(QQO0O0O,O00OO0Q,Q000OOQ),async(O000O00,QOQ0O00,OOOOOOQ)=>{
 			try{
-				if(O0QOQOQ){
-					$.log(O0QOQOQ);
+				if(O000O00){
+					$.log(O000O00);
 				}else{
-					if(O0QOQOO){
-						O0QOQOO=JSON.parse(O0QOQOO);
-						if(Q00QOO0.headers['set-cookie']){
+					if(OOOOOOQ){
+						OOOOOOQ=JSON.parse(OOOOOOQ);
+						if(QOQ0O00.headers['set-cookie']){
 							cookie=originCookie+';';
-							for(let O00QQ00 of Q00QOO0.headers['set-cookie']){
-								lz_cookie[O00QQ00.split(';')[0].substr(0,O00QQ00.split(';')[0].indexOf('='))]=O00QQ00.split(';')[0].substr(O00QQ00.split(';')[0].indexOf('=')+1);
-							}for(const Q000OQ0 of Object.keys(lz_cookie)){
-								cookie+=(Q000OQ0+'='+lz_cookie[Q000OQ0]+';');
+							for(let Q000QQQ of QOQ0O00.headers['set-cookie']){
+								lz_cookie[Q000QQQ.split(';')[0].substr(0,Q000QQQ.split(';')[0].indexOf('='))]=Q000QQQ.split(';')[0].substr(Q000QQQ.split(';')[0].indexOf('=')+1);
+							}for(const O00QQ0O of Object.keys(lz_cookie)){
+								cookie+=(O00QQ0O+'='+lz_cookie[O00QQ0O]+';');
 							}
-						}if(O0QOQOO.result){
-							switch(QQ000O0){
+						}if(OOOOOOQ.result){
+							switch(QQO0O0O){
 								case 'customer/getSimpleActInfoVo':
-									$.jdActivityId=O0QOQOO.data.jdActivityId;
-									$.venderId=O0QOQOO.data.venderId;
-									$.activityShopId=O0QOQOO.data.venderId;
+									$.jdActivityId=OOOOOOQ.data.jdActivityId;
+									$.venderId=OOOOOOQ.data.venderId;
+									$.activityShopId=OOOOOOQ.data.venderId;
 									break;
 								case 'activityContent':
-									$.activityContent=O0QOQOO.data.activityId;
-									$.chance=O0QOQOO.data.chance||0;
-									$.activityName=O0QOQOO.data.activityName||'';
+									$.activityContent=OOOOOOQ.data.activityId;
+									$.chance=OOOOOOQ.data.chance||0;
+									$.activityName=OOOOOOQ.data.activityName||'';
 									if($.index===1){
-															ownCode=O0QOQOO.data.uid;
+															ownCode=OOOOOOQ.data.uid;
 														}
 									break;
 								case 'myInfo':
-									$.taskList=O0QOQOO.data.taskList;
+									$.taskList=OOOOOOQ.data.taskList;
 									break;
 								case 'wxActionCommon/getUserInfo':
-									if(O0QOQOO.data.yunMidImageUrl){
+									if(OOOOOOQ.data.yunMidImageUrl){
 															if($.index===1){
-										ownCode.pinImg=O0QOQOO.data.yunMidImageUrl;
-										ownCode.nickname=O0QOQOO.data.nickname;
+										ownCode.pinImg=OOOOOOQ.data.yunMidImageUrl;
+										ownCode.nickname=OOOOOOQ.data.nickname;
 									}
-															$.pinImg=O0QOQOO.data.yunMidImageUrl;
+															$.pinImg=OOOOOOQ.data.yunMidImageUrl;
 														}else{
 															if($.index===1){
 										ownCode.pinImg='https://img10.360buyimg.com/imgzone/jfs/t1/7020/27/13511/6142/5c5138d8E4df2e764/5a1216a3a5043c5d.png';
-										ownCode.nickname=O0QOQOO.data.nickname;
+										ownCode.nickname=OOOOOOQ.data.nickname;
 									}
 															$.pinImg='https://img10.360buyimg.com/imgzone/jfs/t1/7020/27/13511/6142/5c5138d8E4df2e764/5a1216a3a5043c5d.png';
 														}
 									break;
 								case 'helpFriend':
-									$.helpFriend=O0QOQOO.data.helpFriendMsg;
+									$.helpFriend=OOOOOOQ.data.helpFriendMsg;
 									console.log('  >> '+$.helpFriend);
 									break;
 								case 'wxAssemblePage/shopinfo':
 									break;
 								case 'doTask':
-									if(O0QOQOO.result){
+									if(OOOOOOQ.result){
 															console.log('  >> 任务完成');
 														}else{
-															$.log(O0QOQOO.result);
+															$.log(OOOOOOQ.result);
 														}
 									break;
 								case 'getProduct':
-									$.getProduct=O0QOQOO.data;
+									$.getProduct=OOOOOOQ.data;
 									break;
 								case 'draw/luckyDraw':
-									if(O0QOQOO.data.drawOk){
-															console.log(''+O0QOQOO.data.name);
-															message+=O0QOQOO.data.name;
+									if(OOOOOOQ.data.drawOk){
+															console.log(''+OOOOOOQ.data.name);
+															message+=OOOOOOQ.data.name;
 															llnothing=false;
 														}else{
-															console.log('谢谢参与');
+															console.log('谢谢参与💨');
 														}
 									break;
 								default:
-									$.log(JSON.stringify(O0QOQOO));
+									$.log(JSON.stringify(OOOOOOQ));
 									break;
 							}
 							await $.wait(2000);
 						}
 					}else{}
 				}
-			}catch(QQOQ0QQ){
-				$.log(QQOQ0QQ);
+			}catch(QOOOQ00){
+				$.log(QOOOQ00);
 			}
 			finally{
-				OQ0QOQO();
+				QOQ0O0Q();
 			}
 		});
 	});
 }
-function taskUrl(O0000Q0,QOQ00QO,OOO0QQO){
+function taskUrl(QOOO0OO,QOQQQ0Q,OOQQOQ0){
 	return{
-		'url':OOO0QQO?'https://lzkj-isv.isvjcloud.com/'+O0000Q0:'https://lzkj-isv.isvjcloud.com/drawCenter/'+O0000Q0,'headers':{'Host':'lzkj-isv.isvjcloud.com','Accept':'application/json','X-Requested-With':'XMLHttpRequest','Accept-Language':'zh-cn','Accept-Encoding':'gzip, deflate, br','Content-Type':'application/x-www-form-urlencoded','Origin':'https://lzkj-isv.isvjcloud.comm','User-Agent':'jdapp;iPhone;9.5.4;13.6;'+$.UUID+';network/wifi;ADID/'+$.ADID+';model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1','Connection':'keep-alive','Referer':$.activityUrl,'Cookie':cookie},'body':QOQ00QO
+		'url':OOQQOQ0?'https://lzkj-isv.isvjcloud.com/'+QOOO0OO:'https://lzkj-isv.isvjcloud.com/drawCenter/'+QOOO0OO,'headers':{'Host':'lzkj-isv.isvjcloud.com','Accept':'application/json','X-Requested-With':'XMLHttpRequest','Accept-Language':'zh-cn','Accept-Encoding':'gzip, deflate, br','Content-Type':'application/x-www-form-urlencoded','Origin':'https://lzkj-isv.isvjcloud.comm','User-Agent':'jdapp;iPhone;9.5.4;13.6;'+$.UUID+';network/wifi;ADID/'+$.ADID+';model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1','Connection':'keep-alive','Referer':$.activityUrl,'Cookie':cookie},'body':QOQQQ0Q
 	};
 }
 function getMyPing(){
-	let Q00OOO0={'url':'https://lzkj-isv.isvjcloud.com/customer/getMyPing','headers':{'Host':'lzkj-isv.isvjcloud.com','Accept':'application/json','X-Requested-With':'XMLHttpRequest','Accept-Language':'zh-cn','Accept-Encoding':'gzip, deflate, br','Content-Type':'application/x-www-form-urlencoded','Origin':'https://lzkj-isv.isvjcloud.com','User-Agent':'jdapp;iPhone;9.5.4;13.6;'+$.UUID+';network/wifi;ADID/'+$.ADID+';model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1','Connection':'keep-alive','Referer':$.activityUrl,'Cookie':cookie},'body':'userId='+$.activityShopId+'&token='+$.token+'&fromType=APP&riskType=1'};
-	return new Promise(Q00O00Q=>{
-		$.post(Q00OOO0,(QOOOQ0O,OOQQOQQ,Q00OOOQ)=>{
+	let OOOQOO0={'url':'https://lzkj-isv.isvjcloud.com/customer/getMyPing','headers':{'Host':'lzkj-isv.isvjcloud.com','Accept':'application/json','X-Requested-With':'XMLHttpRequest','Accept-Language':'zh-cn','Accept-Encoding':'gzip, deflate, br','Content-Type':'application/x-www-form-urlencoded','Origin':'https://lzkj-isv.isvjcloud.com','User-Agent':'jdapp;iPhone;9.5.4;13.6;'+$.UUID+';network/wifi;ADID/'+$.ADID+';model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1','Connection':'keep-alive','Referer':$.activityUrl,'Cookie':cookie},'body':'userId='+$.activityShopId+'&token='+$.token+'&fromType=APP&riskType=1'};
+	return new Promise(OOOQ00O=>{
+		$.post(OOOQOO0,(OQO0OQO,O0OQO0O,Q0O0QQ0)=>{
 			try{
-				if(QOOOQ0O){
-					$.log(QOOOQ0O);
+				if(OQO0OQO){
+					$.log(OQO0OQO);
 				}else{
-					if(OOQQOQQ.headers['set-cookie']){
+					if(O0OQO0O.headers['set-cookie']){
 						cookie=originCookie+';';
-						for(let OOO0QO0 of OOQQOQQ.headers['set-cookie']){
-							lz_cookie[OOO0QO0.split(';')[0].substr(0,OOO0QO0.split(';')[0].indexOf('='))]=OOO0QO0.split(';')[0].substr(OOO0QO0.split(';')[0].indexOf('=')+1);
-						}for(const Q00OOOO of Object.keys(lz_cookie)){
-							cookie+=(Q00OOOO+'='+lz_cookie[Q00OOOO]+';');
+						for(let QOO00O0 of O0OQO0O.headers['set-cookie']){
+							lz_cookie[QOO00O0.split(';')[0].substr(0,QOO00O0.split(';')[0].indexOf('='))]=QOO00O0.split(';')[0].substr(QOO00O0.split(';')[0].indexOf('=')+1);
+						}for(const O00OQ0Q of Object.keys(lz_cookie)){
+							cookie+=(O00OQ0Q+'='+lz_cookie[O00OQ0Q]+';');
 						}
 					}
-					if(Q00OOOQ){
-						Q00OOOQ=JSON.parse(Q00OOOQ);
-						if(Q00OOOQ.result){
-							$.log('你好，'+Q00OOOQ.data.nickname);
-							$.pin=Q00OOOQ.data.nickname;
-							$.secretPin=Q00OOOQ.data.secretPin;
+					if(Q0O0QQ0){
+						Q0O0QQ0=JSON.parse(Q0O0QQ0);
+						if(Q0O0QQ0.result){
+							$.log('你好，'+Q0O0QQ0.data.nickname);
+							$.pin=Q0O0QQ0.data.nickname;
+							$.secretPin=Q0O0QQ0.data.secretPin;
 						}else{
-							$.log(Q00OOOQ.errorMessage);
+							$.log(Q0O0QQ0.errorMessage);
 						}
 					}else{
 						$.log('京东返回了空数据');
 					}
 				}
-			}catch(Q000QQQ){
-				$.log(Q000QQQ);
+			}catch(O00O0Q0){
+				$.log(O00O0Q0);
 			}
 			finally{
-				Q00O00Q();
+				OOOQ00O();
 			}
 		});
 	});
 }
 function getFirstLZCK(){
-	return new Promise(Q00OOQ0=>{
+	return new Promise(QQO00QO=>{
 		$.get({'url':$.activityUrl,'headers':{
 				'user-agent':$.isNode()?process.env.JD_USER_AGENT?process.env.JD_USER_AGENT:require('./USER_AGENTS').USER_AGENT:$.getdata('JDUA')?$.getdata('JDUA'):'jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1'
-			}},(OOO0QOO,QQOQO0O,QQOQO0Q)=>{
+			}},(OOO0OOO,QOO0Q0O,QOO00Q0)=>{
 			try{
-				if(OOO0QOO){
-					console.log(OOO0QOO);
+				if(OOO0OOO){
+					console.log(OOO0OOO);
 				}else{
-					if(QQOQO0O.headers['set-cookie']){
+					if(QOO0Q0O.headers['set-cookie']){
 						cookie=originCookie+';';
-						for(let QQOOO00 of QQOQO0O.headers['set-cookie']){
-							lz_cookie[QQOOO00.split(';')[0].substr(0,QQOOO00.split(';')[0].indexOf('='))]=QQOOO00.split(';')[0].substr(QQOOO00.split(';')[0].indexOf('=')+1);
+						for(let OQO0000 of QOO0Q0O.headers['set-cookie']){
+							lz_cookie[OQO0000.split(';')[0].substr(0,OQO0000.split(';')[0].indexOf('='))]=OQO0000.split(';')[0].substr(OQO0000.split(';')[0].indexOf('=')+1);
 						}
-						for(const Q0O0QQQ of Object.keys(lz_cookie)){
-							cookie+=(Q0O0QQQ+'='+lz_cookie[Q0O0QQQ]+';');
+						for(const Q0O0OQO of Object.keys(lz_cookie)){
+							cookie+=(Q0O0OQO+'='+lz_cookie[Q0O0OQO]+';');
 						}
 						$.cookie=cookie;
 					}
 				}
-			}catch(Q0O0000){
-				console.log(Q0O0000);
+			}catch(QQOO0OQ){
+				console.log(QQOO0OQ);
 			}
 			finally{
-				Q00OOQ0();
+				QQO00QO();
 			}
 		});
 	});
 }
 function getToken(){
-	let Q0O0QQO={'url':'https://api.m.jd.com/client.action?functionId=isvObfuscator','headers':{'Host':'api.m.jd.com','Content-Type':'application/x-www-form-urlencoded','Accept':'*/*','Connection':'keep-alive','Cookie':cookie,'User-Agent':'JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)','Accept-Language':'zh-Hans-CN;q=1','Accept-Encoding':'gzip, deflate, br'},'body':'body=%7B%22url%22%3A%20%22https%3A//lzdz1-isv.isvjcloud.com%22%2C%20%22id%22%3A%20%22%22%7D&uuid=72124265217d48b7955781024d65bbc4&client=apple&clientVersion=9.4.0&st=1621796702000&sv=120&sign=14f7faa31356c74e9f4289972db4b988'};
-	return new Promise(OQO0OQO=>{
-		$.post(Q0O0QQO,(OOO0OQQ,QOO00O0,OOO0OQO)=>{
+	let QOOQ0OQ={'url':'https://api.m.jd.com/client.action?functionId=isvObfuscator','headers':{'Host':'api.m.jd.com','Content-Type':'application/x-www-form-urlencoded','Accept':'*/*','Connection':'keep-alive','Cookie':cookie,'User-Agent':'JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)','Accept-Language':'zh-Hans-CN;q=1','Accept-Encoding':'gzip, deflate, br'},'body':'body=%7B%22url%22%3A%20%22https%3A//lzdz1-isv.isvjcloud.com%22%2C%20%22id%22%3A%20%22%22%7D&uuid=72124265217d48b7955781024d65bbc4&client=apple&clientVersion=9.4.0&st=1621796702000&sv=120&sign=14f7faa31356c74e9f4289972db4b988'};
+	return new Promise(QOOQ0OO=>{
+		$.post(QOOQ0OQ,(Q0O0OQ0,QQOOQ0O,QQOO0QO)=>{
 			try{
-				if(OOO0OQQ){
-					$.log(OOO0OQQ);
+				if(Q0O0OQ0){
+					$.log(Q0O0OQ0);
 				}else{
-					if(OOO0OQO){
-						OOO0OQO=JSON.parse(OOO0OQO);
-						if(OOO0OQO.code==='0'){
-							$.token=OOO0OQO.token;
+					if(QQOO0QO){
+						QQOO0QO=JSON.parse(QQOO0QO);
+						if(QQOO0QO.code==='0'){
+							$.token=QQOO0QO.token;
 						}
 					}else{
 						$.log('京东返回了空数据');
 					}
 				}
-			}catch(QOOO0QO){
-				$.log(QOOO0QO);
+			}catch(Q0OQ00O){
+				$.log(Q0OQ00O);
 			}
 			finally{
-				OQO0OQO();
+				QOOQ0OO();
 			}
 		});
 	});
 }
-function random(O0OQO00,Q00OQO0){
-	return Math.floor(Math.random()*Q00OQO0-O0OQO00)+O0OQO00;
+function random(Q0OQ00Q,OOOQOQ0){
+	return Math.floor(Math.random()*OOOQOQ0-Q0OQ00Q)+Q0OQ00Q;
 }
-function randomsb(){
-	let OQOQ00O=['','','','','','',''];
-	let OQOQOO0=OQOQ00O[Math.floor(Math.random()*OQOQ00O.length)];
-	let O0O0O0O={'url':'https://api.m.jd.com/','body':'functionId=TaskInviteService&body='+JSON.stringify({'method':'participateInviteTask','data':{'channel':'1','encryptionInviterPin':encodeURIComponent(OQOQOO0),'type':1}})+'&appid=market-task-h5&uuid=&_t='+Date.now(),'headers':{
-			'Host':'api.m.jd.com','Accept':'application/json, text/plain, */*','Content-Type':'application/x-www-form-urlencoded','Origin':'https://assignment.jd.com','Accept-Language':'zh-CN,zh-Hans;q=0.9','User-Agent':$.isNode()?process.env.JS_USER_AGENT?process.env.JS_USER_AGENT:require('./JS_USER_AGENTS').USER_AGENT:$.getdata('JSUA')?$.getdata('JSUA'):'\'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1','Referer':'https://assignment.jd.com/','Accept-Encoding':'gzip, deflate, br','Cookie':cookie
-		}};
-	$.post(O0O0O0O,(O0O0O0Q,QQO00QO,QQO00QQ)=>{});
-}
-function getUUID(OQOQ00Q='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',O00OO00=0){
-	return OQOQ00Q.replace(/[xy]/g,function(QQOQ0OO){
-		var O0000OQ=(Math.random()*0x10|0x0),Q0O0OOO=(QQOQ0OO=='x')?O0000OQ:(O0000OQ&0x3|0x8);
-		if(O00OO00){
-			uuid=Q0O0OOO.toString(36).toUpperCase();
+function getUUID(OQO000O='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',OQO0OO0=0){
+	return OQO000O.replace(/[xy]/g,function(Q0QQQQ0){
+		var OQQQO0Q=(Math.random()*0x10|0x0),OQOO0QO=(Q0QQQQ0=='x')?OQQQO0Q:(OQQQO0Q&0x3|0x8);
+		if(OQO0OO0){
+			uuid=OQOO0QO.toString(36).toUpperCase();
 		}else{
-			uuid=Q0O0OOO.toString(36);
+			uuid=OQOO0QO.toString(36);
 		}
 		return uuid;
 	});
 }
 function checkCookie(){
-	const OO0O000={'url':'https://me-api.jd.com/user_new/info/GetJDUserInfoUnion','headers':{'Host':'me-api.jd.com','Accept':'*/*','Connection':'keep-alive','Cookie':cookie,'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1','Accept-Language':'zh-cn','Referer':'https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&','Accept-Encoding':'gzip, deflate, br'}};
-	return new Promise(OOOQQQQ=>{
-		$.get(OO0O000,(QQOQ0Q0,O0OQ0QQ,Q0O000O)=>{
+	const QO0O000={'url':'https://me-api.jd.com/user_new/info/GetJDUserInfoUnion','headers':{'Host':'me-api.jd.com','Accept':'*/*','Connection':'keep-alive','Cookie':cookie,'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1','Accept-Language':'zh-cn','Referer':'https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&','Accept-Encoding':'gzip, deflate, br'}};
+	return new Promise(QO0OQQQ=>{
+		$.get(QO0O000,(QO0OQQ0,QQQQ0Q0,O0OOQQQ)=>{
 			try{
-				if(QQOQ0Q0){
-					$.logErr(QQOQ0Q0);
+				if(QO0OQQ0){
+					$.logErr(QO0OQQ0);
 				}else{
-					if(Q0O000O){
-						Q0O000O=JSON.parse(Q0O000O);
-						if(Q0O000O.retcode==='1001'){
+					if(O0OOQQQ){
+						O0OOQQQ=JSON.parse(O0OOQQQ);
+						if(O0OOQQQ.retcode==='1001'){
 							$.isLogin=false;
 							return;
-						}if((Q0O000O.retcode==='0')&&Q0O000O.data.hasOwnProperty('userInfo')){
-							$.nickName=Q0O000O.data.userInfo.baseInfo.nickname;
+						}if((O0OOQQQ.retcode==='0')&&O0OOQQQ.data.hasOwnProperty('userInfo')){
+							$.nickName=O0OOQQQ.data.userInfo.baseInfo.nickname;
 						}
 					}else{
 						$.log('京东返回了空数据');
 					}
 				}
-			}catch(Q0OQOQ0){
-				$.logErr(Q0OQOQ0);
+			}catch(OQO00O0){
+				$.logErr(OQO00O0);
 			}
 			finally{
-				OOOQQQQ();
+				QO0OQQQ();
 			}
 		});
 	});
