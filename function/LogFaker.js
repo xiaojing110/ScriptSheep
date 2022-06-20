@@ -29,7 +29,7 @@ class MoveMentFaker {
       log: e || -1,
       random: t
     })
-    console.log(o);
+    // console.log(o);
     return o;
   }
 
