@@ -895,8 +895,8 @@ let utils = {
             ro: [
               'iPhone12,1',
               'iOS',
-              '14.3',
-              '10.0.10',
+              '14.4.2',
+              '10.0.8',
               '167741',
               `${$.UUID}`,
               'a'
@@ -907,7 +907,7 @@ let utils = {
             cf_v: '01',
             bd: senddata,
             mj: [1, 0, 0],
-            blog: "a",
+            blog: this.get_blog($.UserName),
             msg: ''
         }
         data = new Buffer.from(this.xorEncrypt(JSON.stringify(data), key)).toString('base64');
