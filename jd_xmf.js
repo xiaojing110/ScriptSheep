@@ -239,9 +239,8 @@ async function requireConfig() {
 }
 async function getLog() {
   let body = await faker.getBody();
-  data = JSON.parse(body);
-  log = data.log
-  random = data.random
+  log = body.log
+  random = body.random
   // return new Promise((resolve) => {
   //     let url = {
   //         url:`${LogUrl}`,
