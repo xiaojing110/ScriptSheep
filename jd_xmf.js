@@ -238,7 +238,7 @@ async function requireConfig() {
     })
 }
 async function getLog() {
-  let body = faker.getBody();
+  let body = await faker.getBody();
   data = JSON.parse(body);
   log = data.log
   random = data.random
