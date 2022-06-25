@@ -115,6 +115,6 @@ function getBodyArray(count) {
   return itemArray;
 }
 
-MoveMentFaker.getBody = getBody;
+MoveMentFaker.getBody = getBody(id);
 MoveMentFaker.getBodyArray = getBodyArray;
 module.exports = MoveMentFaker;
