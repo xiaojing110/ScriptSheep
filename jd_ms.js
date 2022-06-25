@@ -24,6 +24,7 @@ cron "30 8 * * *" script-path=jd_ms.js, tag=秒秒币
 const $ = new Env('秒秒币-LingFeng自用版');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
+const faker = require('./function/LogFaker.js');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 var timestamp = Math.round(new Date().getTime()).toString();
@@ -37,14 +38,6 @@ let jdLogsArr =[]
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {
     await requireConfig()
-    if(jdLogUrl){
-        let res = await getJdLogs(jdLogUrl)
-        jdLogsArr = [...jdLogsArr,...(res || [])]
-    }
-    if (jdLogsArr.length == 0){
-        console.log(`提醒: log为空,脚本停止运行！`)
-        return
-    }
 
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -221,6 +214,7 @@ function getTaskList() {
 async function doTask(body) {
     await getLog();
     body = {...body, "encryptProjectId": $.encryptProjectId, "sourceCode": sourceCode, "ext": {},"extParam":{"businessData":{"random":`${random}`},"signStr":`${log}`,"sceneid":"MShPageh5"} }
+    console.log(body)
     return new Promise(resolve => {
         $.post(taskPostUrl('doInteractiveAssignment', body), (err, resp, data) => {
             try {
@@ -467,9 +461,12 @@ async function requireConfig() {
     })
 }
 async function getLog() {
-    var cuid = jdLogsArr[Math.floor((Math.random()*jdLogsArr.length))];
-    log = cuid["log"];
-    random = cuid["random"];
+    // var cuid = jdLogsArr[Math.floor((Math.random()*jdLogsArr.length))];
+    // log = cuid["log"];
+    // random = cuid["random"];
+    let body = await faker.getBody("mslogVM.js");
+    log = body.log
+    random = body.random
 }
 function jsonParse(str) {
     if (typeof str == "string") {

@@ -6,7 +6,8 @@ const fs = require('fs').promises;
 const JS_REGEX = /smash-h5\/index\.js":(([\d\D])+?(!function([\d\D])+?)},"\.\/node_modules)/gmi
 const UA = 'okhttp/3.12.1;jdmall;android;version/9.5.4;build/88136;screen/1440x3007;os/11;network/wifi;';
 // const SCRIPT_URL = 'https://wlaport.top/main.111.js';
-const SCRIPT_URL = 'LogVM.js';
+const SCRIPT_URL = '';
+
 let smashUtils;
 
 class MoveMentFaker {
@@ -98,7 +99,8 @@ class MoveMentFaker {
   }
 }
 
-async function getBody() {
+async function getBody(id) {
+  SCRIPT_URL = id
   const zf = new MoveMentFaker();
   const ss = await zf.run();
   return JSON.parse(ss);

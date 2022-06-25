@@ -238,7 +238,7 @@ async function requireConfig() {
     })
 }
 async function getLog() {
-  let body = await faker.getBody();
+  let body = await faker.getBody("LogVM.js");
   log = body.log
   random = body.random
   // return new Promise((resolve) => {
