@@ -6,7 +6,7 @@ const fs = require('fs').promises;
 const JS_REGEX = /smash-h5\/index\.js":(([\d\D])+?(!function([\d\D])+?)},"\.\/node_modules)/gmi
 const UA = 'okhttp/3.12.1;jdmall;android;version/9.5.4;build/88136;screen/1440x3007;os/11;network/wifi;';
 // const SCRIPT_URL = 'https://wlaport.top/main.111.js';
-const SCRIPT_URL = '';
+let SCRIPT_URL = '';
 
 let smashUtils;
 
