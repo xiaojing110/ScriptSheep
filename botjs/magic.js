@@ -952,6 +952,7 @@ class Env {
             && "AUTH_C_USER=" + this.Pin + ";" || "")
         this.domain.includes('cjhy') ? ck += 'APP_ABBR=CJHY;' : ''
         if (fn.includes('followShop')) ck += `${LZ_AES_PIN}`
+        if (fn.includes('addCart')) ck += `${LZ_AES_PIN}`
         let headers = {
             "Host": this.domain,
             "Accept": "application/json",
