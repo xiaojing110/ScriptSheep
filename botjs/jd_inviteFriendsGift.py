@@ -18,10 +18,10 @@ from urllib.parse import quote_plus, unquote_plus
 from functools import partial
 
 try:
-    from jdCookie import get_cookies
-    getCk = get_cookies()
+    from JDCookie import getJDCookie
+    getCk = getJDCookie()
 except:
-    print("请先下载依赖脚本，\n下载链接：https://raw.githubusercontent.com/HarbourJ/HarbourToulu/main/JDCookie.py")
+    print("请先下载依赖脚本")
     sys.exit(3)
 print = partial(print, flush=True)
 activatyname = '邀请赢大礼'
@@ -30,7 +30,7 @@ try:
     if os.environ.get("jd_inv_authorCode"):
         authorCode = os.environ["jd_inv_authorCode"]  # 活动id
     else:
-        authorCode = "6b84e047a9154d909febd19d3120aad2"
+        authorCode = ""
 except:
     print("未在环境变量中获取到有效jd_inv_authorCode变量，请添加变量后重试！")
 

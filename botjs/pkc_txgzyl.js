@@ -1,5 +1,5 @@
 /*
-更新时间：2022-4-11
+更新时间：2022-7-12
 皮卡车
 
 # 变量
@@ -23,7 +23,7 @@ https://git.metauniverse-cn.com/https://raw.githubusercontent.com/curtinlv/gd/ma
 
 [task_local]
 #获取body后执行
-1 1 1 1 * https://git.metauniverse-cn.com/https://raw.githubusercontent.com/curtinlv/gd/main/jk_script/pkc_txgzyl.js, tag=PKC-特效关注有礼, enabled=false
+1 1 1 1 1 1 https://git.metauniverse-cn.com/https://raw.githubusercontent.com/curtinlv/gd/main/jk_script/pkc_txgzyl.js, tag=PKC-特效关注有礼, enabled=false
 
 
 */
@@ -373,13 +373,13 @@ async function getMyPing(timeout = 500) {
                          $.log(`${JSON.stringify(err)}`);
                      }else {
                          $.data = JSON.parse(data);
-												 rep_cookies = resp.headers['set-cookie'];
-												// console.log(rep_cookies);
-												r_cookie='';
-												for(var c in rep_cookies){
-														r_cookie += rep_cookies[c].split(" ")[0];
-												}
-                          if($.data.result){
+                         rep_cookies = resp.headers['set-cookie'];
+                         // console.log(JSON.stringify($.data,null, '\t'));
+                         r_cookie='';
+                         for(var c in rep_cookies){
+                             r_cookie += rep_cookies[c].split(" ")[0];
+                         }
+                         if($.data.result){
                               username=$.data.data.nickname;
                               pin=encodeURIComponent($.data.data.secretPin);
 
