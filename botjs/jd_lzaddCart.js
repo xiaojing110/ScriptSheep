@@ -198,7 +198,7 @@ function task(function_id, body, isCommon = 0) {
 									break;
 								case 'addCart':
 									console.log(data.data);
-									if (data.data.includes("活动仅限店铺会员参与哦~")) notVIP = true;
+									if (data.data == "活动仅限店铺会员参与哦~") notVIP = true;
 									break;
 								case 'getPrize':
 									$.getPrize = data.data;
