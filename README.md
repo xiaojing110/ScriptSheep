@@ -16,3 +16,6 @@
 `ql repo https://github.com/Tlaeld/ScriptSheep.git "jd_|jx_|gua_|jddj_|getJDCookie" "activity|backUp|Coupon|update" "^jd[^_]|USER|utils|^JS|^TS|^JDJRValidator_|^ZooFaker|^sign|ql|magic|sentNotify|JDSignValidator|function|JDJR"`
 
 ## 可能有些BUG已修复
+
+# 监控
+https://t.me/activity_scan
