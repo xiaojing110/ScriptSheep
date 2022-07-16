@@ -109,6 +109,7 @@ $.logic = async function () {
     let hasCollectionSize = content.hasCollectionSize;
     let oneKeyAddCart = content.oneKeyAddCart * 1 === 1;
     $.log('drawInfo', JSON.stringify(content.drawInfo));
+    //加购必须进行一次，才不会提示非法操作，有几率行吧
     if (hasCollectionSize < needCollectionSize) {
         let productIds = [];
         a:for (let cpvo of content.cpvos) {

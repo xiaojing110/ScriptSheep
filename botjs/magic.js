@@ -953,6 +953,8 @@ class Env {
         this.domain.includes('cjhy') ? ck += 'APP_ABBR=CJHY;' : ''
         if (fn.includes('followShop')) ck += `${LZ_AES_PIN}`
         if (fn.includes('addCart')) ck += `${LZ_AES_PIN}`
+        // 加购必须进行一次，才不会提示非法操作，有几率行吧
+        if (fn.includes('getPrize')) ck += `${LZ_AES_PIN}`
         let headers = {
             "Host": this.domain,
             "Accept": "application/json",
