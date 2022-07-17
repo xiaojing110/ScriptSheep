@@ -51,7 +51,7 @@ const JD_API_HOST = 'https://hserver.moxigame.cn';
       $.beans = 0
       $.nickName = '';
       message = '';
-      await TotalBean();
+      
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await $.wait(500)
       await gettoken(`user/token`,`&client=m&url=pengyougou.m.jd.com`);

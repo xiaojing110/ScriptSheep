@@ -90,7 +90,7 @@ if ($.isNode()) {
             $.oldcookie = cookiesArr[i];
             $.isLogin = true;
             $.nickName = '';
-            await TotalBean();
+            
             $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
             console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
             if (!$.isLogin) {

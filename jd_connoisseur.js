@@ -57,7 +57,7 @@ let allMessage = '';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      
       isLoginInfo[$.UserName] = $.isLogin
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {

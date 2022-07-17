@@ -8,7 +8,7 @@ const UA = 'okhttp/3.12.1;jdmall;android;version/9.5.4;build/88136;screen/1440x3
 let SCRIPT_URL = '';
 
 let smashUtils;
-
+let projectId = '';
 class MoveMentFaker {
   constructor() {
   }
@@ -20,7 +20,7 @@ class MoveMentFaker {
 
     var t = Math.floor(1e7 + 9e7 * Math.random()).toString();
     var e = smashUtils.get_risk_result({
-      id: t,
+      id: projectId,
       data: {
         random: t
       }
@@ -46,7 +46,7 @@ class MoveMentFaker {
           cookie: this.cookie,
           documentElement : {
             clientWidth : 1440,
-            clientHeight : 1080
+            clientHeight : 3007
           }
         },
         navigator: { userAgent: UA }
@@ -98,8 +98,9 @@ class MoveMentFaker {
   }
 }
 
-async function getBody(id) {
-  SCRIPT_URL = id
+async function getBody(url,id) {
+  SCRIPT_URL = url;
+  projectId = id;
   const zf = new MoveMentFaker();
   const ss = await zf.run();
   return JSON.parse(ss);

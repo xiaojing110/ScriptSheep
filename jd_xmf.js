@@ -43,7 +43,7 @@ $.shareCodes = [];
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -116,7 +116,7 @@ async function doInteractiveAssignment(projectId, encryptAssignmentId, itemId, a
   // logs = await getJinliLogs()
   // let random = logs["random"].toString(),log =logs["log"].toString()
     await $.wait(1500)
-	await getLog();
+	await getLog(projectId);
   let body = { "encryptProjectId": projectId, "encryptAssignmentId": encryptAssignmentId, "sourceCode": "acexinpin0823", "itemId": itemId, "actionType": actionType, "completionFlag": "", "ext": {},"extParam":{"businessData":{"random":`${random}`},"signStr":`${log}`,"sceneid":"XMFhPageh5"} }
   return new Promise(resolve => {
     $.post(taskPostUrl("doInteractiveAssignment", body), async (err, resp, data) => {
@@ -178,6 +178,8 @@ function getInteractionHomeInfo() {
           if (data) {
             if (data.result.giftConfig) {
               $.projectId = data.result.taskConfig.projectId
+              $.awardproid = data.result.giftConfig.projectId
+              $.projectPoolId = data.result.taskConfig.projectPoolId
             } else {
               console.log("获取projectId失败");
             }
@@ -237,8 +239,8 @@ async function requireConfig() {
         resolve()
     })
 }
-async function getLog() {
-  let body = await faker.getBody("LogVM.js");
+async function getLog(projectId) {
+  let body = await faker.getBody("LogVM.js",projectId);
   log = body.log
   random = body.random
   // return new Promise((resolve) => {

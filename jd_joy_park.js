@@ -72,7 +72,7 @@ message = ""
       $.isLogin = true;
       $.nickName = '';
       $.maxJoyCount = 10
-      await TotalBean();
+      
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
 
@@ -132,6 +132,7 @@ async function getJoyBaseInfo(taskId = '', inviteType = '', inviterPin = '', pri
           console.log(`${$.name} getJoyBaseInfo API请求失败，请检查网路重试`)
         } else {
           data = JSON.parse(data);
+          console.log(data)
           if (printLog) {
             $.log(`等级: ${data.data.level}|金币: ${data.data.joyCoin}`);
             if (data.data.level >= 30 && $.isNode()) {
