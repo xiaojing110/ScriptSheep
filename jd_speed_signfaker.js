@@ -27,6 +27,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [], cookie = '', message;
+let IPError = false; // 403 ip黑
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -50,7 +51,7 @@ const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -62,6 +63,10 @@ const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
       }
       await jdGlobal()
       await $.wait(2*1000)
+      if (IPError){
+        console.log(`403 黑IP了，请换个IP`);
+        break;
+      }
     }
   }
 })()
@@ -196,6 +201,10 @@ async function taskList() {
                 } else {
                   console.log(`${task.taskInfo.mainTitle}已完成`)
                 }
+                if (IPError){
+                  console.error('API请求失败，停止执行')
+                  break
+                }
               }
             }
           }
@@ -218,6 +227,7 @@ async function doTask(taskId) {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          IPError = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -313,6 +323,7 @@ async function queryItem(activeType = 1) {
             } else {
               console.log(`商品任务开启失败，${data.message}`)
               $.canStartNewItem = false
+              IPError = true
             }
           }
         }
@@ -341,6 +352,7 @@ async function startItem(activeId, activeType) {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          IPError = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -699,7 +711,7 @@ function invite() {
   let options = {
     url: `https://api.m.jd.com/?t=${t}`,
     body: `functionId=InviteFriendChangeAssertsService&body=${JSON.stringify({"method":"attendInviteActivity","data":{"inviterPin":encodeURIComponent(inviterId),"channel":1,"token":"","frontendInitStatus":""}})}&referer=-1&eid=eidI9b2981202fsec83iRW1nTsOVzCocWda3YHPN471AY78%2FQBhYbXeWtdg%2F3TCtVTMrE1JjM8Sqt8f2TqF1Z5P%2FRPGlzA1dERP0Z5bLWdq5N5B2VbBO&aid=&client=ios&clientVersion=14.4.2&networkType=wifi&fp=-1&uuid=ab048084b47df24880613326feffdf7eee471488&osVersion=14.4.2&d_brand=iPhone&d_model=iPhone10,2&agent=-1&pageClickKey=-1&platform=3&lang=zh_CN&appid=market-task-h5&_t=${t}`,
-    "headers": {
+    headers: {
       "Host": "api.m.jd.com",
       "Accept": "application/json, text/plain, */*",
       "Content-type": "application/x-www-form-urlencoded",

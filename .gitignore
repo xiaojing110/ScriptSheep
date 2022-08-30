@@ -7,3 +7,6 @@ botjs/node_modules
 botjs/package-lock.json
 botjs/jdCookie.js
 package-lock.json
+node_modules
+jdCookie.js
+.vscode
