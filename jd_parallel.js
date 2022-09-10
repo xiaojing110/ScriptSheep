@@ -22,7 +22,7 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const { getAppCookie } = safeRequire('./utils/wskeyUtils')
+// const { getAppCookie } = safeRequire('./utils/wskeyUtils')
 
 !(async () => {
     if (!cookiesArr[0]) {
@@ -33,10 +33,10 @@ const { getAppCookie } = safeRequire('./utils/wskeyUtils')
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
-            const pt_key = cookie.match(/pt_key=([^; ]+)(?=;?)/)?.[1] || ""
-            if (!/app_open/.test(pt_key)) {
-                getAppCookie && (cookie = await getAppCookie(cookie));
-            }
+            // const pt_key = cookie.match(/pt_key=([^; ]+)(?=;?)/)?.[1] || ""
+            // if (!/app_open/.test(pt_key)) {
+            //     getAppCookie && (cookie = await getAppCookie(cookie));
+            // }
             $.pin = cookie.match(/pt_pin=([^; ]+)(?=;?)/)?.[1] || ""
             $.UserName = decodeURIComponent($.pin)
             $.index = i + 1;
