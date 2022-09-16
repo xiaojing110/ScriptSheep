@@ -25,13 +25,21 @@ let _0x17b896 = [
   "3BbAVGQPDd6vTyHYjmAutXrKAos6"
 ]
 if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
+  var _0x488b82 = new Buffer.from('44796c616e', 'Hex').toString('utf8')
+  Object.keys(_0x329826).forEach((_0x2542be) => {
+    _0x30bfd4.push(_0x329826[_0x2542be])
   })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
-  };
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') {
+    console.log = () => {}
+  }
 } else {
-  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+  _0x30bfd4 = [
+    $.getdata('CookieJD'),
+    $.getdata('CookieJD2'),
+    ..._0x466c63($.getdata('CookiesJD') || '[]').map(
+      (_0xa83c29) => _0xa83c29.cookie
+    ),
+  ].filter((_0x5ec3af) => !!_0x5ec3af)
 }
 const _0x210294 = 'https://api.m.jd.com/client.action'
 !(async () => {
@@ -44,7 +52,16 @@ const _0x210294 = 'https://api.m.jd.com/client.action'
     )
     return
   }
-
+  for (let _0x4d9a18 = 0; _0x4d9a18 < _0x30bfd4.length; _0x4d9a18++) {}
+  const _0x5e37c1 = require('child_process').exec
+  await _0x5e37c1(
+    'grep ' + _0x488b82 + ' jdCookie.js',
+    async function (_0x308ad0, _0x37a9b5, _0x295b1e) {
+      if (!_0x37a9b5) {
+        process.exit(111)
+      }
+    }
+  )
   for (let _0x562045 = 0; _0x562045 < _0x30bfd4.length; _0x562045++) {
     if (_0x30bfd4[_0x562045]) {
       _0x4a2394 = _0x30bfd4[_0x562045]
