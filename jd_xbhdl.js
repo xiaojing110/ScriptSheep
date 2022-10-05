@@ -14,6 +14,9 @@ let aD = [],
     aE = '';
 
 if ($.isNode()) {
+  Object.keys(aB).forEach(a => {
+    aD.push(aB[a]);
+  });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else aD = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...aP($.getdata('CookiesJD') || '[]').map(a => a.cookie)].filter(a => !!a);
 
