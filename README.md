@@ -34,10 +34,3 @@
 | axios    |          |
 | jsdom    |          |
 | date-fns |          |
-
-
-
-# ~~监控~~
-~~https://t.me/activity_scan~~
-
-暂时未恢复监控
