@@ -21,45 +21,44 @@ const signList = [
 
 const $ = new Env('京东滑块签到-加密');
 const b4 = $.isNode() ? require('./sendNotify') : '',
-      b5 = $.isNode() ? require('./jdCookie.js') : '',
-      b6 = require('crypto-js'),
-      b7 = require('axios');
+      b5 = $.isNode() ? require('./jdCookie.js') : '';
 
-let b8 = [],
-    b9 = '';
+const b6 = require('crypto-js');
 
-const ba = require('png-js'),
-      bb = require('https'),
-      bc = require('stream');
+let b7 = [],
+    b8 = '';
 
-const bd = require('zlib'),
-      be = require('vm'),
-      bf = 50;
+const b9 = require('png-js'),
+      ba = require('https'),
+      bb = require('stream'),
+      bc = require('zlib'),
+      bd = require('vm'),
+      be = 50;
 
-let bh = '',
-    bi = '',
-    bj = 0,
-    bk = '',
-    bl = '',
-    bm = false;
-let bn = 0,
-    bo = 0;
+let bf = '',
+    bh = '',
+    bi = 0,
+    bj = '';
+let bk = '',
+    bl = false,
+    bm = 0,
+    bn = 0;
 
 if ($.isNode()) {
   process.env.JOY_HOST && (JD_API_HOST = process.env.JOY_HOST);
   Object.keys(b5).forEach(a => {
-    b8.push(b5[a]);
+    b7.push(b5[a]);
   });
 
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') {
     console.log = () => {};
   }
 } else {
-  b8 = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...bC($.getdata('CookiesJD') || '[]').map(a => a.cookie)].filter(a => !!a);
+  b7 = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...bw($.getdata('CookiesJD') || '[]').map(a => a.cookie)].filter(a => !!a);
 }
 
 !(async () => {
-  if (!b8[0]) {
+  if (!b7[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
       'open-url': 'https://bean.m.jd.com/bean/signIndex.action'
     });
@@ -67,29 +66,29 @@ if ($.isNode()) {
   }
 
   for (let g = 0; g < 5; g++) {
-    if (b8[g]) {
-      b9 = b8[g];
-      $.UserName = decodeURIComponent(b9.match(/pt_pin=(.+?);/) && b9.match(/pt_pin=(.+?);/)[1]);
+    if (b7[g]) {
+      b8 = b7[g];
+      $.UserName = decodeURIComponent(b8.match(/pt_pin=(.+?);/) && b8.match(/pt_pin=(.+?);/)[1]);
       $.index = g + 1;
       $.nickName = '';
       console.log('\n开始【京东账号' + $.index + '】' + ($.nickName || $.UserName) + '\n');
-      bj = 0;
+      bi = 0;
+      bm = 0;
       bn = 0;
-      bo = 0;
       invalidNum = 0;
-      bi = '';
+      bh = '';
       lkt = new Date().getTime();
-      bD();
-      $.uuid = bX('xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx');
-      await br();
-      const k = new Date().getTime() + new Date().getTimezoneOffset() * 60000 + 28800000,
-            l = {
+      bx();
+      $.uuid = bR('xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx');
+      await bq();
+      const j = new Date().getTime() + new Date().getTimezoneOffset() * 60000 + 28800000,
+            k = {
         hour12: false
       };
-      $.beanSignTime = new Date(k).toLocaleString('zh', l).replace(' 24:', ' 00:');
-      let m = '【京东账号' + $.index + '】' + ($.nickName || $.UserName) + '\n【签到时间】:  ' + $.beanSignTime + '\n【签到概览】:  成功' + bn + '个, 失败' + bo + '个' + (invalidNum && '，失效' + invalidNum + '个' || '') + '\n' + (bj > 0 && '【签到奖励】:  ' + bj + '京豆\n' || '');
-      bh += m + '\n';
-      console.log('【签到总计】:  ' + signList.length + '个\n' + bi + m);
+      $.beanSignTime = new Date(j).toLocaleString('zh', k).replace(' 24:', ' 00:');
+      let l = '【京东账号' + $.index + '】' + ($.nickName || $.UserName) + '\n【签到时间】:  ' + $.beanSignTime + '\n【签到概览】:  成功' + bm + '个, 失败' + bn + '个' + (invalidNum && '，失效' + invalidNum + '个' || '') + '\n' + (bi > 0 && '【签到奖励】:  ' + bi + '京豆\n' || '');
+      bf += l + '\n';
+      console.log('【签到总计】:  ' + signList.length + '个\n' + bh + l);
     }
   }
 })().catch(a => {
@@ -98,25 +97,21 @@ if ($.isNode()) {
   $.done();
 });
 
-async function bq() {
-  $.msg($.name, '【签到总计】:  ' + signList.length + '个\n' + bi + bh);
+async function bp() {
+  $.msg($.name, '【签到总计】:  ' + signList.length + '个\n' + bh + bf);
 }
 
-async function br() {
+async function bq() {
   for (let b in signList) {
     $.validatorUrl = signList[b].url || '';
-    bm = 0;
+    bl = 0;
     console.log('开始 ' + signList[b].name + ' 签到...');
-    await bs(b);
+    await br(b);
 
-    if (bm == 1) {
-      bn++;
+    if (bl == 1) {
+      bm++;
     } else {
-      if (bm == 2) {
-        invalidNum++;
-      } else {
-        bo++;
-      }
+      bl == 2 ? invalidNum++ : bn++;
     }
 
     let e = Math.random() * 5000 + 10000;
@@ -125,40 +120,39 @@ async function br() {
   }
 }
 
-function bs(a) {
+function br(a) {
   return new Promise(async e => {
-    let h = await bw(signList[a].id || signList[a].code);
-    $.get(h, async (j, k, l) => {
+    let g = await bu(signList[a].id || signList[a].code);
+    $.get(g, async (h, j, k) => {
       try {
-        if (j) {
-          console.log('\n' + signList[a].name + ' 登录: API查询请求失败 ‼️‼️');
-          console.log('' + JSON.stringify(j));
+        if (h) {
+          console.log('\n' + signList[a].name + ' 登录: API查询请求失败 ‼️‼️'), console.log('' + JSON.stringify(h));
         } else {
-          if (l) {
-            l = JSON.parse(l);
+          if (k) {
+            k = JSON.parse(k);
 
-            if (l.success && l.data) {
-              l = l.data;
+            if (k.success && k.data) {
+              k = k.data;
 
-              if (l.hasSign === false) {
+              if (k.hasSign === false) {
                 $.validate = '';
-                await bF();
+                await bz();
                 await $.wait(500);
 
                 if ($.validate === '') {
                   return;
                 }
 
-                await bt(a, 1);
+                await bs(a, 1);
               } else {
-                if (l.hasSign === true) {
-                  if (l.records && l.records[0]) {
-                    for (let u in l.records) {
-                      let w = l.records[u];
+                if (k.hasSign === true) {
+                  if (k.records && k.records[0]) {
+                    for (let s in k.records) {
+                      let t = k.records[s];
 
-                      if (w.hasSign == false && w.index != 1 || u == l.records.length - 1) {
-                        if (w.hasSign == false) {
-                          u = u - 1;
+                      if (t.hasSign == false && t.index != 1 || s == k.records.length - 1) {
+                        if (t.hasSign == false) {
+                          s = s - 1;
                         }
 
                         break;
@@ -166,40 +160,32 @@ function bs(a) {
                     }
                   }
 
-                  bm = 1;
+                  bl = 1;
                   console.log(signList[a].name + ' 今日已签到');
                 } else {
-                  bm = 2;
+                  bl = 2;
                   console.log(signList[a].name + ' 无法签到\n签到地址:' + signList[a].url + '\n');
                 }
               }
             } else {
-              if (l.errorMessage) {
-                if (l.errorMessage.indexOf('已签到') > -1 || l.errorMessage.indexOf('今天已经签到') > -1) {
-                  bm = 1;
-                }
-
-                console.log(signList[a].name + ' ' + l.errorMessage);
-              } else {
-                console.log(signList[a].name + ' ' + JSON.stringify(l));
-              }
+              k.errorMessage ? ((k.errorMessage.indexOf('已签到') > -1 || k.errorMessage.indexOf('今天已经签到') > -1) && (bl = 1), console.log(signList[a].name + ' ' + k.errorMessage)) : console.log(signList[a].name + ' ' + JSON.stringify(k));
             }
           } else {
             console.log('京豆api返回数据为空，请检查自身原因');
           }
         }
-      } catch (K) {
-        $.logErr(K, k);
+      } catch (I) {
+        $.logErr(I, j);
       } finally {
-        e(l);
+        e(k);
       }
     });
   });
 }
 
-function bt(a, b) {
+function bs(a, b) {
   return new Promise(async f => {
-    let j = await bx(signList[a].id || signList[a].code);
+    let j = await bv(signList[a].id || signList[a].code);
     $.post(j, async (k, l, m) => {
       try {
         if (k) {
@@ -210,17 +196,21 @@ function bt(a, b) {
 
           if (typeof r === 'object') {
             if (r.success && r.data) {
-              let s = r.data;
+              let u = r.data;
 
-              if (Number(s.jdBeanQuantity) > 0) {
-                bj += Number(s.jdBeanQuantity);
+              if (Number(u.jdBeanQuantity) > 0) {
+                bi += Number(u.jdBeanQuantity);
               }
 
-              bm = true;
-              console.log(signList[a].name + ' 签到成功:获得 ' + Number(s.jdBeanQuantity) + '京豆');
+              bl = true;
+              console.log(signList[a].name + ' 签到成功:获得 ' + Number(u.jdBeanQuantity) + '京豆');
             } else {
               if (r.errorMessage) {
-                r.errorMessage.indexOf('已签到') > -1 || r.errorMessage.indexOf('今天已经签到') > -1 ? bm = true : console.log(signList[a].name + ' ' + r.errorMessage);
+                if (r.errorMessage.indexOf('已签到') > -1 || r.errorMessage.indexOf('今天已经签到') > -1) {
+                  bl = true;
+                } else {
+                  console.log(signList[a].name + ' ' + r.errorMessage);
+                }
               } else {
                 console.log(signList[a].name + ' ' + m);
               }
@@ -238,61 +228,27 @@ function bt(a, b) {
   });
 }
 
-function bu(a) {
-  return new Promise(e => {
-    const h = {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    };
-    h['User-Agent'] = $.UA;
-    const i = {
-      url: 'https://gia.jd.com/fcf.html?a=' + a.a,
-      body: 'd=' + a.d,
-      headers: h
-    };
-    const j = i;
-    $.post(j, async (k, l, m) => {
-      try {
-        if (k) {
-          console.log('\n' + signList[i].name + ' 登录: API查询请求失败 ‼️‼️');
-          throw new Error(k);
-        } else {
-          if (m.indexOf('*_*') > 0) {
-            m = m.split('*_*', 2);
-            m = JSON.parse(m[1]);
-            bl = m.eid;
-          } else {
-            console.log('京豆api返回数据为空，请检查自身原因');
-          }
-        }
-      } catch (t) {
-        $.logErr(t, l);
-      } finally {
-        e(m);
-      }
-    });
-  });
-}
-
-function bv() {
+function bt(a) {
   return new Promise(e => {
     const g = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     };
     g['User-Agent'] = $.UA;
     const h = {
-      url: 'https://iv.jd.com/slide/g.html?appId=17839d5db83&scene=channelSign&product=embed&lang=zh_CN',
+      url: 'https://gia.jd.com/fcf.html?a=' + a.a,
+      body: 'd=' + a.d,
       headers: g
     };
     const i = h;
-    $.get(i, async (j, k, l) => {
+    $.post(i, async (j, k, l) => {
       try {
         if (j) {
           console.log('\n' + signList[i].name + ' 登录: API查询请求失败 ‼️‼️');
           throw new Error(j);
         } else {
-          if (l) {
+          if (l.indexOf('*_*') > 0) {
             ;
-            l = JSON.parse(l), $.validate = l.challenge;
+            l = l.split('*_*', 2), l = JSON.parse(l[1]), bk = l.eid;
           } else {
             console.log('京豆api返回数据为空，请检查自身原因');
           }
@@ -306,23 +262,23 @@ function bv() {
   });
 }
 
-async function bw(i) {
+async function bu(i) {
   let k = Date.now(),
       l;
 
   if (i.length === 32) {
-    const u = {
+    const v = {
       code: '' + i
     };
-    l = u;
+    l = v;
   } else {
-    const w = {
+    const z = {
       turnTableId: '' + i
     };
-    l = w;
+    l = z;
   }
 
-  let m = await bR('turncardChannelDetail', l, '9a4de');
+  let m = await bL('turncardChannelDetail', l, '9a4de');
   const n = {
     key: 'appid',
     value: 'jdchoujiang_h5'
@@ -346,18 +302,20 @@ async function bw(i) {
   }, o],
       q = 'https://api.m.jd.com/api?client=android&clientVersion=11.0.2&appid=jdchoujiang_h5&functionId=turncardChannelDetail&body=' + encodeURIComponent(JSON.stringify(l)) + '&h5st=' + m;
   const r = {
-    Cookie: b9,
+    Cookie: b8,
     Origin: 'https://prodev.m.jd.com',
     Referer: 'https://prodev.m.jd.com/',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'zh-cn'
   };
   r['User-Agent'] = $.UA;
-  const s = {};
-  return s.url = q, s.headers = r, s;
+  const s = {
+    url: q
+  };
+  return s.headers = r, s;
 }
 
-async function bx(j) {
+async function bv(j) {
   let l = Date.now(),
       m;
 
@@ -374,20 +332,20 @@ async function bx(j) {
     };
     const w = {
       code: '' + j,
-      fp: bk,
-      eid: bl,
+      fp: bj,
+      eid: bk,
       deviceInfoVO: v,
       validate: ''
     };
     m = w;
   } else {
-    const A = {
+    const B = {
       turnTableId: '' + j,
-      fp: bk,
-      eid: bl,
+      fp: bj,
+      eid: bk,
       validate: ''
     };
-    m = A;
+    m = B;
   }
 
   if ($.validate) {
@@ -415,184 +373,38 @@ async function bx(j) {
     key: 'functionId',
     value: 'turncardChannelSign'
   }, o],
-      q = await bR('turncardChannelSign', m, 'b342e'),
+      q = await bL('turncardChannelSign', m, 'b342e'),
       r = 'https://api.m.jd.com/api?client=android&clientVersion=11.0.2&appid=jdchoujiang_h5&functionId=turncardChannelSign&body=' + encodeURIComponent(JSON.stringify(m)) + '&' + q;
   const s = {
     Accept: 'application/json, text/plain, */*',
-    Cookie: b9,
+    Cookie: b8,
     Origin: 'https://prodev.m.jd.com',
     Referer: 'https://prodev.m.jd.com/',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
   };
   s['User-Agent'] = $.UA;
-  const u = {
-    url: r
-  };
-  return u.headers = s, u;
+  const u = {};
+  return u.url = r, u.headers = s, u;
 }
 
-async function by() {
-  var h = '',
-      j = '0123456789',
-      k = j,
-      l = Math.random() * 10 | 0;
-
-  do {
-    const q = {
-      size: 1,
-      customDict: j
-    };
-    ss = bz(q) + '';
-
-    if (h.indexOf(ss) == -1) {
-      h += ss;
-    }
-  } while (h.length < 3);
-
-  for (let r of h.slice()) k = k.replace(r, '');
-
-  const m = {
-    size: l,
-    customDict: k
-  };
-  $.fp = bz(m) + '' + h + bz({
-    size: 14 - (l + 3) + 1,
-    customDict: k
-  }) + l + '';
-  const n = {
-    Accept: 'application/json',
-    Origin: 'https://prodev.m.jd.com',
-    Referer: 'https://prodev.m.jd.com/',
-    'Content-Type': 'application/json',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
-  };
-  n['User-Agent'] = $.UA;
-  let o = {
-    url: 'https://cactus.jd.com/request_algo?g_ty=ajax',
-    headers: n,
-    body: '{"version":"3.0","fp":"' + $.fp + '","appId":"' + $.appId + '","timestamp":' + Date.now() + ',"platform":"web","expandParams":""}'
-  };
-  return new Promise(async t => {
-    $.post(o, (z, A, B) => {
-      try {
-        const {
-          ret: F,
-          msg: G,
-          data: {
-            result: H
-          } = {}
-        } = JSON.parse(B);
-        $.token = H.tk;
-        $.genKey = new Function('return ' + H.algo)();
-      } catch (I) {
-        $.logErr(I, A);
-      } finally {
-        t();
-      }
-    });
-  });
-}
-
-function bz() {
-  var h,
-      j,
-      k = undefined === (l = (j = 0 < arguments.length && undefined !== arguments[0] ? arguments[0] : {}).size) ? 10 : l,
-      l = undefined === (l = j.dictType) ? 'number' : l,
-      m = '';
-
-  if ((j = j.customDict) && 'string' == typeof j) {
-    h = j;
-  } else {
-    switch (l) {
-      case 'alphabet':
-        h = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        break;
-
-      case 'max':
-        h = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
-        break;
-
-      case 'number':
-      default:
-        h = '0123456789';
-    }
-  }
-
-  for (; k--;) {
-    m += h[Math.random() * h.length | 0];
-  }
-
-  return m;
-}
-
-function bA(b) {
-  let f = b.map(function (l) {
-    return l.key + ':' + l.value;
-  }).join('&'),
-      g = Date.now();
-  let h = '',
-      i = bB('yyyyMMddhhmmssSSS', g);
-  h = $.genKey($.token, $.fp.toString(), i.toString(), $.appId.toString(), b6).toString();
-  const j = b6.HmacSHA256(f, h.toString()).toString();
-  let k = [''.concat(i.toString()), ''.concat($.fp.toString()), ''.concat($.appId.toString()), ''.concat($.token), ''.concat(j), '3.0', ''.concat(g)].join(';');
-  return k;
-}
-
-function bB(b, f) {
-  if (!b) {
-    b = 'yyyy-MM-dd';
-  }
-
-  var h;
-
-  if (!f) {
-    h = Date.now();
-  } else {
-    h = new Date(f);
-  }
-
-  var i,
-      j = new Date(h),
-      k = b,
-      m = {
-    'M+': j.getMonth() + 1,
-    'd+': j.getDate(),
-    'D+': j.getDate(),
-    'h+': j.getHours(),
-    'H+': j.getHours(),
-    'm+': j.getMinutes(),
-    's+': j.getSeconds(),
-    'w+': j.getDay(),
-    'q+': Math.floor((j.getMonth() + 3) / 3),
-    'S+': j.getMilliseconds()
-  };
-  return /(y+)/i.test(k) && (k = k.replace(RegExp.$1, ''.concat(j.getFullYear()).substr(4 - RegExp.$1.length))), Object.keys(m).forEach(q => {
-    if (new RegExp('('.concat(q, ')')).test(k)) {
-      var s = 'S+' === q ? '000' : '00';
-      k = k.replace(RegExp.$1, 1 == RegExp.$1.length ? m[q] : ''.concat(s).concat(m[q]).substr(''.concat(m[q]).length));
-    }
-  }), k;
-}
-
-function bC(f) {
+function bw(f) {
   const h = function () {
     let k = true;
     return function (l, m) {
       const p = k ? function () {
         if (m) {
-          const r = m.apply(l, arguments);
-          return m = null, r;
+          const t = m.apply(l, arguments);
+          return m = null, t;
         }
       } : function () {};
       return k = false, p;
     };
-  }(),
-        i = h(this, function () {
+  }();
+
+  const i = h(this, function () {
     return i.toString().search('(((.+)+)+)+$').toString().constructor(i).search('(((.+)+)+)+$');
   });
-
   i();
 
   if (typeof f == 'string') {
@@ -604,11 +416,11 @@ function bC(f) {
   }
 }
 
-function bD() {
+function bx() {
   $.UA = 'jdapp;android;11.0.2;;;appBuild/97565;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1663720079628%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22EG%3D%3D%22%2C%22ad%22%3A%22ZwS1ZQC4ZwVrZJZuDzC0ZK%3D%3D%22%2C%22od%22%3A%22ZQHuZtc3CzCjZtdvZM1rEQO5BJvsD2OjCzPsZwHsZQU2YzKz%22%2C%22ov%22%3A%22Ctq%3D%22%2C%22ud%22%3A%22ZwS1ZQC4ZwVrZJZuDzC0ZK%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jingdong.app.mall%22%7D;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 9; LYA-AL00 Build/HUAWEILYA-AL00L; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046011 Mobile Safari/537.36';
 }
 
-function bE(f) {
+function by(f) {
   f = f || 32;
   let i = 'abcdef0123456789',
       j = i.length,
@@ -621,13 +433,13 @@ function bE(f) {
   return k;
 }
 
-async function bF(b = 'cww') {
+async function bz(b = 'cww') {
   console.log('滑块验证中...');
-  let g = await new bP().run(b, bl);
+  let g = await new bJ().run(b, bk);
   g.validate && ($.validate = g.validate);
 }
 
-Math.avg = function bY() {
+Math.avg = function bS() {
   var f = 0,
       g = this.length;
 
@@ -638,11 +450,11 @@ Math.avg = function bY() {
   return f / g;
 };
 
-function bG(a) {
+function bA(a) {
   return new Promise(b => setTimeout(b, a));
 }
 
-class bH extends ba {
+class bB extends b9 {
   constructor(a) {
     super(a);
     this.pixels = [];
@@ -650,9 +462,9 @@ class bH extends ba {
 
   ['decodeToPixels']() {
     return new Promise(b => {
-      this.decode(f => {
+      this.decode(g => {
         ;
-        this.pixels = f, b();
+        this.pixels = g, b();
       });
     });
   }
@@ -670,13 +482,13 @@ class bH extends ba {
 
 }
 
-const bI = 8,
-      bJ = 10;
+const bC = 8,
+      bD = 10;
 
-class bK {
+class bE {
   constructor(b, e, f) {
-    const i = new bH(Buffer.from(b, 'base64')),
-          j = new bH(Buffer.from(e, 'base64'));
+    const i = new bB(Buffer.from(b, 'base64')),
+          j = new bB(Buffer.from(e, 'base64'));
     this.bg = i;
     this.patch = j;
     this.rawBg = b;
@@ -688,8 +500,7 @@ class bK {
 
   async ['run']() {
     await this.bg.decodeToPixels();
-    await this.patch.decodeToPixels();
-    return this.recognize();
+    return await this.patch.decodeToPixels(), this.recognize();
   }
 
   ['recognize']() {
@@ -701,46 +512,46 @@ class bK {
           {
       width: j,
       height: k
-    } = this.patch,
-          l = this.y + bJ + (k - bJ) / 2 - bI / 2;
-    const m = h.getImageData(0, l, f, bI).data,
+    } = this.patch;
+    const l = this.y + bD + (k - bD) / 2 - bC / 2,
+          m = h.getImageData(0, l, f, bC).data,
           o = [];
 
     for (let C = 0; C < f; C++) {
       var p = 0;
 
-      for (let D = 0; D < bI; D++) {
+      for (let D = 0; D < bC; D++) {
         var s = C * 4 + D * (f * 4);
         var q = m[s];
         var u = m[s + 1];
-        var v = m[s + 2];
-        var t = 0.2126 * q + 0.7152 * u + 0.0722 * v;
-        p += t;
+        var t = m[s + 2];
+        var v = 0.2126 * q + 0.7152 * u + 0.0722 * t;
+        p += v;
       }
 
-      o.push(p / bI);
+      o.push(p / bC);
     }
 
-    const z = j - bJ;
-    const B = bJ;
+    const z = j - bD,
+          B = bD;
 
     for (let I = 0, J = o.length - 8; I < J; I++) {
-      const K = (o[I] + o[I + 1]) / 2,
-            L = (o[I + 2] + o[I + 3]) / 2,
-            M = z + I,
-            N = (o[M] + o[M + 1]) / 2,
-            O = (o[M + 2] + o[M + 3]) / 2;
+      const L = (o[I] + o[I + 1]) / 2,
+            M = (o[I + 2] + o[I + 3]) / 2,
+            N = z + I,
+            O = (o[N] + o[N + 1]) / 2,
+            P = (o[N + 2] + o[N + 3]) / 2;
 
-      if (K - L > 20 && N - O < -20) {
-        const Q = o.slice(I + 2, z + I + 2),
-              R = Q.sort((T, U) => T - U)[20],
-              S = Math.avg(Q);
+      if (L - M > 20 && O - P < -20) {
+        const R = o.slice(I + 2, z + I + 2),
+              S = R.sort((U, V) => U - V)[20],
+              T = Math.avg(R);
 
-        if (R > K || R > O) {
+        if (S > L || S > P) {
           return;
         }
 
-        if (S > 100) {
+        if (T > 100) {
           return;
         }
 
@@ -756,12 +567,12 @@ class bK {
       createCanvas: e,
       Image: f
     } = require('canvas'),
-          j = e();
-
-    const k = j.getContext('2d'),
+          j = e(),
+          k = j.getContext('2d'),
           l = new f(),
           m = new f(),
           o = 'data:image/png;base64,';
+
     l.src = o + this.rawBg;
     m.src = o + this.rawPatch;
     const {
@@ -777,45 +588,45 @@ class bK {
       naturalWidth: t,
       naturalHeight: u
     } = m,
-          v = this.y + bJ + (u - bJ) / 2 - bI / 2,
-          z = k.getImageData(0, v, s, bI).data,
+          v = this.y + bD + (u - bD) / 2 - bC / 2;
+    const z = k.getImageData(0, v, s, bC).data,
           A = [];
 
     for (let L = 0; L < s; L++) {
       var B = 0;
 
-      for (let M = 0; M < bI; M++) {
-        var F = L * 4 + M * (s * 4);
-        var E = z[F];
-        var G = z[F + 1];
-        var C = z[F + 2];
-        var D = 0.2126 * E + 0.7152 * G + 0.0722 * C;
-        B += D;
+      for (let M = 0; M < bC; M++) {
+        var D = L * 4 + M * (s * 4);
+        var G = z[D];
+        var F = z[D + 1];
+        var E = z[D + 2];
+        var C = 0.2126 * G + 0.7152 * F + 0.0722 * E;
+        B += C;
       }
 
-      A.push(B / bI);
+      A.push(B / bC);
     }
 
-    const I = t - bJ;
-    const K = bJ;
+    const I = t - bD;
+    const K = bD;
 
     for (let R = 0, S = A.length - 8; R < S; R++) {
-      const T = (A[R] + A[R + 1]) / 2,
-            U = (A[R + 2] + A[R + 3]) / 2,
-            V = I + R,
-            W = (A[V] + A[V + 1]) / 2,
-            X = (A[V + 2] + A[V + 3]) / 2;
+      const U = (A[R] + A[R + 1]) / 2,
+            V = (A[R + 2] + A[R + 3]) / 2,
+            W = I + R,
+            X = (A[W] + A[W + 1]) / 2,
+            Y = (A[W + 2] + A[W + 3]) / 2;
 
-      if (T - U > 20 && W - X < -20) {
-        const Z = A.slice(R + 2, I + R + 2),
-              a0 = Z.sort((a2, a3) => a2 - a3)[20],
-              a1 = Math.avg(Z);
+      if (U - V > 20 && X - Y < -20) {
+        const a0 = A.slice(R + 2, I + R + 2),
+              a1 = a0.sort((a3, a4) => a3 - a4)[20],
+              a2 = Math.avg(a0);
 
-        if (a0 > T || a0 > X) {
+        if (a1 > U || a1 > Y) {
           return;
         }
 
-        if (a1 > 100) {
+        if (a2 > 100) {
           return;
         }
 
@@ -828,43 +639,57 @@ class bK {
 
 }
 
-async function bL(f) {
-  _0x8a8aa8 = {
+function bF(b) {
+  let f = {
     version: '3.1',
-    fp: $.fp,
-    appId: $.appId,
+    fp: $.dy[b].fp,
+    appId: b,
     timestamp: Date.now(),
     platform: 'web',
     expandParams: ''
   };
-  _0x8a8aa8.expandParams = $.expandParams || '';
-  const i = {
+  f.expandParams = $.expandParams || '';
+  const g = {
     Host: 'cactus.jd.com',
-    accept: 'application/json',
-    'content-type': 'application/json'
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
   };
-  i['user-agent'] = $.UA;
-  const j = {
-    headers: i
+  g['User-agent'] = $.UA;
+  let h = {
+    url: 'https://cactus.jd.com/request_algo?g_ty=ajax',
+    body: JSON.stringify(f),
+    headers: g,
+    timeout: 10000
   };
-  let {
-    data: k
-  } = await b7.post('https://cactus.jd.com/request_algo?g_ty=ajax', _0x8a8aa8, j);
-  let l = k,
-      m = l.data.result,
-      n = new Function('return ' + m.algo)();
-  $.dict[f].tk = m.tk;
-  $.dict[f].func = n;
+  return new Promise(async i => {
+    $.post(h, (l, m, n) => {
+      try {
+        if (l) {
+          console.log('' + JSON.stringify(l));
+          console.log('algo请求失败，请检查网路重试');
+        } else {
+          n = JSON.parse(n);
+          let s = n.data.result;
+          $.dy[b].tk = s.tk;
+          $.dy[b].test = new Function('return ' + s.algo)();
+        }
+      } catch (t) {
+        $.logErr(t, m);
+      } finally {
+        i(n);
+      }
+    });
+  });
 }
 
-const bM = {};
-bM.appId = '17839d5db83';
-bM.product = 'embed';
-bM.lang = 'zh_CN';
-const bN = bM,
-      bO = 'iv.jd.com';
+const bG = {};
+bG.appId = '17839d5db83';
+bG.product = 'embed';
+bG.lang = 'zh_CN';
+const bH = bG,
+      bI = 'iv.jd.com';
 
-class bP {
+class bJ {
   constructor() {
     this.data = {};
     this.x = 0;
@@ -874,67 +699,67 @@ class bP {
 
   async ['run'](b = 'cww', e = '') {
     const g = async () => {
-      const n = await this.recognize(b, e);
+      const m = await this.recognize(b, e);
 
-      if (n > 0) {
-        return n;
+      if (m > 0) {
+        return m;
       }
 
       return await g();
     },
-          h = await g(),
-          i = new bT(h).run(),
-          j = bQ(i);
+          h = await g();
 
-    await bG(i[i.length - 1][2] - Date.now());
+    const i = new bN(h).run(),
+          j = bK(i);
+    await bA(i[i.length - 1][2] - Date.now());
     this.count++;
     const k = {
       d: j,
       ...this.data
     },
-          l = await bP.jsonp('/slide/s.html', k, b);
+          l = await bJ.jsonp('/slide/s.html', k, b);
 
     if (l.message === 'success') {
       return $.validatorTime = ((Date.now() - this.t) / 1000).toFixed(0), console.log('\n滑块验证耗时: ' + $.validatorTime + '秒'), l;
     } else {
       process.stdout.write('.');
 
-      if (this.count >= bf) {
+      if (this.count >= be) {
         return console.log('\n滑块验证失败过多，退出本次验证'), l;
       } else {
-        return await bG(1000), await this.run(b, e);
+        return await bA(1000), await this.run(b, e);
       }
     }
   }
 
-  async ['recognize'](e, f) {
-    const h = {
-      e: f
+  async ['recognize'](f, g) {
+    const j = {
+      e: g
     };
-    const i = await bP.jsonp('/slide/g.html', h, e),
-          {
-      bg: j,
-      patch: k,
-      y: l
-    } = i,
-          m = new bK(j, k, l),
-          n = await m.run();
+    const k = await bJ.jsonp('/slide/g.html', j, f);
+    const {
+      bg: l,
+      patch: m,
+      y: n
+    } = k,
+          o = new bE(l, m, n),
+          p = await o.run();
 
-    if (n > 0) {
-      const p = {
-        c: i.challenge,
-        w: m.w,
-        e: f,
+    if (p > 0) {
+      const q = {
+        c: k.challenge,
+        w: o.w,
+        e: g,
         s: '',
         o: '',
         o1: 0,
         u: $.validatorUrl || 'https://prodev.m.jd.com'
       };
-      this.data = p;
-      this.x = n;
+      this.data = q;
+      this.x = p;
     }
 
-    return n;
+    return p;
   }
 
   async ['report'](b) {
@@ -958,22 +783,22 @@ class bP {
 
   static ['jsonp'](a, b = {}, e) {
     return new Promise((h, i) => {
-      const l = 'jsonp_' + String(Math.random()).replace('.', ''),
-            m = {
-        callback: l
+      const k = 'jsonp_' + String(Math.random()).replace('.', ''),
+            l = {
+        callback: k
       };
-      const n = m,
-            o = {
+      const m = l,
+            n = {
         scene: e
       };
-      const p = { ...bN,
-        ...o,
+      const o = { ...bH,
+        ...n,
         ...b,
-        ...n
+        ...m
       },
-            q = new URLSearchParams(p).toString(),
-            r = 'https://' + bO + a + '?' + q,
-            s = {
+            p = new URLSearchParams(o).toString(),
+            q = 'https://' + bI + a + '?' + p,
+            r = {
         Accept: '*/*',
         Connection: 'keep-alive',
         Host: 'iv.jd.com',
@@ -981,46 +806,46 @@ class bP {
         'Accept-Encoding': 'gzip,deflate,br',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
       };
-      s['User-Agent'] = $.UA;
-      const t = s,
-            u = {
-        headers: t
+      r['User-Agent'] = $.UA;
+      const s = r,
+            t = {
+        headers: s
       };
-      const v = bb.get(r, u, w => {
-        let B = w;
+      const u = ba.get(q, t, v => {
+        let z = v;
 
-        if (B.headers['content-encoding'] === 'gzip') {
-          const D = new bc.PassThrough();
-          bc.pipeline(w, bd.createGunzip(), D, i);
-          B = D;
+        if (z.headers['content-encoding'] === 'gzip') {
+          const C = new bb.PassThrough();
+          bb.pipeline(v, bc.createGunzip(), C, i);
+          z = C;
         }
 
-        B.setEncoding('utf8');
-        let C = '';
-        B.on('data', F => C += F);
-        B.on('end', () => {
+        z.setEncoding('utf8');
+        let A = '';
+        z.on('data', D => A += D);
+        z.on('end', () => {
           try {
             const F = {
-              [l]: G => F.data = G,
+              [k]: G => F.data = G,
               data: {}
             };
-            be.createContext(F);
-            be.runInContext(C, F);
-            B.resume();
+            bd.createContext(F);
+            bd.runInContext(A, F);
+            z.resume();
             h(F.data);
-          } catch (H) {
-            i(H);
+          } catch (G) {
+            i(G);
           }
         });
       });
-      v.on('error', i);
-      v.end();
+      u.on('error', i);
+      u.end();
     });
   }
 
 }
 
-function bQ(g) {
+function bK(g) {
   function i(q) {
     var s = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-~'.split(''),
         t = s.length,
@@ -1028,9 +853,8 @@ function bQ(g) {
         v = [];
 
     do {
-      mod = u % t;
-      u = (u - mod) / t;
-      v.unshift(s[mod]);
+      ;
+      mod = u % t, u = (u - mod) / t, v.unshift(s[mod]);
     } while (u);
 
     return v.join('');
@@ -1041,14 +865,14 @@ function bQ(g) {
   }
 
   function k(q, r, s) {
-    var t = i(Math.abs(q)),
-        u = '';
+    var u = i(Math.abs(q)),
+        v = '';
 
     if (!s) {
-      u += q > 0 ? '1' : '0';
+      v += q > 0 ? '1' : '0';
     }
 
-    return u += j(t, r), u;
+    return v += j(u, r), v;
   }
 
   var l = new Array();
@@ -1057,115 +881,101 @@ function bQ(g) {
     if (m == 0) {
       l.push(k(g[m][0] < 262143 ? g[m][0] : 262143, 3, true)), l.push(k(g[m][1] < 16777215 ? g[m][1] : 16777215, 4, true)), l.push(k(g[m][2] < 4398046511103 ? g[m][2] : 4398046511103, 7, true));
     } else {
-      var o = g[m][0] - g[m - 1][0];
-      var p = g[m][1] - g[m - 1][1];
-      var n = g[m][2] - g[m - 1][2];
-      l.push(k(o < 4095 ? o : 4095, 2, false));
+      var p = g[m][0] - g[m - 1][0];
+      var n = g[m][1] - g[m - 1][1];
+      var o = g[m][2] - g[m - 1][2];
       l.push(k(p < 4095 ? p : 4095, 2, false));
-      l.push(k(n < 16777215 ? n : 16777215, 4, true));
+      l.push(k(n < 4095 ? n : 4095, 2, false));
+      l.push(k(o < 16777215 ? o : 16777215, 4, true));
     }
   }
 
   return l.join('');
 }
 
-async function bR(e, f, g) {
-  $.timestamp = new Date().getTime();
-  $.ts = bW($.timestamp, 'yyyyMMddhhmmssSSS');
-  $.fp = bU($.version);
-  $.appId = g;
-  $.dict = {
-    [$.appId]: {}
+async function bL(g, h, i) {
+  let k = '3.1',
+      l = bO(k);
+  const m = {
+    fp: l
   };
-  var i = ['wc', 'wd', 'l', 'ls', 'ml', 'pl', 'av', 'ua', 'sua', 'pp', 'pp1', 'w', 'h', 'ow', 'oh', 'url', 'og', 'pr', 're'],
-      j = {},
-      k = [1, 0, 'zh-CN', 'zh-CN', 0, 0, '', '', '', '', '', 393, 873, 393, 373, '', '', 1, ''],
-      l = {};
+  const n = {
+    i: m
+  };
+  $.dy = n;
+  let o = ['wc', 'wd', 'l', 'ls', 'ml', 'pl', 'av', 'ua', 'sua', 'pp', 'pp1', 'w', 'h', 'ow', 'oh', 'url', 'og', 'pr', 're'],
+      p = {
+    enc: await p.test(p.tk, l, A, i, b6).toString(b6.enc.Hex)
+  },
+      q = {},
+      r = [1, 0, 'zh-CN', 'zh-CN', 0, 0, '', $.UA, {
+    p1: $.UserName
+  }, '', '', 393, 873, 393, 373, '', '', 2.75, ''];
 
-  for (let F in i) {
-    l[i[F]] = k[F];
+  for (let H in o) {
+    q[o[H]] = r[H];
   }
 
-  const m = {
-    ai: $.appId,
-    fp: $.fp
+  const s = {
+    ai: i,
+    fp: l
   };
-  const n = { ...l,
-    ...m
+  const t = { ...q,
+    ...s
   };
-  var o = n,
-      p = 'wm0!@w-s#ll1flo(';
-  var q = '0102030405060708',
-      r = b6.AES.encrypt(JSON.stringify(o, null, 2), b6.enc.Utf8.parse(p), {
-    iv: b6.enc.Utf8.parse(q),
+  let u = t,
+      v = b6.AES.encrypt(JSON.stringify(u, null, 2), b6.enc.Utf8.parse('wm0!@w-s#ll1flo('), {
+    iv: b6.enc.Utf8.parse('0102030405060708'),
     mode: b6.mode.CBC,
     padding: b6.pad.Pkcs7
   });
-  $.expandParams = r.ciphertext.toString();
-  $._start = new Date().getTime();
-  await bL($.appId);
-  $.timestamp = new Date().getTime(), $.ts = bW($.timestamp, 'yyyyMMddhhmmssSSS');
-  j = $.dict[$.appId];
-  j.encrypt = await j.func(j.tk, $.fp, $.ts, $.appId, b6).toString(b6.enc.Hex);
-  var s = {
+  $.expandParams = v.ciphertext.toString();
+  let w = new Date().getTime();
+  await bF(i);
+  let z = new Date().getTime(),
+      A = bQ(z, 'yyyyMMddhhmmssSSS');
+  p = $.dy[i];
+  let B = {
     appid: 'jdchoujiang_h5',
-    functionId: e,
-    body: JSON.stringify(f),
+    functionId: g,
+    body: JSON.stringify(h),
     clientVersion: '11.0.2',
     client: 'android',
-    t: $._start
+    t: w
   },
-      t,
-      u;
-  let v = ['appid', 'body', 'client', 'clientVersion', 'functionId', 't'];
-  delete s.h5st;
-  u = s;
-  t = v.filter(H => u[H]).map(H => H + ':' + (H == 'body' ? b6.SHA256(s[H]).toString() : s[H])).join('&');
-  let w = {};
+      C = ['appid', 'body', 'client', 'clientVersion', 'functionId', 't'];
+  let D = C.filter(J => B[J]).map(J => J + ':' + (J == 'body' ? b6.SHA256(B[J]).toString() : B[J])).join('&');
+  let E = b6.HmacSHA256(D, p.enc).toString(b6.enc.Hex),
+      F = '';
 
-  for (let H of v) {
-    u[H] && (w[H] = u[H]);
-  }
-
-  u = w;
-  var z = b6.HmacSHA256(t, j.encrypt).toString(b6.enc.Hex),
-      A = '0102030405060708';
-  var B = '';
-
-  if ($.version === '3.1') {
-    var C = {
+  if (k === '3.1') {
+    let K = {
+      sua: $.UA.match(/\(([^\)]+)\)/)[1],
       pp: {},
-      fp: $.fp
-    },
-        D = 'Linux; Android 9; LYA-AL00 Build/HUAWEILYA-AL00L; wv';
-    C.sua = D;
-
-    if (b9) {
-      let K = b9.match(/pin=([^;]+)/);
-      K && (C.pp.p1 = decodeURIComponent(K[1]));
-    }
-
-    var r = b6.AES.encrypt(JSON.stringify(C, null, 2), b6.enc.Utf8.parse('wm0!@w_s#ll1flo('), {
-      iv: b6.enc.Utf8.parse(A),
+      fp: l
+    };
+    K.pp.p1 = $.UserName;
+    let L = b6.AES.encrypt(JSON.stringify(K, null, 2), b6.enc.Utf8.parse('wm0!@w_s#ll1flo('), {
+      iv: b6.enc.Utf8.parse('0102030405060708'),
       mode: b6.mode.CBC,
       padding: b6.pad.Pkcs7
     });
-    B = r.ciphertext.toString();
+    F = L.ciphertext.toString();
   }
 
-  var E = [$.ts, $.fp, $.appId, j.tk, z, $.version, $.timestamp, B].join(';');
-  return 't=' + $._start + '&h5st=' + encodeURIComponent(E);
+  let G = [A, l, i, p.tk, E, k, z, F].join(';');
+  return 't=' + w + '&h5st=' + encodeURIComponent(G);
 }
 
-const bS = 20;
+const bM = 20;
 
-class bT {
+class bN {
   constructor(a) {
     this.x = parseInt(Math.random() * 20 + 20, 10);
     this.y = parseInt(Math.random() * 80 + 80, 10);
     this.t = Date.now();
     this.pos = [[this.x, this.y, this.t]];
-    this.minDuration = parseInt(1000 / bS, 10);
+    this.minDuration = parseInt(1000 / bM, 10);
     this.puzzleX = a + parseInt(Math.random() * 2 - 1, 10);
     this.STEP = parseInt(Math.random() * 6 + 5, 10);
     this.DURATION = parseInt(Math.random() * 7 + 14, 10) * 100;
@@ -1174,8 +984,8 @@ class bT {
 
   ['run']() {
     const b = this.puzzleX / this.STEP,
-          e = this.DURATION / this.STEP,
-          f = [this.x - parseInt(Math.random() * 6, 10), this.y + parseInt(Math.random() * 11, 10), this.t];
+          e = this.DURATION / this.STEP;
+    const f = [this.x - parseInt(Math.random() * 6, 10), this.y + parseInt(Math.random() * 11, 10), this.t];
     this.pos.unshift(f);
     this.stepPos(b, e);
     this.fixPos();
@@ -1208,8 +1018,8 @@ class bT {
   }
 
   ['fixPos']() {
-    const b = this.pos[this.pos.length - 1][0] - this.pos[1][0];
-    const e = this.puzzleX - b;
+    const b = this.pos[this.pos.length - 1][0] - this.pos[1][0],
+          e = this.puzzleX - b;
     Math.abs(e) > 4 && this.moveToAndCollect({
       x: e,
       y: parseInt(Math.random() * 8 - 3, 10),
@@ -1222,29 +1032,24 @@ class bT {
     y: b,
     duration: e
   }) {
-    let g = 0;
-    let h = 0;
-    let i = 0;
+    let g = 0,
+        h = 0,
+        i = 0;
     const j = e / this.minDuration;
     let k = a / j,
-        l = b / j,
-        m = 0;
-
-    if (Math.abs(k) < 1) {
-      m = e / Math.abs(a) - this.minDuration;
-      k = 1;
-      l = b / Math.abs(a);
-    }
+        l = b / j;
+    let m = 0;
+    Math.abs(k) < 1 && (m = e / Math.abs(a) - this.minDuration, k = 1, l = b / Math.abs(a));
 
     while (Math.abs(g) < Math.abs(a)) {
-      const o = parseInt(m + Math.random() * 16 - 4, 10);
+      const p = parseInt(m + Math.random() * 16 - 4, 10);
       g += k + Math.random() * 2 - 1;
       h += l;
-      i += this.minDuration + o;
-      const p = parseInt(this.x + g, 10),
-            q = parseInt(this.y + h, 10),
-            r = this.t + i;
-      this.pos.push([p, q, r]);
+      i += this.minDuration + p;
+      const q = parseInt(this.x + g, 10),
+            r = parseInt(this.y + h, 10),
+            s = this.t + i;
+      this.pos.push([q, r, s]);
     }
 
     this.x += a;
@@ -1254,7 +1059,7 @@ class bT {
 
 }
 
-function bU(g) {
+function bO(g) {
   if (g === '3.1') {
     var i = '',
         j = '0123456789',
@@ -1268,9 +1073,9 @@ function bU(g) {
         size: 1,
         num: j
       };
-      m = bV(t);
+      m = bP(t);
       i.indexOf(m) == -1 && (i += m);
-      m = bV(t), i.indexOf(m) == -1 && (i += m);
+      m = bP(t), i.indexOf(m) == -1 && (i += m);
     } while (i.length < 3);
 
     for (let u of i.slice()) {
@@ -1281,7 +1086,7 @@ function bU(g) {
       size: l,
       num: k
     };
-    var o = bV(r) + i + bV({
+    var o = bP(r) + i + bP({
       size: n - l,
       num: k
     }) + l,
@@ -1302,24 +1107,24 @@ function bU(g) {
         m;
 
     do {
-      const z = {
+      const A = {
         size: 1,
         num: j
       };
-      m = bV(z);
+      m = bP(A);
       i.indexOf(m) == -1 && (i += m);
-      m = bV(z), i.indexOf(m) == -1 && (i += m);
+      m = bP(A), i.indexOf(m) == -1 && (i += m);
     } while (i.length < 3);
 
-    for (let A of i.slice()) {
-      k = k.replace(A, '');
+    for (let B of i.slice()) {
+      k = k.replace(B, '');
     }
 
-    const w = {
+    const z = {
       size: l,
       num: k
     };
-    var o = bV(w) + i + bV({
+    var o = bP(z) + i + bP({
       size: n - l,
       num: k
     }) + l;
@@ -1328,7 +1133,7 @@ function bU(g) {
   return o;
 }
 
-function bV() {
+function bP() {
   var f,
       g = arguments.length > 0 && 'undefined' !== arguments[0] ? arguments[0] : {},
       h = g.size,
@@ -1349,7 +1154,7 @@ function bV() {
   return m;
 }
 
-function bW() {
+function bQ() {
   var g = arguments.length > 0 && undefined !== arguments[0] ? arguments[0] : Date.now(),
       h = arguments.length > 1 && undefined !== arguments[1] ? arguments[1] : 'yyyy-MM-dd',
       j = new Date(g),
@@ -1374,7 +1179,7 @@ function bW() {
   }), k;
 }
 
-function bX(b = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e = 0) {
+function bR(b = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e = 0) {
   return b.replace(/[xy]/g, function (h) {
     var i = Math.random() * 10 | 0,
         j = h == 'x' ? i : i & 3 | 8;
