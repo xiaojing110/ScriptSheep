@@ -144,15 +144,78 @@ async function main() {
   } else {
     $.log('没有获取到活动信息')
   }
+  await $.wait(1500)
+  let sum = await queryInteractiveRewardInfo($.projectPoolId,{
+    "needPoolRewards":"1",
+    "needExchangeRestScore":"1"
+  })
+  sum = sum.exchangeRestScoreMap["368"]
+  console.log('当前碎片', sum+'片')
+  if (sum >= 6) {
+    for (let k = 1; k <= Math.floor(sum / 6); k++) {
+      await $.wait(1500)
+      console.log(`开始第${k}次收集魔方`)
+      let data = await doInteractiveAssignment($.awardproid, "wE62TwscdA52Z4WkpTJq7NaMvfw", "", "",{"exchangeNum": "1"})
+      if (data.subCode === '0') {
+        console.log('收集成功')
+        } else {
+        console.log('收集失败', data.msg)
+      }
+    }
+  } 
+  let sum2 = await queryInteractiveRewardInfo($.awardproid,{
+    "needExchangeRestScore":"1"
+  })
+  console.log(sum2)
+  sum2 = sum2.exchangeRestScoreMap["368"]  
+  console.log('当前魔方', sum2+'个')
+  if (sum2 >= 6) {
+    let res = await doInteractiveAssignment($.awardproid, "42pP1FaQ4FTMurVsJpZhiFJXCZox", "", "",{"exchangeNum": "1"})
+    if (res.subCode === '0') {
+      console.log('兑换6魔方成功:', res.rewardsInfo.successRewards['3'][0].rewardName)
+      sum2 -= 6
+    } else {
+      console.log('兑换6魔方失败:', res.msg)
+    }
+  }
 }
 
 
-async function doInteractiveAssignment(projectId, encryptAssignmentId, itemId, actionType) {
-  // logs = await getJinliLogs()
-  // let random = logs["random"].toString(),log =logs["log"].toString()
+async function queryInteractiveRewardInfo(projectId ,ext){
+  let body = {
+    "encryptProjectPoolId": projectId,
+    "sourceCode":"acexinpin0823",
+    "ext":ext
+
+  }
+  console.log(body)
+  return new Promise(resolve => {
+    $.post(taskPostUrl("queryInteractiveRewardInfo", body), async (err, resp, data) => {
+      //$.log(data)
+      try {
+        if (err) {
+          console.log(`${err}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            //console.log(data.msg);
+          } else {
+            console.log("没有返回数据")
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
+
+async function doInteractiveAssignment(projectId, encryptAssignmentId, itemId, actionType,ext={}) {
   await $.wait(1500)
   await getLog(projectId);
-  //   console.log(log)
   let body = {
     "encryptProjectId": projectId,
     "encryptAssignmentId": encryptAssignmentId,
@@ -160,7 +223,7 @@ async function doInteractiveAssignment(projectId, encryptAssignmentId, itemId, a
     "itemId": itemId,
     "actionType": actionType,
     "completionFlag": "",
-    "ext": {},
+    "ext": ext,
     "extParam": {
       "businessData": {
         "random": `${random}`
@@ -270,7 +333,7 @@ function taskPostUrl(function_id, body) {
     "client": "wh5",
     "clientVersion": "1.0.0",
     "appid": "content_ecology",
-    "area": "15_1213_1245_51807",
+    "area": "19_1609_41655_41708",
   })
   // console.log(bodys)
   return {
