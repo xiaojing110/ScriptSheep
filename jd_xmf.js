@@ -4,33 +4,30 @@
 更新地址：jd_xmf.js
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
+更新: 自动兑换6魔方
 ============Quantumultx===============
 [task_local]
 #京东小魔方
-30 3,20 * * * jd_xmf.js, tag=京东小魔方, img-url=, enabled=true
+14 10,16 * * * jd_xmf.js, tag=京东小魔方, img-url=, enabled=true
 
 ================Loon==============
 [Script]
-cron "30 3,20 * * *" script-path=jd_xmf.js, tag=京东小魔方
+cron "14 10,16 * * *" script-path=jd_xmf.js, tag=京东小魔方
 
 ===============Surge=================
-京东小魔方 = type=cron,cronexp="30 3,20 * * *",wake-system=1,timeout=3600,script-path=jd_xmf.js
+京东小魔方 = type=cron,cronexp="14 10,16 * * *",wake-system=1,timeout=3600,script-path=jd_xmf.js
 
 ============小火箭=========
-京东小魔方 = type=cron,script-path=jd_xmf.js, cronexpr="30 3,20 * * *", timeout=3600, enable=true
+京东小魔方 = type=cron,script-path=jd_xmf.js, cronexpr="14 10,16 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东小魔方- Fake_Log版');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
-let cookiesArr = [], cookie = '', message, helpCodeArr = [], expandHelpArr = [], helpPinArr = [], wxCookie = "";
-let wxCookieArr = process.env.WXCookie?.split("@") || []
-const teamLeaderArr = [], teamPlayerAutoTeam = {}
+let cookiesArr = [], cookie = '', message;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const appid = $.appid = "50091"
 const ZooFaker = require('./utils/ZooFaker_Necklace.js').utils()
 $.jsUrl = "https://storage.360buyimg.com/babel/01063143/2984621/production/dev/main.b59162e9.js?t=20220817143707"
-let teamMap = {}
-let userToTeamMap = {}
 $.curlCmd = ""
 $.ZooFaker = ZooFaker
 if ($.isNode()) {
@@ -163,11 +160,11 @@ async function main() {
       }
     }
   } 
-  let sum2 = await queryInteractiveRewardInfo($.awardproid,{
+  let sum2 = await queryInteractiveRewardInfo2($.awardproid,{
     "needExchangeRestScore":"1"
   })
-  console.log(sum2)
-  sum2 = sum2.exchangeRestScoreMap["368"]  
+  // console.log(sum2)
+  sum2 = sum2.exchangeRestScoreMap["367"]  
   console.log('当前魔方', sum2+'个')
   if (sum2 >= 6) {
     let res = await doInteractiveAssignment($.awardproid, "42pP1FaQ4FTMurVsJpZhiFJXCZox", "", "",{"exchangeNum": "1"})
@@ -187,6 +184,38 @@ async function queryInteractiveRewardInfo(projectId ,ext){
     "sourceCode":"acexinpin0823",
     "ext":ext
 
+  }
+  // console.log(body)
+  return new Promise(resolve => {
+    $.post(taskPostUrl("queryInteractiveRewardInfo", body), async (err, resp, data) => {
+      //$.log(data)
+      try {
+        if (err) {
+          console.log(`${err}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            //console.log(data.msg);
+          } else {
+            console.log("没有返回数据")
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
+
+
+async function queryInteractiveRewardInfo2(projectId ,ext){
+  let body = {
+    "encryptProjectId":projectId,
+    "sourceCode":"acexinpin0823",
+    "ext":ext
   }
   console.log(body)
   return new Promise(resolve => {
@@ -212,7 +241,6 @@ async function queryInteractiveRewardInfo(projectId ,ext){
     })
   })
 }
-
 async function doInteractiveAssignment(projectId, encryptAssignmentId, itemId, actionType,ext={}) {
   await $.wait(1500)
   await getLog(projectId);
