@@ -12,8 +12,8 @@ let teamMap = {}
 let userToTeamMap = {}
 $.curlCmd = ""
 const h = (new Date()).getHours()
-const helpFlag = h >= 9 && h < 12
-const doTaskFlag = h >= 9 && h < 14
+const helpFlag = h >= 9 && h < 24
+const doTaskFlag = h >= 9 && h < 24
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -135,10 +135,10 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     }
 
 })().catch((e) => {
-        $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-    }).finally(() => {
-        $.done();
-    });
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+}).finally(() => {
+    $.done();
+});
 
 function getWxUA() {
     const osVersion = `${randomNum(12, 14)}.${randomNum(0, 6)}`
@@ -281,48 +281,53 @@ async function travel() {
 }
 
 async function doJrAppTask() {
-    $.isJr = true
-    $.JrUA = getJrUA()
-    const { trades, views } = await doJrPostApi("miMissions", null, null, true)
-    /* for (let task of trades || views || []) {
-        const { status, missionId, channel } = task
-        if (status !== 1 && status !== 3) continue
-        const { subTitle, title, url } = await doJrPostApi("miTakeMission", null, {
-            missionId,
-            validate: "",
-            channel,
-            babelChannel: "1111shouyefuceng"
-        }, true)
-        console.log(`当前正在做任务：${title}，${subTitle}`)
-        const { code, msg, data } = await doJrGetApi("queryPlayActiveHelper", { sourceUrl: url })
-        // const { code, msg, data } = await doJrGetApi("queryMissionReceiveAfterStatus", { missionId })
-        console.log(`做任务结果：${msg}（${code}）`)
-    } */
-    for (let task of views || []) {
-        const { status, missionId, channel, total, complete } = task
-        if (status !== 1 && status !== 3) continue
-        const { subTitle, title, url } = await doJrPostApi("miTakeMission", null, {
-            missionId,
-            validate: "",
-            channel,
-            babelChannel: "jdbanner"
-        }, true)
-        console.log(`当前正在做任务：${title}，${subTitle}`)
-        const readTime = url.getKeyVal("readTime")
-        const juid = url.getKeyVal("juid")
-        if (readTime) {
-            await doJrGetApi("queryMissionReceiveAfterStatus", { missionId })
-            await $.wait(+ readTime * 1000)
-            const { code, msg, data } = await doJrGetApi("finishReadMission", { missionId, readTime })
-            console.log(`做任务结果：${msg}`)
-        } else if (juid) {
-            const { code, msg, data } = await doJrGetApi("getJumpInfo", { juid })
-            console.log(`做任务结果：${msg}`)
-        } else {
-            console.log(`不知道这是啥：${url}`)
+    try {
+        $.isJr = true
+        $.JrUA = getJrUA()
+        const { trades, views } = await doJrPostApi("miMissions", null, null, true)
+        /* for (let task of trades || views || []) {
+            const { status, missionId, channel } = task
+            if (status !== 1 && status !== 3) continue
+            const { subTitle, title, url } = await doJrPostApi("miTakeMission", null, {
+                missionId,
+                validate: "",
+                channel,
+                babelChannel: "1111shouyefuceng"
+            }, true)
+            console.log(`当前正在做任务：${title}，${subTitle}`)
+            const { code, msg, data } = await doJrGetApi("queryPlayActiveHelper", { sourceUrl: url })
+            // const { code, msg, data } = await doJrGetApi("queryMissionReceiveAfterStatus", { missionId })
+            console.log(`做任务结果：${msg}（${code}）`)
+        } */
+        for (let task of views || []) {
+            const { status, missionId, channel, total, complete } = task
+            if (status !== 1 && status !== 3) continue
+            const { subTitle, title, url } = await doJrPostApi("miTakeMission", null, {
+                missionId,
+                validate: "",
+                channel,
+                babelChannel: "jdbanner"
+            }, true)
+            console.log(`当前正在做任务：${title}，${subTitle}`)
+            const readTime = url.getKeyVal("readTime")
+            const juid = url.getKeyVal("juid")
+            if (readTime) {
+                await doJrGetApi("queryMissionReceiveAfterStatus", { missionId })
+                await $.wait(+ readTime * 1000)
+                const { code, msg, data } = await doJrGetApi("finishReadMission", { missionId, readTime })
+                console.log(`做任务结果：${msg}`)
+            } else if (juid) {
+                const { code, msg, data } = await doJrGetApi("getJumpInfo", { juid })
+                console.log(`做任务结果：${msg}`)
+            } else {
+                console.log(`不知道这是啥：${url}`)
+            }
         }
+        $.isJr = false
     }
-    $.isJr = false
+    catch (e) {
+        console.log(e)
+    }
 }
 
 async function doJrPostApi(functionId, prepend = {}, append = {}, needEid = false) {
@@ -589,6 +594,10 @@ async function doAppTask() {
                 console.log("助力任务，跳过")
                 continue
             }
+            if (taskId === 31) {
+                console.log("组队任务待修，跳过")
+                continue
+            }
             const res = await doApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
             res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
             continue
@@ -700,12 +709,12 @@ async function doApi(functionId, prepend = {}, append = {}, needSs = false, getL
         functionId,
         body: encodeURIComponent(JSON.stringify({
             ...prepend,
-            ... needSs ? JSON.stringify(getSs($.secretp || "CXJAssist_h5")) : undefined,
+            ...needSs ? JSON.stringify(getSs($.secretp || "CXJAssist_h5")) : undefined,
             ...append,
         })),
         client: "m",
         clientVersion: "-1",
-        appid:"signed_wh5"
+        appid: "signed_wh5"
     })
     // console.log(bodyMain)
     const option = {
@@ -729,9 +738,9 @@ async function doApi(functionId, prepend = {}, append = {}, needSs = false, getL
         $.post(option, (err, resp, data) => {
             let res = null
             try {
-                if (err) 
+                if (err)
                     console.log(formatErr(functionId, err, toCurl(option)))
-                    // console.log(err)
+                // console.log(err)
                 else {
                     if (safeGet(data)) {
                         data = JSON.parse(data)
@@ -770,7 +779,7 @@ function getToken(appname = appid, platform = "1") {
         $.post({
             url: "https://rjsb-token-m.jd.com/gettoken",
             body: `content=${JSON.stringify({
-                appname:"50082",
+                appname: "50082",
                 whwswswws: "",
                 jdkey: $.UUID || randomString(40),
                 body: {
