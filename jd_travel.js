@@ -1,5 +1,5 @@
 ﻿/*
-22 0-23/1 * * *  jd_cxxb.js
+22 0-23/1 * * *  jd_travel.js
 */
 const $ = new Env('穿行寻宝');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -701,7 +701,7 @@ async function doAppTask() {
     }
 
     console.log("做分享任务")
-    const res = await doApi("getWelfareScore", { tpye : 1})
+    const res = await doApi("getWelfareScore", { type : 1})
     res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
 }
 
