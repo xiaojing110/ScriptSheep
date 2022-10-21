@@ -10,7 +10,9 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const appid = $.appid = "50074"
 let teamMap = {}
 let userToTeamMap = {}
+const teamLeaderArr = [], teamPlayerAutoTeam = {}
 $.curlCmd = ""
+const pkTeamNum = 1
 const h = (new Date()).getHours()
 const helpFlag = h >= 9 && h < 11
 const doTaskFlag = h >= 9 && h < 24
@@ -113,6 +115,14 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         for (let j = 0; j < helpInfoArr.length; j++) {
             const { flag, codeArr, preFunctionId, functionId } = helpInfoArr[j]
             if (flag) {
+                console.log(teamPlayerAutoTeam)
+                if (teamPlayerAutoTeam.hasOwnProperty($.UserName)) {
+                    const { groupJoinInviteId, groupNum, groupName } = teamLeaderArr[teamPlayerAutoTeam[$.UserName]]
+                    console.log(`${groupName}人数：${groupNum}，正在去加入他的队伍...`)
+                    await joinTeam(groupJoinInviteId)
+                    teamLeaderArr[teamPlayerAutoTeam[$.UserName]].groupNum += 1
+                    await $.wait(2000)
+                }
                 $.newHelpCodeArr = [...codeArr]
                 for (let i = 0, codeLen = codeArr.length; i < codeLen; i++) {
                     const helpCode = codeArr[i]
@@ -125,11 +135,13 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                     console.log(`去帮助用户：${pin}`)
                     await doApi(preFunctionId, { inviteId: code })
                     await dealHelpRes(functionId, code, pin)
-                    await $.wait(3000)
+                    await $.wait(7000)
                     if ($.stopHelp) break
                 }
                 if ($.logBysha1) delete $.logBysha1
                 helpInfoArr[j].codeArr = [...$.newHelpCodeArr]
+
+
             }
         }
     }
@@ -139,6 +151,18 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 }).finally(() => {
     $.done();
 });
+
+
+async function joinTeam(groupJoinInviteId) {
+    const inviteId = groupJoinInviteId
+    await doApi("pk_getHomeData", { inviteId })
+    const { bizCode, bizMsg } = await doApi("pk_joinGroup", { inviteId, confirmFlag: "1" }, null, true, true)
+    if (bizCode === 0) {
+        console.log("加入队伍成功！")
+    } else {
+        formatErr("pk_joinGroup", `${bizMsg}（${bizCode}）`, $.curlCmd)
+    }
+}
 
 function getWxUA() {
     const osVersion = `${randomNum(12, 14)}.${randomNum(0, 6)}`
@@ -247,9 +271,31 @@ async function travel() {
             const collectAutoScore = await doApi("collectAutoScore", null, null, true)
             collectAutoScore.produceScore && formatMsg(collectAutoScore.produceScore, "定时收集")
 
+
             if (doTaskFlag) {
                 console.log("\n去做主App任务\n")
                 await doAppTask()
+            }
+
+            if (helpFlag){
+                
+                const pkHomeData = await doApi("pk_getHomeData")
+
+                const { groupJoinInviteId, groupName, groupNum } = pkHomeData?.groupInfo || {}
+                if (groupNum !== undefined && groupNum < 30 && $.index <= pkTeamNum) {
+                    if (groupJoinInviteId) {
+                        teamLeaderArr.push({
+                            groupJoinInviteId,
+                            groupNum,
+                            groupName
+                        })
+                    }
+                } else if (groupNum === 1) {
+                    const n = ($.index - 1) % pkTeamNum
+                    if (teamLeaderArr[n]) {
+                        teamPlayerAutoTeam[$.UserName] = n
+                    }
+                }
             }
         }
     } catch (e) {
@@ -552,6 +598,7 @@ async function doAppTask() {
             helpPinArr.push($.UserName)
         }
     }
+    
     for (const { times, badgeAwardVos } of lotteryTaskVos || []) {
         for (const { awardToken, requireIndex, status } of badgeAwardVos) {
             if (times >= requireIndex && status === 3) {
