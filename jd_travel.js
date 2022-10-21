@@ -278,7 +278,7 @@ async function travel() {
             }
 
             if (helpFlag){
-                
+
                 const pkHomeData = await doApi("pk_getHomeData")
 
                 const { groupJoinInviteId, groupName, groupNum } = pkHomeData?.groupInfo || {}
@@ -641,10 +641,10 @@ async function doAppTask() {
                 console.log("助力任务，跳过")
                 continue
             }
-            if (taskId === 31) {
-                console.log("组队任务待修，跳过")
-                continue
-            }
+            // if (taskId === 31) {
+            //     console.log("组队任务跳过")
+            //     continue
+            // }
             const res = await doApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
             res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
             continue
@@ -699,6 +699,10 @@ async function doAppTask() {
         } */
         }
     }
+
+    console.log("做分享任务")
+    const res = await doApi("getWelfareScore", { tpye : 1})
+    res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
 }
 
 
