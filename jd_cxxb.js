@@ -12,7 +12,7 @@ let teamMap = {}
 let userToTeamMap = {}
 $.curlCmd = ""
 const h = (new Date()).getHours()
-const helpFlag = h >= 9 && h < 24
+const helpFlag = h >= 9 && h < 11
 const doTaskFlag = h >= 9 && h < 24
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -255,29 +255,29 @@ async function travel() {
     } catch (e) {
         console.log(e)
     }
-    // 如果wxCookie不为空
-    if (wxCookie) {
-        try {
-            $.WxUA = getWxUA()
-            const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
-            $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
-            console.log("\n去做微信小程序任务\n")
-            await doWxTask()
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    // // 如果wxCookie不为空
+    // if (wxCookie) {
+    //     try {
+    //         $.WxUA = getWxUA()
+    //         const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
+    //         $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
+    //         console.log("\n去做微信小程序任务\n")
+    //         await doWxTask()
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
+    // }
 
-    try {
-        console.log("\n去做金融App任务\n")
-        $.sdkToken = "jdd01" + randomUUID({
-            formatData: "X".repeat(103),
-            charArr: [...Array(36).keys()].map(k => k.toString(36).toUpperCase())
-        }) + "0123456"
-        await doJrAppTask()
-    } catch (e) {
-        console.log(e)
-    }
+//     try {
+//         console.log("\n去做金融App任务\n")
+//         $.sdkToken = "jdd01" + randomUUID({
+//             formatData: "X".repeat(103),
+//             charArr: [...Array(36).keys()].map(k => k.toString(36).toUpperCase())
+//         }) + "0123456"
+//         await doJrAppTask()
+//     } catch (e) {
+//         console.log(e)
+//     }
 }
 
 async function doJrAppTask() {
