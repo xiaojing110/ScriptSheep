@@ -701,7 +701,7 @@ async function doAppTask() {
     }
 
     console.log("做分享任务")
-    const res = await doApi("getWelfareScore", { type : 1})
+    const res = await doApi("getWelfareScore", { type : 2})
     res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
 }
 
