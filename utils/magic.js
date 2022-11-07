@@ -1,29 +1,61 @@
-// noinspection JSUnresolvedFunction,JSUnresolvedVariable
+//问题反馈:https://t.me/Wall_E_Channel
+let mode = __dirname.includes('magic')
 
-const axios = require('axios');
-const fs = require("fs");
-const {format} = require("date-fns");
-const notify = require('./sendNotify');
-const jdCookieNode = require('./jdCookie.js');
-const CryptoJS = require("crypto-js");
-
-let cookies = [];
-let testMode = process.env.TEST_MODE?.includes('on') ? true
-    : __dirname.includes("magic")
-
-let mode = process.env.MODE ? process.env.MODE : "local"
-
+let testMode = process.env.M_TEST_MODE?.includes('on') ? true : mode
+let tokenCacheMin = parseInt(process.env?.M_WX_TOKEN_CACHE_MIN || 5)
+let tokenCacheMax = parseInt(process.env?.M_WX_TOKEN_CACHE_MAX || 10)
+let enableCacheToken = parseInt(process.env?.M_WX_ENABLE_CACHE_TOKEN || 1)
+let enableCacheTokenTip = parseInt(process.env?.M_WX_ENABLE_CACHE_TOKEN_TIP || 1)
+let isvObfuscatorRetry = parseInt(process.env?.M_WX_ISVOBFUSCATOR_RETRY || 2)
+let isvObfuscatorRetryWait = parseInt(process.env?.M_WX_ISVOBFUSCATOR_RETRY_WAIT || 2)
+//模式
+let signMode = process.env.M_SIGN_MODE ? process.env.M_SIGN_MODE : "local"
 let apiToken = process.env.M_API_TOKEN ? process.env.M_API_TOKEN : ""
 let apiSignUrl = process.env.M_API_SIGN_URL ? process.env.M_API_SIGN_URL : "http://ailoveu.eu.org:19840/sign"
+let wskeyFile = process.env.M_WSKEY_FILE ? process.env.M_WSKEY_FILE : mode ? '/home/magic/Work/wools/doc/config.sh' : ''
+//无线pt_pin黑名单
+let blackPinConfig = {
+    'cjhy-isv.isvjcloud.com': process.env.M_WX_CJ_BLACK_COOKIE_PIN ? process.env.M_WX_CJ_BLACK_COOKIE_PIN : '',
+    'cjhydz-isv.isvjcloud.com': process.env.M_WX_CJ_BLACK_COOKIE_PIN ? process.env.M_WX_CJ_BLACK_COOKIE_PIN : '',
+    'lzkj-isv.isvjcloud.com': process.env.M_WX_LZ_BLACK_COOKIE_PIN ? process.env.M_WX_LZ_BLACK_COOKIE_PIN : '',
+    'lzkjdz-isv.isvjcloud.com': process.env.M_WX_LZ_BLACK_COOKIE_PIN ? process.env.M_WX_LZ_BLACK_COOKIE_PIN : '',
+    '*': process.env.M_WX_BLACK_COOKIE_PIN ? process.env.M_WX_BLACK_COOKIE_PIN : ''
+}
 
-let wxBlackCookiePin = process.env.M_WX_BLACK_COOKIE_PIN
-    ? process.env.M_WX_BLACK_COOKIE_PIN : ''
+//跳出关键词
+let stopKeywords = ['来晚了', '已发完', '参数缺失或无效', '超出活动计划时间', '奖品发送失败', '发放完', '全部被领取', '余额不足', '已结束', '活动已经结束', '未开始']
+process.env.M_WX_STOP_KEYWORD ? process.env.M_WX_STOP_KEYWORD.split(/[@,&|]/).forEach((item) => stopKeywords.push(item)) : ''
 
-Object.keys(jdCookieNode).forEach((item) => {
-    cookies.push(jdCookieNode[item])
-})
-let LZ_AES_PIN = process.env.M_LZ_AES_PIN ? process.env.M_LZ_AES_PIN : ""
+//是否打印地址信息
+let M_WX_ADDRESS_LOG = parseInt(process.env?.M_WX_ADDRESS_LOG || 2);
+//不填地址关键词,
+let addressStopKeywords = ['京豆', '红包', '券', '再来一次', '客服', '积分', '晒图', '不发放', '购物', '购买']
+process.env.M_WX_ADDRESS_STOP_KEYWORD ? process.env.M_WX_ADDRESS_STOP_KEYWORD.split(/[@,&|]/).forEach(
+    (item) => addressStopKeywords.push(item))
+    : ''
 
+//无线白名单列表
+let wxWhitelist = []
+process.env.M_WX_WHITELIST ? process.env.M_WX_WHITELIST.split(/[@,&|]/).forEach(
+    (item) => wxWhitelist.push(item.includes('-') ? item : item * 1))
+    : [];
+//无线不支持文件列表
+let wxWhitelistNotSupportFile = ['m_jd_wx_collectCard.js', 'm_jd_wx_unPackDraw.js', 'm_jd_wx_microDz.js', 'm_jd_wx_share.js']
+process.env.M_WX_WHITELIST_NOT_SUPPORT_FILE ? process.env.M_WX_WHITELIST_NOT_SUPPORT_FILE.split(/[@,&|]/).forEach(
+    (item) => wxWhitelistNotSupportFile.push(item)) : '';
+
+const axios = require('axios'),
+    fs = require('fs'),
+    { format } = require('date-fns'),
+    notify = require('./sendNotify'),
+    jdCookieNode = require('./jdCookie.js'),
+    CryptoJS = require('crypto-js'),
+    h5sts = require('./h5sts.js');
+
+let cookies = [];
+Object.keys(jdCookieNode).length > 0 && Object.keys(jdCookieNode).forEach(b => {
+    cookies.push(jdCookieNode[b]);
+});
 const JDAPP_USER_AGENTS = [
     `jdapp;android;10.0.2;9;${uuid()};network/wifi;Mozilla/5.0 (Linux; Android 9; MHA-AL00 Build/HUAWEIMHA-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044942 Mobile Safari/537.36`,
     `jdapp;android;10.0.2;9;${uuid()};network/wifi;Mozilla/5.0 (Linux; Android 9; MI 6 Build/PKQ1.190118.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044942 Mobile Safari/537.36`,
@@ -63,29 +95,12 @@ const JDAPP_USER_AGENTS = [
     `jdapp;android;10.0.2;8.1.0;${uuid()};network/wifi;Mozilla/5.0 (Linux; Android 8.1.0; MI 8 Build/OPM1.171019.026; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/045131 Mobile Safari/537.36`,
 ]
 
-//来源于kedaya大佬
-const ISV_OBFUSCATOR = {
-    'lzkj-isv.isvjcloud.com': [
-        'body=%7B%22url%22%3A%22https%3A%2F%2Flzkj-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=1d9f7760c9ffaad4eb&client=apple&clientVersion=10.0.10&st=1646999134752&sv=112&sign=d14c9517190f8a8b0e253e3dbbdee87a',
-    ],
-    'cjhy-isv.isvjcloud.com': [
-        'body=%7B%22url%22%3A%22https%3A%2F%2Fcjhy-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=b024526b380d35c9e3&client=apple&clientVersion=10.0.10&st=1646999134786&sv=111&sign=fd9417f9d8e872da6c55102bd69da99f',
-    ],
-    'txzj-isv.isvjcloud.com': [
-        'body=%7B%22url%22%3A%22https%3A%2F%2Ftxzj-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=f7fc9bef85a8620cdf&client=apple&clientVersion=10.0.10&st=1646999134805&sv=121&sign=bbe137e2f52dbf3a1f10fa2ffe749d05',
-    ],
-    'lzdz1-isv.isvjcloud.com': [
-        'body=%7B%22url%22%3A%20%22https%3A//lzdz1-isv.isvjcloud.com%22%2C%20%22id%22%3A%20%22%22%7D&uuid=72124265217d48b7955781024d65bbc4&client=apple&clientVersion=9.4.0&st=1621796702000&sv=120&sign=14f7faa31356c74e9f4289972db4b988'
-    ],
-    'cjhydz-isv.isvjcloud.com': [
-        'adid=7B411CD9-D62C-425B-B083-9AFC49B94228&area=16_1332_42932_43102&body=%7B%22url%22%3A%22https%3A%5C/%5C/cjhydz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167541&client=apple&clientVersion=9.4.0&d_brand=apple&d_model=iPhone8%2C1&eid=eidId10b812191seBCFGmtbeTX2vXF3lbgDAVwQhSA8wKqj6OA9J4foPQm3UzRwrrLdO23B3E2wCUY/bODH01VnxiEnAUvoM6SiEnmP3IPqRuO%2By/%2BZo&isBackground=N&joycious=48&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&openudid=2f7578cb634065f9beae94d013f172e197d62283&osVersion=13.1.2&partner=apple&rfs=0000&scope=11&screen=750%2A1334&sign=60bde51b4b7f7ff6e1bc1f473ecf3d41&st=1613720203903&sv=110&uts=0f31TVRjBStG9NoZJdXLGd939Wv4AlsWNAeL1nxafUsZqiV4NLsVElz6AjC4L7tsnZ1loeT2A8Z5/KfI/YoJAUfJzTd8kCedfnLG522ydI0p40oi8hT2p2sNZiIIRYCfjIr7IAL%2BFkLsrWdSiPZP5QLptc8Cy4Od6/cdYidClR0NwPMd58K5J9narz78y9ocGe8uTfyBIoA9aCd/X3Muxw%3D%3D&uuid=hjudwgohxzVu96krv/T6Hg%3D%3D&wifiBssid=9cf90c586c4468e00678545b16176ed2'
-    ],
-}
-const $ = axios.create({timeout: 30000});
+const $ = axios.create({ timeout: 30000 });
 $.defaults.headers['Accept'] = '*/*';
 $.defaults.headers['Connection'] = 'keep-alive';
 $.defaults.headers['Accept-Language'] = "zh-CN,zh-Hans;q=0.9";
 $.defaults.headers['Accept-Encoding'] = "gzip, deflate, br";
+
 
 function uuid(x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") {
     return x.replace(/[xy]/g, function (x) {
@@ -96,21 +111,29 @@ function uuid(x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") {
 
 class Env {
     constructor(name) {
-        this.name = name
+        this.name = name;
         this.username = '';
         this.cookie = '';
+        this.wskey = '';
+        this.wskeys = new Map();
         this.cookies = cookies;
         this.index = '';
         this.ext = [];
         this.msg = [];
         this.delimiter = '';
-        this.filename = ''
-        this.lz = ''
+        this.filename = '';
+        this.ticket = '';
         this.appId = '';
         this.algo = {};
         this.bot = false;
         this.expire = false;
+        this.breakBefore = false;
+        this.skipNum = 0;
         this.accounts = {};
+        this.domain = '';
+        this.activityUrl = '';
+        this.tickets = new Map();
+        this.addressIndex = 1;
     }
 
     async run(data = {
@@ -120,85 +143,134 @@ class Env {
         o2o: false,
         random: false,
         once: false,
+        wskey: false,
         blacklist: [],
-        whitelist: []
+        whitelist: [],
     }) {
-        console.log('运行参数：', data);
-        this.filename = process.argv[1];
-        console.log(`${this.now()} ${this.name} ${this.filename} 开始运行...`);
-        this.start = this.timestamp();
-        let accounts = "";
-        if (__dirname.includes("magic")) {
-            accounts = this.readFileSync(
-                '/home/magic/Work/wools/doc/account.json')
-        } else {
-            if (fs.existsSync('utils/account.json')) {
-                accounts = this.readFileSync('utils/account.json')
-            } else {
-                accounts = this.readFileSync('account.json')
+        if (process.env.M_SYS_INFO) {
+            console.log('-----------------系统参数-----------------');
+            for (let j in process.env) {
+                if (!j.startsWith('M_') || j.includes('URL') || j.includes('TOKEN') || j.includes('ARGV')) {
+                    continue;
+                }
+                console.log(j + '="' + process.env[j] + '"');
             }
-        }
-        accounts ? JSON.parse(accounts).forEach(
-            o => this.accounts[o.pt_pin] = o.remarks) : ''
-        await this.config()
-        if (data?.delimiter) {
-            this.delimiter = data?.delimiter
-        }
-        if (data?.bot) {
-            this.bot = data.bot;
+            console.log('-----------------系统参数-----------------');
         }
 
-        console.log('原始ck长度', cookies.length)
+        console.log('运行参数：', data);
+        this.filename = process.argv[1];
+        console.log(this.now() + ' ' + this.name + ' ' + this.filename + ' 开始运行...');
+        this.start = this.timestamp();
+        let accounts = '';
+        try {
+            if (mode) {
+                accounts = this.readFileSync(
+                    '/home/magic/Work/wools/doc/account.json');
+            } else {
+                if (fs.existsSync('utils/account.json')) {
+                    accounts = this.readFileSync('utils/account.json');
+                } else {
+                    fs.existsSync('/jd/config/account.json') ? accounts = this.readFileSync('/jd/config/account.json') : accounts = this.readFileSync('account.json');
+                }
+            }
+            accounts ? JSON.parse(accounts).forEach(C => this.accounts[C.pt_pin] = C) : '';
+        } catch (C) {
+            console.log('account.json读取异常', C);
+            this.msg.push('account.json读取异常');
+        }
+
+        await this.config();
+        data?.delimiter && (this.delimiter = data?.delimiter);
+        data?.bot && (this.bot = data.bot);
+        console.log('原始ck长度', cookies.length);
+
         if (data?.blacklist?.length > 0) {
             for (const cki of this.__as(data.blacklist)) {
                 delete cookies[cki - 1];
             }
         }
-        this.delBlackCK()
-        console.log('排除黑名单后ck长度', cookies.length)
+
+        console.log('排除黑名单后ck长度', cookies.length);
+        wxWhitelist.length > 0 && wxWhitelistNotSupportFile.filter(E =>
+            this.filename.includes(E)).length === 0 && this.filename.includes('_wx_') && (console.log('支持全局无线ck长度:' + wxWhitelist),
+                console.log('支持全局无线ck长度:' + wxWhitelistNotSupportFile),
+                data.whitelist = wxWhitelist);
+
         if (data?.whitelist?.length > 0) {
-            let cks = []
+            let cks = [];
+
             for (const cki of this.__as(data.whitelist)) {
-                if (cki - 1 < cookies.length) {
-                    cks.push(cookies[cki - 1])
-                }
+                cki - 1 < cookies.length && cks.push(cookies[cki - 1]);
             }
             cookies = cks;
         }
-        console.log('设置白名单后ck长度', cookies.length)
 
-        if (data?.random) {
-            cookies = this.randomArray(cookies)
+        console.log('设置白名单后ck长度', cookies.length);
+        this.delBlackCK();
+        console.log('排除PIN黑名单后ck长度', cookies.length);
+        data?.random && (cookies = this.randomArray(cookies));
+
+        if (data?.wskey) {
+            try {
+                let wsck = fs.existsSync(wskeyFile) ? this.readFileSync(wskeyFile).split('\n') : process.env?.JD_WSCK?.split('&') || [];
+
+                for (let ws of wsck) {
+                    !ws.endsWith(';') && (ws += ';');
+
+                    if (ws.startsWith('pin')) {
+                        this.wskeys.set(ws.match(/pin=([^; ]+)(?=;?)/)[1], ws.match(/(pin=.*?;wskey=.*?;)/)[1]);
+                    } else {
+                        ws.startsWith('wskey') && this.wskeys.set(ws.match(/pin=([^; ]+)(?=;?)/)[1], ws.match(/(pin=.*?;wskey=.*?;)/)[1]);
+                    }
+                }
+
+                console.log('当前wskey共计' + this.wskeys.size + '个');
+            } catch (e) {
+                console.log('wkeys读取异常', e);
+                this.msg.push('wkeys读取异常');
+            }
         }
-        await this.verify()
+
+        await this.verify();
         this.cookies = cookies;
+
         if (data?.before) {
             for (let i = 0; i <= this.cookies.length; i++) {
-                if (this.cookies[i] && !this.expire) {
-                    let cookie = this.cookies[i];
-                    this.cookie = cookie;
-                    this.username = decodeURIComponent(
-                        cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-                    $.defaults.headers['Cookie'] = this.cookie;
-                    this.index = i + 1;
-                    let me = {
-                        username: this.username,
-                        index: this.index,
-                        cookie: this.cookie
-                    };
-                    try {
-                        this.ext.push(Object.assign(me, await this.before()));
-                    } catch (e) {
-                        console.log(e)
-                    }
-                    if (data?.wait?.length > 0 && this.index
-                        !== cookies.length) {
-                        await this.wait(data?.wait[0], data?.wait[1])
-                    }
+                if (!this.cookies[i]) {
+                    continue;
+                }
+
+                if (this.breakBefore) {
+                    break;
+                }
+
+                let ck = this.cookies[i];
+                this.cookie = ck;
+                let pt_pin = ck.match(/pt_pin=([^; ]+)(?=;?)/)[1];
+                this.username = decodeURIComponent(pt_pin);
+                this.wskey = this.wskeys.get(pt_pin);
+                $.defaults.headers.Cookie = this.cookie;
+                this.index = i + 1;
+                let me = {
+                    username: this.username,
+                    index: this.index,
+                    cookie: this.cookie
+                };
+                try {
+                    this.ext.push(Object.assign(me, await this.before()));
+                } catch (e) {
+                    console.log(e);
+                }
+                if (data?.wait?.length > 0 && this.index
+                    !== cookies.length) {
+                    await this.wait(data?.wait[0], data?.wait[1])
                 }
             }
         }
+
         let once = false;
+
         for (let i = 0; i <= this.cookies.length; i++) {
             if (this.cookies[i] && !this.expire) {
                 this.index = i + 1;
@@ -208,12 +280,26 @@ class Env {
                 }
                 let cookie = this.cookies[i];
                 this.cookie = cookie;
-                this.username = decodeURIComponent(
-                    cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-                $.defaults.headers['Cookie'] = this.cookie;
+                let pt_pin = cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1];
+                this.username = decodeURIComponent(pt_pin);
+
+                if (this.skipNum > 0 && this.skipNum-- > 0) {
+                    this.log('跳过当前ck skipNum=' + this.skipNum);
+                    continue;
+                }
+
+                this.wskey = this.wskeys.get(pt_pin);
+                $.defaults.headers.Cookie = this.cookie;
                 this.index = i + 1;
+                !data?.before ? this.ext.push({
+                    username: this.username,
+                    index: this.index,
+                    cookie: this.cookie
+                }) : '';
+
                 try {
-                    await this.logic()
+                    this.index < 5 ? this.appId === 'wx' ? await this._algo() : '' : '';
+                    await this.logic();
                     if (data?.o2o) {
                         await this.send();
                         testMode ? this.log(this.msg.join("\n")) : ''
@@ -223,17 +309,25 @@ class Env {
                         break;
                     }
                 } catch (e) {
-                    console.log(e.message || '')
+                    this.log('捕获异常', e?.response?.status, e?.response?.statusText);
+                    this.log('捕获异常', e);
+                    e?.response?.status === 493 && (this.expire = true, this.msg.push('IP 493 493 493'));
+                    e?.response?.status === 403 && this.msg.push('IP 403 403 403');
                 }
                 if (data?.wait?.length > 0 && this.index !== cookies.length) {
                     await this.wait(data?.wait[0], data?.wait[1])
                 }
             }
         }
-        await this.after()
-        console.log(`${this.now()} ${this.name} 运行结束,耗时 ${this.timestamp()
-        - this.start}ms\n`)
-        testMode && this.msg.length > 0 ? console.log(this.msg.join("\n")) : ''
+
+        try {
+            await this.after();
+        } catch (e) {
+            console.log(e);
+        }
+
+        console.log(this.now() + ' ' + this.name + ' 运行结束,耗时 ' + (this.timestamp() - this.start) + 'ms\n');
+        testMode && this.msg.length > 0 ? console.log(this.msg.join('\n')) : '';
         if (!data?.o2o) {
             await this.send();
         }
@@ -244,15 +338,13 @@ class Env {
     }
 
     delBlackCK() {
-        let strArrTemp = []
+        let strArrTemp = [];
+
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i]) {
-                let cookie = cookies[i]
-                let pt_pin = decodeURIComponent(
-                    cookie.match(/pt_pin=(.+?);/) && cookie.match(
-                    /pt_pin=(.+?);/)[1]);
-                if (wxBlackCookiePin.includes(pt_pin)) {
-                    this.log("剔除黑号CK:" + pt_pin);
+                let cookie = cookies[i],
+                    pt_pin = cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1];
+                if (blackPinConfig[this.domain] === undefined && blackPinConfig['*']?.includes(pt_pin) || blackPinConfig[this.domain]?.includes(pt_pin)) {
                     continue;
                 }
                 strArrTemp.push(cookie);
@@ -262,35 +354,30 @@ class Env {
     }
 
     me() {
-        return this.ext[this.index - 1]
-    }
-
-    finish() {
-        this.ext[this.index - 1].finish = true
+        return this.ext[this.index - 1];
     }
 
     __as(es) {
-        console.log(es)
-
         let b = [];
+
         for (let e of es) {
             if (typeof e === 'string') {
-                let start = e.split('-')[0] * 1
-                let end = e.split('-')[1] * 1
+                let start = e.split('-')[0] * 1,
+                    end = e.split('-')[1] * 1;
+
                 if (end - start === 1) {
-                    b.push(start)
-                    b.push(end)
+                    b.push(start);
+                    b.push(end);
                 } else {
                     for (let i = start; i <= end; i++) {
-                        b.push(i)
+                        b.push(i);
                     }
                 }
             } else {
-                b.push(e)
+                b.push(e);
             }
         }
-        console.log(b)
-        return b
+        return b;
     }
 
     deleteCookie() {
@@ -324,26 +411,24 @@ class Env {
     }
 
     async verify() {
-        let fn = this.filename
+        let fn = this.filename;
 
         function av(s) {
             return s.trim().match(/([a-z_])*$/)[0];
         }
 
-        let x = '109M95O106F120V95B', y = '99M102F100O', z = '109H99V',
-            j = '102N97I99D116T111G114A121B', k = '112C112U',
-            l = '109N95G106B100K95U', m = '119V120M';
-        let reg = /[A-Z]/;
-        x.concat(y).split(reg).map(o => +o).filter(o => o > 0).forEach(
-            o => y += String.fromCharCode(o))
-        x.concat(z).split(reg).map(o => +o).filter(o => o > 0).forEach(
-            o => z += String.fromCharCode(o))
-        x.concat(j).split(reg).map(o => +o).filter(o => o > 0).forEach(
-            o => j += String.fromCharCode(o))
-        x.concat(k).split(reg).map(o => +o).filter(o => o > 0).forEach(
-            o => k += String.fromCharCode(o))
-        l.concat(m).split(reg).map(o => +o).filter(o => o > 0).forEach(
-            o => m += String.fromCharCode(o))
+        let x = '109M95O106F120V95B',
+            y = '99M102F100O',
+            z = '109H99V',
+            j = '102N97I99D116T111G114A121B',
+            k = '112C112U',
+            l = '109N95G106B100K95U',
+            m = '119V120M';
+        x.concat(y).split(/[A-Z]/).map(o => +o).filter(o => o > 0).forEach(o => y += String.fromCharCode(o));
+        x.concat(z).split(/[A-Z]/).map(o => +o).filter(o => o > 0).forEach(o => z += String.fromCharCode(o));
+        x.concat(j).split(/[A-Z]/).map(o => +o).filter(o => o > 0).forEach(o => j += String.fromCharCode(o));
+        x.concat(k).split(/[A-Z]/).map(o => +o).filter(o => o > 0).forEach(o => k += String.fromCharCode(o));
+        l.concat(m).split(/[A-Z]/).map(o => +o).filter(o => o > 0).forEach(o => m += String.fromCharCode(o));
         this.appId = fn ? this.name.slice(0, 1)
             === String.fromCharCode(77)
             ? (fn.includes(av(y)) ? '10032' :
@@ -356,7 +441,7 @@ class Env {
     }
 
     async wait(min, max) {
-        if (min < 0) {
+        if (min <= 0) {
             return;
         }
         if (max) {
@@ -367,42 +452,49 @@ class Env {
         }
     }
 
-    putMsg(msg) {
-        msg += ''
-        this.log(msg)
-        let r = [[' ', ''], ['优惠券', '券'], ['东券', '券'], ['店铺', ''],
-            ['恭喜', ''], ['获得', '']]
+    putMsg(msg, username = '') {
+        msg += '';
+        this.log(msg);
+        let r = [[' ', ''], ['优惠券', '券'], ['东券', '券'], ['店铺', ''], ['恭喜', ''], ['获得', '']];
+
         for (let ele of r) {
-            msg = msg.replace(ele[0], ele[1])
+            msg = msg.replace(ele[0], ele[1]);
         }
+
         if (this.bot) {
-            this.msg.push(msg)
+            this.msg.push(msg);
         } else {
-            let username = this.accounts[this.username] || this.username;
-            username += this.index
-            if (this.msg.length > 0 && this.msg[this.msg.length - 1].includes(
-                username)) {
-                this.msg[this.msg.length - 1] = this.msg[this.msg.length
-                - 1].split(" ")[0] + '' + [this.msg[this.msg.length - 1].split(
-                    " ")[1], msg].join(',')
+
+            username = username ? username : (this.accounts[this.username]?.remarks || this.username) + this.index;
+            if (this.msg.length > 0 && this.msg.filter(C => C.includes(username)).length > 0) {
+                for (let length = 0; length < this.msg.length; length++) {
+                    if (this.msg[length].includes(username)) {
+                        this.msg[length] = this.msg[length].split(' ')[0] + '' + [this.msg[length].split(' ')[1], msg].join(',');
+                        break;
+                    }
+                }
             } else {
                 this.msg.push(`【${username}】${msg}`)
             }
         }
     }
 
+    getRemarks(b) {
+        return this.accounts[b]?.remarks || b;
+    }
+
     md5(str) {
-        return CryptoJS.MD5(str).toString()
+        return CryptoJS.MD5(str).toString();
     }
 
     HmacSHA256(param, key) {
-        return CryptoJS.HmacSHA256(param, key).toString()
+        return CryptoJS.HmacSHA256(param, key).toString();
     }
 
     log(...msg) {
         this.s ? console.log(...msg) : console.log(
-            `${this.now()} ${this.accounts[this.username] || this.username}`,
-            ...msg)
+            this.now() + ' cookie' + this.index + ' ' + (this.accounts[this.username]?.remarks || this.username),
+            ...msg);
     }
 
     //并
@@ -419,6 +511,7 @@ class Env {
     different(a, b) {
         return a.concat(b).filter(o => a.includes(o) && !b.includes(o))
     }
+
 
     build(url) {
         if (url.match(/&callback=(jsonpCBK(.*))&/)) {
@@ -443,16 +536,16 @@ class Env {
             }
             stk.split(',').map((item, index) => {
                 st += `${item}:${this.getQueryString(url, item)}${index
-                === stk.split(',').length - 1 ? '' : '&'}`;
+                    === stk.split(',').length - 1 ? '' : '&'}`;
             })
             ens = encodeURIComponent(
                 [''.concat(ts), ''.concat(fp),
-                    ''.concat(this.appId), ''.concat(tk),
-                    ''.concat(CryptoJS.HmacSHA256(st, hash.toString()).toString(
-                        CryptoJS.enc.Hex))].join(';'));
+                ''.concat(this.appId), ''.concat(tk),
+                ''.concat(CryptoJS.HmacSHA256(st, hash.toString()).toString(
+                    CryptoJS.enc.Hex))].join(';'));
             if (url.match(/[?|&]h5st=(.*?)&/)) {
                 url = url.replace(url.match(/[?|&]h5st=(.*?)&/)[1], 'H5ST')
-                .replace(/H5ST/, ens)
+                    .replace(/H5ST/, ens)
             }
             let matchArr = [/[?|&]_time=(\d+)/, /[?|&]__t=(\d+)/,
                 /[?|&]_ts=(\d+)/,
@@ -636,30 +729,30 @@ class Env {
     async get(url, headers) {
         url = this.appId ? this.build(url) : url
         return new Promise((resolve, reject) => {
-            $.get(url, {headers: headers}).then(
+            $.get(url, { headers: headers }).then(
                 data => resolve(this.handler(data) || data))
-            .catch(e => reject(e))
+                .catch(e => reject(e))
         })
     }
 
     async post(url, body, headers) {
         url = this.appId ? this.build(url) : url
         return new Promise((resolve, reject) => {
-            $.post(url, body, {headers: headers})
-            .then(data => resolve(this.handler(data) || data))
-            .catch(e => reject(e));
+            $.post(url, body, { headers: headers })
+                .then(data => resolve(this.handler(data) || data))
+                .catch(e => reject(e));
         })
     }
 
     async request(url, headers, body) {
         return new Promise((resolve, reject) => {
-            let __config = headers?.headers ? headers : {headers: headers};
+            let __config = headers?.headers ? headers : { headers: headers };
             (body ? $.post(url, body, __config) : $.get(url, __config))
-            .then(data => {
-                this.__lt(data);
-                resolve(data)
-            })
-            .catch(e => reject(e));
+                .then(data => {
+                    this.__lt(data);
+                    resolve(data)
+                })
+                .catch(e => reject(e));
         })
     }
 
@@ -670,13 +763,13 @@ class Env {
         let scs = data?.headers['set-cookie'] || data?.headers['Set-Cookie']
             || ''
         if (!scs) {
-            if (data?.data?.LZ_TOKEN_KEY && data?.data?.LZ_TOKEN_VALUE && data?.data?.LZ_AES_PIN) {
-                this.lz = `LZ_TOKEN_KEY=${data.data.LZ_TOKEN_KEY};LZ_TOKEN_VALUE=${data.data.LZ_TOKEN_VALUE};LZ_AES_PIN=${data.data.LZ_AES_PIN};`;
+            if (data?.data?.LZ_TOKEN_KEY && data?.data?.LZ_TOKEN_VALUE) {
+                this.ticket = `LZ_TOKEN_KEY=${data.data.LZ_TOKEN_KEY};LZ_TOKEN_VALUE=${data.data.LZ_TOKEN_VALUE};`;
             }
             return;
         }
         let LZ_TOKEN_KEY = '', LZ_TOKEN_VALUE = '', JSESSIONID = '',
-            jcloud_alb_route = '', ci_session = ''
+            jcloud_alb_route = '', ci_session = '', LZ_AES_PIN = ''
         let sc = typeof scs != 'object' ? scs.split(',') : scs
         for (let ck of sc) {
             let name = ck.split(";")[0].trim()
@@ -685,30 +778,24 @@ class Env {
                     / /g, '') + ';' : ''
                 name.includes('LZ_TOKEN_VALUE=')
                     ? LZ_TOKEN_VALUE = name.replace(/ /g, '') + ';' : ''
-                name.includes('LZ_AES_PIN=') ? LZ_AES_PIN = name.replace(
-                    / /g, '') + ';' : ''
                 name.includes('JSESSIONID=') ? JSESSIONID = name.replace(/ /g,
                     '') + ';' : ''
-                name.includes('jcloud_alb_route=')
-                    ? jcloud_alb_route = name.replace(/ /g, '') + ';' : ''
-                name.includes('ci_session=') ? ci_session = name.replace(/ /g,
-                    '') + ';' : ''
+                // name.includes('jcloud_alb_route=')
+                //     ? jcloud_alb_route = name.replace(/ /g, '') + ';' : ''
+                // name.includes('ci_session=') ? ci_session = name.replace(/ /g,
+                //     '') + ';' : ''
+                name.includes('LZ_AES_PIN=') ? this.LZ_AES_PIN = name.replace(/ /g, '')
+                    + ';' : ''
+
             }
         }
-        if (JSESSIONID && LZ_TOKEN_KEY && LZ_TOKEN_VALUE && LZ_AES_PIN) {
-            this.lz = `${JSESSIONID}${LZ_TOKEN_KEY}${LZ_TOKEN_VALUE}${LZ_AES_PIN}`
-        } else if (JSESSIONID && LZ_TOKEN_KEY && LZ_TOKEN_VALUE) {
-            this.lz = `${JSESSIONID}${LZ_TOKEN_KEY}${LZ_TOKEN_VALUE}`
+
+        if (JSESSIONID && LZ_TOKEN_KEY && LZ_TOKEN_VALUE) {
+            this.ticket = `${JSESSIONID}${LZ_TOKEN_KEY}${LZ_TOKEN_VALUE}${this.LZ_AES_PIN || ''}`
         } else if (LZ_TOKEN_KEY && LZ_TOKEN_VALUE) {
-            this.lz = `${LZ_TOKEN_KEY}${LZ_TOKEN_VALUE}`
-        } else if (JSESSIONID && jcloud_alb_route) {
-            this.lz = `${JSESSIONID}${jcloud_alb_route}`
-        } else if (JSESSIONID) {
-            this.lz = `${JSESSIONID}`
+            this.ticket = `${LZ_TOKEN_KEY}${LZ_TOKEN_VALUE}${this.LZ_AES_PIN || ''}`
         }
-        if (ci_session) {
-            this.lz = `${ci_session}`
-        }
+        !this.ticket.includes('LZ_AES_PIN=') && this.LZ_AES_PIN && (this.ticket = this.ticket + this.LZ_AES_PIN);
         // testMode ? this.log('lz', this.lz) : ''
     }
 
@@ -721,14 +808,14 @@ class Env {
             data = data.replace(/[\n\r| ]/g, '');
             if (data.includes("try{jsonpCB")) {
                 data = data.replace(/try{jsonpCB.*\({/, '{')
-                .replace(/}\)([;])?}catch\(e\){}/, '}')
+                    .replace(/}\)([;])?}catch\(e\){}/, '}')
             } else if (data.includes('jsonpCB')) {
                 let st = data.replace(/[\n\r]/g, '').replace(/jsonpCB.*\({/,
                     '{');
                 data = st.substring(0, st.length - 1)
             } else if (data.match(/try{.*\({/)) {
                 data = data.replace(/try{.*\({/, '{')
-                .replace(/}\)([;])?}catch\(e\){}/, '}')
+                    .replace(/}\)([;])?}catch\(e\){}/, '}')
             } else {
                 testMode ? console.log('例外', data) : ''
                 data = /.*?({.*}).*/g.exec(data)[1]
@@ -756,47 +843,6 @@ class Env {
         return this.uuid()
     }
 
-    uuid(x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") {
-        return uuid(x)
-    }
-
-    async unfollow(shopId = this.shopId) {
-        let url = 'https://api.m.jd.com/client.action?g_ty=ls&g_tk=518274330'
-        let body = `functionId=followShop&body={"follow":"false","shopId":"${shopId
-        || this.shopId}","award":"true","sourceRpc":"shop_app_home_follow"}&osVersion=13.7&appid=wh5&clientVersion=9.2.0&loginType=2&loginWQBiz=interact`
-        let headers = {
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Host': 'api.m.jd.com',
-            'Connection': 'keep-alive',
-            'Accept-Language': 'zh-cn',
-            'Cookie': this.cookie
-        }
-        headers['User-Agent'] = `Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.4(0x1800042c) NetType/4G Language/zh_CN miniProgram`
-        let {data} = await this.request(url, headers, body);
-        this.log(data.msg)
-        return data;
-    }
-
-    async getShopInfo(venderId = this.venderId) {
-        try {
-            let url = `https://wq.jd.com/mshop/QueryShopMemberInfoJson?venderId=${venderId
-            || this.venderId}`
-            let headers = {
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-                "Referer": 'https://h5.m.jd.com/',
-                "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`,
-                'Cookie': this.cookie
-            }
-            return await this.get(url, headers);
-        } catch (e) {
-            return {}
-        }
-    }
-
     randomCallback(e = 1) {
         let t = "abcdefghigklmnopqrstuvwsyz", a = t.length, n = '';
         for (let i = 0; i < e; i++) {
@@ -819,30 +865,117 @@ class Env {
     }
 
     now(fmt) {
-        return format(Date.now(), fmt || 'yyyy-MM-dd HH:mm:ss.SSS')
+        return format(Date.now(), fmt || 'yyyy-MM-dd HH:mm:ss.SSS');
     }
 
-    formatDate(date, fmt) {
-        // noinspection JSCheckFunctionSignatures
-        return format(typeof date === 'object' ? date : new Date(
-            typeof date === 'string' ? date * 1 : date),
-            fmt || 'yyyy-MM-dd')
+    formatDate(data, fmt) {
+        return format(typeof data === 'object' ? data : new Date(typeof data === 'string' ? data * 1 : data), fmt || 'yyyy-MM-dd');
     }
 
-    //yyyy-MM-dd HH:mm:ss
     parseDate(date) {
-        let d = new Date(Date.parse(date.replace(/-/g, "/")));
-        d.setHours(d.getHours() + 8)
-        return d;
+        return new Date(Date.parse(date.replace(/-/g, '/')));
     }
 
     timestamp() {
-        return new Date().getTime()
+        return new Date().getTime();
+    }
+
+    uuid(x = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx') {
+        return uuid(x);
+    }
+
+    async unfollow(shopId = this.shopId) {
+        return
+        let url = 'https://api.m.jd.com/client.action?g_ty=ls&g_tk=518274330'
+        let body = `functionId=followShop&body={"follow":"false","shopId":"${shopId
+            || this.shopId}","award":"true","sourceRpc":"shop_app_home_follow"}&osVersion=13.7&appid=wh5&clientVersion=9.2.0&loginType=2&loginWQBiz=interact`
+        let headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Host': 'api.m.jd.com',
+            'Connection': 'keep-alive',
+            'Accept-Language': 'zh-cn',
+            'Cookie': this.cookie
+        }
+        headers['User-Agent'] = `Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.4(0x1800042c) NetType/4G Language/zh_CN miniProgram`
+        let { data } = await this.request(url, headers, body);
+        this.log(data.msg)
+        return data;
+    }
+
+    async getShopInfo(venderId = this.venderId) {
+        try {
+            let url = 'https://wq.jd.com/mshop/QueryShopMemberInfoJson?venderId=' + (venderId || this.venderId);
+            const headers = {
+                Accept: '*/*',
+                Referer: 'https://h5.m.jd.com/',
+                Cookie: this.cookie,
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+                'User-Agent': 'Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40'
+            }
+            return await this.get(url, headers);
+        } catch (e) {
+            return {};
+        }
+    }
+
+    async sendMessage(d, i, j = 1) {
+        let C = 'https://api.telegram.org/bot' + process.env.TG_BOT_TOKEN + '/sendMessage';
+        const D = {
+            chat_id: d,
+            text: i,
+            disable_web_page_preview: true
+        };
+        let E = D;
+        const F = {
+            Cookie: '10089',
+            'Content-Type': 'application/json'
+        };
+        let G = F,
+            {
+                data: H
+            } = await this.request(C, G, E);
+        this.log('发送数据', i);
+        !H?.ok && j === 1 && ($.log('重试中', i), await $.wait(1000, 2000), await this.sendMessage(d, i, j++));
+    }
+
+    ua(type = 'jd') {
+        return JDAPP_USER_AGENTS[this.random(0, JDAPP_USER_AGENTS.length)];
+    }
+
+    async wxStop(err) {
+        let flag = false;
+
+        for (let e of stopKeywords) {
+            if (e && err?.includes(e)) {
+                flag = true;
+                this.expire = true;
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    async wxAddressStop(err) {
+        let flag = false;
+
+        for (let e of addressStopKeywords) {
+            if (e && err?.includes(e)) {
+                flag = true;
+                break;
+            }
+        }
+
+        return flag;
     }
 
     _tk() {
         let id = function (n) {
-            let src = 'abcdefghijklmnopqrstuvwxyz1234567890', res = '';
+            let src = 'abcdefghijklmnopqrstuvwxyz1234567890',
+                res = '';
             for (let i = 0; i < n; i++) {
                 res += src[Math.floor(src.length * Math.random())];
             }
@@ -850,164 +983,388 @@ class Env {
         }(40), ts = Date.now().toString(), tk = this.md5(
             '' + decodeURIComponent(this.username) + ts + id
             + 'tPOamqCuk9NLgVPAljUyIHcPRmKlVxDy');
-        return {ts: ts, id: id, tk: tk}
+
+        const j = {
+            ts: ts,
+            id: id,
+            tk: tk
+        };
+        return j;
     }
 
-    ua(type = 'jd') {
-        return JDAPP_USER_AGENTS[this.random(0, JDAPP_USER_AGENTS.length)]
-    }
-
-    async sign(fn, body = {}) {
-        let b = {"fn": fn, "body": body};
-        let h = {"token": apiToken}
-        try {
-            let {data} = await this.request(apiSignUrl, h, b);
-            console.log(data)
-            return {fn: data.fn, sign: data.body};
-        } catch (e) {
-            console.log("sign接口异常")
-        }
-        return {fn: "", sign: ""};
-    }
-
-    async _algo() {
-        if (this.appId.length === 2) {
-            if (this.domain.includes('lzkj') || this.domain.includes('lzdz')
-                || this.domain.includes('cjhy')) {
-                let url = `https://${this.domain}/wxTeam/activity?activityId=${this.activityId}`
-                await this.request(url, {
-                    'Accept-Encoding': 'gzip, deflate, br',
-                    'Connection': 'keep-alive',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1",
-                    'Accept-Language': 'zh-cn',
-                    'Cookie': this.cookie
-                })
+    async _algo(d = 0) {
+        if (this.appId === 'wx') {
+            try {
+                if (this.domain.includes('lzkj') || this.domain.includes('lzdz')
+                    || this.domain.includes('cjhy')) {
+                    let url = `https://${this.domain}/wxTeam/activity?activityId=${this.activityId}`
+                    await this.request(url, {
+                        'Accept-Encoding': 'gzip, deflate, br',
+                        'Connection': 'keep-alive',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1",
+                        'Accept-Language': 'zh-cn',
+                        'Cookie': this.cookie
+                    })
+                }
+            } catch (e) {
+                d++ < 3 && (await this.wait(1200, 3000), await this._algo(d));
             }
-            return ''
+
+            return '';
         } else {
             let fp = function () {
-                let e = "0123456789", a = 13, i = ''
+                let e = '0123456789',
+                    a = 13,
+                    i = '';
+
                 for (; a--;) {
-                    i += e[Math.random() * e.length | 0]
+                    i += e[Math.random() * e.length | 0];
                 }
-                return (i + Date.now()).slice(0, 16)
+
+                return (i + Date.now()).slice(0, 16);
             }();
-            let data = await this.post(
-                'https://cactus.jd.com/request_algo?g_ty=ajax', JSON.stringify({
-                    "version": "1.0",
-                    "fp": fp,
-                    "appId": this.appId,
-                    "timestamp": this.timestamp(),
-                    "platform": "web",
-                    "expandParams": ''
-                }), {
-                    'Authority': 'cactus.jd.com',
-                    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
-                    'Content-Type': 'application/json',
-                    'Origin': 'https://st.jingxi.com',
-                    'Referer': 'https://st.jingxi.com/',
-                });
+
+            let data = await this.post('https://cactus.jd.com/request_algo?g_ty=ajax', JSON.stringify({
+                'version': '1.0',
+                'fp': fp,
+                'appId': this.appId,
+                'timestamp': this.timestamp(),
+                'platform': 'web',
+                'expandParams': ''
+            }), {
+                'Authority': 'cactus.jd.com',
+                'Origin': 'https://st.jingxi.com',
+                'Referer': 'https://st.jingxi.com/',
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+                'Content-Type': 'application/json'
+            });
             return {
                 fp: fp.toString(),
                 tk: data?.data?.result?.tk || data?.result?.tk,
-                em: new Function(
-                    `return ${data?.data?.result?.algo
-                    || data?.result?.algo}`)()
-            }
+                em: new Function('return ' + (data?.data?.result?.algo || data?.result?.algo))()
+            };
         }
     }
 
-    async isvObfuscator() {
-        let url = `https://api.m.jd.com/client.action?functionId=isvObfuscator`
-        let body = ''
-        switch (this.domain) {
-            case 'cjhy-isv.isvjcloud.com':
-            case 'lzkj-isv.isvjcloud.com':
-            case 'txzj-isv.isvjcloud.com':
-            case 'lzdz-isv.isvjcloud.com':
-            case 'cjhydz-isv.isvjcloud.com':
-                body = this.randomArray(ISV_OBFUSCATOR[this.domain], 1)[0]
-                break
-            default:
-                body = 'adid=7B411CD9-D62C-425B-B083-9AFC49B94228&area=16_1332_42932_43102&body=%7B%22url%22%3A%22https%3A%5C/%5C/cjhydz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167541&client=apple&clientVersion=9.4.0&d_brand=apple&d_model=iPhone8%2C1&eid=eidId10b812191seBCFGmtbeTX2vXF3lbgDAVwQhSA8wKqj6OA9J4foPQm3UzRwrrLdO23B3E2wCUY/bODH01VnxiEnAUvoM6SiEnmP3IPqRuO%2By/%2BZo&isBackground=N&joycious=48&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&openudid=2f7578cb634065f9beae94d013f172e197d62283&osVersion=13.1.2&partner=apple&rfs=0000&scope=11&screen=750%2A1334&sign=60bde51b4b7f7ff6e1bc1f473ecf3d41&st=1613720203903&sv=110&uts=0f31TVRjBStG9NoZJdXLGd939Wv4AlsWNAeL1nxafUsZqiV4NLsVElz6AjC4L7tsnZ1loeT2A8Z5/KfI/YoJAUfJzTd8kCedfnLG522ydI0p40oi8hT2p2sNZiIIRYCfjIr7IAL%2BFkLsrWdSiPZP5QLptc8Cy4Od6/cdYidClR0NwPMd58K5J9narz78y9ocGe8uTfyBIoA9aCd/X3Muxw%3D%3D&uuid=hjudwgohxzVu96krv/T6Hg%3D%3D&wifiBssid=9cf90c586c4468e00678545b16176ed2'
+    async isvObfuscator(cache = enableCacheToken, retries = isvObfuscatorRetry, cookie = this.cookie) {
+        let pt_pin = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+
+        if (cache) {
+            !fs.existsSync('tokens') && fs.mkdirSync('tokens');
+            let cacheObj = JSON.parse(this.readFileSync('tokens/' + pt_pin + '.json') || '{}');
+            this.log('缓存token结果' + pt_pin + ': ' + JSON.stringify(cacheObj));
+
+            if (cacheObj && cacheObj.token && cacheObj?.expireTime > this.timestamp()) {
+                enableCacheTokenTip === 2 ? this.putMsg('缓存') : '';
+                return { code: '0', token: cacheObj.token };
+            }
         }
-        let headers = {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-cn",
-            "Connection": "keep-alive",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Host": "api.m.jd.com",
-            "Cookie": this.cookie,
-            "User-Agent": this.UA,
+
+        let body = 'body=%7B%22url%22%3A%22https%3A%2F%2Fcjhy-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&uuid=b024526b380d35c9e3&client=apple&clientVersion=10.0.10&st=1646999134786&sv=111&sign=fd9417f9d8e872da6c55102bd69da99f';
+
+        try {
+            let newVar = await this.sign('isvObfuscator', { 'id': '', 'url': `https://${this.domain}` });
+
+            newVar.sign && (body = newVar.sign);
+            let url = 'https://api.m.jd.com/client.action?functionId=isvObfuscator';
+            const headers = {
+                'Accept': '*/*',
+                'Connection': 'keep-alive',
+                'Host': 'api.m.jd.com',
+                'Cookie': cookie,
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Language': 'zh-cn',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': 'JD4iPhone/168069 (iPhone; iOS 13.7; Scale/3.00)'
+            };
+            let { data } = await this.request(url, headers, body);
+            // console.log(data)
+            this.log('接口获取token结果' + pt_pin + ':', JSON.stringify(data));
+
+            if (cache && data?.code === '0' && data.token) {
+                enableCacheTokenTip === 2 ? this.putMsg('实时') : '';
+
+                if (cache) {
+                    let tokens = {
+                        expireTime: this.timestamp() + this.random(tokenCacheMin, tokenCacheMax) * 60 * 1000,
+                        token: data.token
+                    };
+                    this.writeFileSync('tokens/' + pt_pin + '.json', JSON.stringify(tokens));
+                    this.log('更新' + pt_pin + '.json文件完成');
+                }
+            } else if (data?.code === '3' && data?.errcode === 264) {
+                this.putMsg(`CK过期`);
+            } else {
+                console.log(data)
+            }
+            return data;
+        } catch (e) {
+            if (retries-- > 0) {
+                console.log(`第${isvObfuscatorRetry - retries}去重试isvObfuscator接口,等待${isvObfuscatorRetryWait}秒`)
+                await this.wait(isvObfuscatorRetryWait * 1000)
+                await this.isvObfuscator(cache, retries);
+            }
         }
-        let {data} = await this.request(url, headers, body)
+
+        return { code: '1', token: '' };
+    }
+
+    async getSimpleActInfoVo(fn = 'customer/getSimpleActInfoVo') {
+        if (this.venderId && this.shopId && this.activityType) {
+            return;
+        }
+
+        let data = await this.api(fn, 'activityId=' + this.activityId);
+        console.log(data)
+        if (!data.result || !data.data) {
+            this.putMsg('活动已结束');
+            this.expire = true
+            return;
+        }
+
+        this.venderId = data.data.venderId;
+        this.shopId = data.data.shopId;
+        this.activityType = data.data.activityType;
+    }
+
+    async getMyPing(fn = 'customer/getMyPing') {
+        let data = await this.api(fn, 'userId=' + this.venderId + '&token=' + this.Token + '&fromType=APP');
+        this.Pin = '';
+
+        if (!data.result) {
+            this.putMsg('获取pin失败');
+            return;
+        }
+
+        let secretPin = data.data.secretPin;
+        this.nickname = data.data.nickname;
+        this.Pin = this.domain.includes('cjhy') ? encodeURIComponent(encodeURIComponent(secretPin)) : encodeURIComponent(secretPin);
+    }
+
+    async accessLog(fn = 'common/' + (this.domain.includes('cjhy') ? 'accessLog' : 'accessLogWithAD')) {
+        await this.api(fn,
+            'venderId=' + this.venderId
+            + '&code=' + this.activityType
+            + '&pin=' + this.Pin
+            + '&activityId=' + this.activityId
+            + '&pageUrl=' + encodeURIComponent(this.activityUrl)
+            + '&subType=app&adSource=');
+    }
+
+    async sign(fn, body = {}) {
+        let back;
+        const b = {
+            'fn': fn,
+            'body': body
+        };
+        const h = {
+            'token': apiToken,
+            'Cookie': '123'
+        };
+
+        try {
+            let { data } = await this.request(signMode.includes('server') ? 'http://172.17.0.1:17840/sign' : apiSignUrl, h, b);
+            const K = {
+                fn: data.fn,
+                sign: data.body
+            };
+            back = K;
+        } catch (e) {
+            try {
+                const { data } = await this.request('http://imagic.eu.org:17840/sign', h, b),
+                    N = {
+                        fn: data.fn,
+                        sign: data.body
+                    };
+                back = N;
+            } catch (O) {
+                console.log('sign解析接口失效');
+            }
+        }
+
+        return back;
+    }
+
+    async ['api'](c, d) {
+        let i = 'https://' + this.domain + '/' + c,
+            j = '';
+        !this.domain.includes('lorealjdcampaign-rc.isvjcloud.com') && (j = 'IsvToken=' + this.Token + ';' + this.ticket + (this.Pin && 'AUTH_C_USER=' + this.Pin + ';' || ''), this.domain.includes('cjhy') ? j += 'APP_ABBR=CJHY;' : '');
+        const C = {
+            Host: this.domain,
+            Accept: 'application/json, text/plain, */*',
+            Connection: 'keep-alive',
+            Origin: 'https://' + this.domain,
+            Cookie: j,
+            Referer: this.activityUrl + '&sid=&un_area=',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-cn'
+        };
+        C['Content-Type'] = typeof d == 'string' ? 'application/x-www-form-urlencoded' : 'application/json;charset=utf-8';
+        C['User-Agent'] = this.UA;
+        let D = C;
+        this.domain.includes('lorealjdcampaign-rc.isvjcloud.com') && this.Token?.startsWith('ey') && (D.token = this.Token);
+        await this.wait(200, 300);
+        let {
+            data: E
+        } = await this.request(i, D, d);
+        return E;
+    }
+
+
+    async saveAddress(address = this.accounts[this.username]?.address || '', d = '') {
+        if (!address) {
+            console.log('未配置自动填地址，退出');
+            return;
+        }
+
+        if (await this.wxAddressStop(this.prizeName)) {
+            this.putMsg('命中关键词，不填写地址！');
+            return;
+        }
+
+        // const i = {
+        //   token: apiToken,
+        //   Cookie: '123'
+        // };
+        // let j = i;
+        // let C = [];
+
+        // try {
+        //   let {
+        //     data: D
+        //   } = await this.request(this.match(/(https?:\/\/[^/]+)/, apiSignUrl) + '/list_md5_pin', j);
+        //   C = D.data;
+        // } catch (E) {
+        //   console.log('获取授权信息失败');
+        //   return;
+        // }
+
+        // if (C.length === 0) {
+        //   return;
+        // }
+
+        // for (let F in this.accounts) {
+        //   this.accounts[F].md5 = this.md5(encodeURIComponent(F));
+        // }
+
+        // if (!C.includes(this.accounts[this.username].md5)) {
+        //   this.log('当前' + this.username + '未注册，退出自动填地址');
+        //   return;
+        // }
+
+        address = this.accounts[this.username].address;
+        M_WX_ADDRESS_LOG === 1 && this.log('当前地址详情' + JSON.stringify(address));
+
+        try {
+            let data = await this.api('wxAddress/save', 'venderId=' + this.venderId + '&pin=' + this.Pin + '&activityId=' + this.activityId + '&actType=' + this.activityType + '&prizeName=' + encodeURIComponent(this.prizeName) + '&receiver=' + encodeURIComponent(address.receiver) + '&phone=' + address.phone + '&province=' + encodeURIComponent(address.province) + '&city=' + encodeURIComponent(address.city) + '&address=' + encodeURIComponent(address.address) + '&generateId=' + this.addressId + '&postalCode=' + address.postalCode + '&areaCode=' + encodeURIComponent(address.areaCode) + '&county=' + encodeURIComponent(address.county));
+            data?.result ? this.putMsg('已填地址', d) : this.putMsg('' + data?.errorMessage, d);
+        } catch (e) { }
+    }
+
+    async carData() {
+        let url = 'https://wq.jd.com/deal/mshopcart/uncheckcmdy?sceneval=2&g_login_type=1&g_ty=ajax';
+        let body = 'commlist=&pingouchannel=0&all=1&scene=0&locationid=&type=0&templete=1&reg=1&version=20190418&traceid=&tabMenuType=4&sceneval=2';
+        const headers = {
+            'Accept': 'application/json',
+            'Origin': 'https://p.m.jd.com',
+            'Cookie': this.cookie,
+            'Host': 'wq.jd.com',
+            'Referer': 'https://p.m.jd.com/',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'jdpingou;5.5.2;;session/9;brand/apple',
+            'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
+        };
+        let { data } = await this.request(url, headers, body);
+        return data.errId === '0' ? data : '';
+    }
+
+    async carRmv(c = []) {
+        let d = [],
+            data = await this.carData();
+
+        if (data) {
+            for (let H of data.cart.venderCart) {
+                for (let I of H.sortedItems) {
+                    for (let J of I.polyItem.products) {
+                        if (c.length > 0 && c.includes(J.mainSku.id.toString()) || c.length === 0) {
+                            const K = I.polyItem?.promotion?.pid;
+                            K ? d.push(J.mainSku.id + ',,1,' + J.mainSku.id + ',11,' + I.polyItem.promotion.pid + ',0,skuUuid:' + J.skuUuid + '@@useUuid:0') : d.push(J.mainSku.id + ',,1,' + J.mainSku.id + ',1,,0,skuUuid:' + J.skuUuid + '@@useUuid:0');
+                        }
+                    }
+                }
+            }
+        }
+
+        if (d.length === 0) {
+            return;
+        }
+
+        this.log('即将删除' + d.length + '件商品');
+        let url = 'https://wq.jd.com/deal/mshopcart/rmvCmdy?sceneval=2&g_login_type=1&g_ty=ajax',
+            body = 'pingouchannel=0&commlist=' + encodeURIComponent(d.join('$')) + '&type=0&checked=0&locationid=&templete=1&reg=1&scene=0&version=20190418&traceid=&tabMenuType=4&sceneval=2';
+        const headers = {
+            'Accept': 'application/json',
+            'Origin': 'https://p.m.jd.com',
+            'Cookie': this.cookie,
+            'Host': 'wq.jd.com',
+            'Referer': 'https://p.m.jd.com/',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'jdpingou;5.5.2;;session/9;brand/apple',
+            'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
+        };
+        let {
+            data: G
+        } = await this.request(url, headers, body);
+        return G.errId === '0' ? G : {};
+    }
+
+    async openCardInfo(venderId = this.venderId) {
+        let url = 'https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=getShopOpenCardInfo&body=%7B%22venderId%22%3A%22' + venderId + '%22%2C%22channel%22%3A401%7D&client=H5&clientVersion=9.2.0&uuid=&jsonp=jsonp_' + this.timestamp() + '_' + this.random(10000, 99999) + '&' + (await this.h5st());
+        return await this.get(url, {
+            'Accept': '*/*',
+            'Connection': 'close',
+            'Referer': 'https://shopmember.m.jd.com/shopcard/?',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Host': 'api.m.jd.com',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
+            'Accept-Language': 'zh-cn',
+            'Cookie': this.cookie
+        });
+    }
+
+    async openCard(channel = 401, activityId = '', venderId = this.venderId, times = 0) {
+        this.log(this.venderId + ' ' + channel + ' ' + activityId + ' ' + times + ' ');
+        let ts = 'jsonp_' + this.timestamp() + '_' + this.random(10000, 99999),
+            body = '{"venderId":' + venderId + ',"bindByVerifyCodeFlag":1,"registerExtend":{},"writeChildFlag":0,' + (activityId ? '"activityId":' + activityId + ',' : '') + ' "channel":' + channel + '}',
+            url = 'https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=' + encodeURIComponent(body) + '&client=H5&clientVersion=9.2.0&uuid=&jsonp=' + ts + '&' + (await this.h5st());
+        const headers = {
+            'Accept': '*/*',
+            'Referer': 'https://shopmember.m.jd.com/shopcard/?venderId=' + venderId + '&channel=' + channel + (this.activityUrl ? '&returnUrl=' + this.activityUrl : ''),
+            'Host': 'api.m.jd.com',
+            'Cookie': this.cookie,
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-cn',
+            'User-Agent': this.UA
+        };
+        let data = await this.get(url, headers);
+
+        if ((data?.message?.includes('火爆') || data?.message?.includes('失败')) && times < 10) {
+            this.log(JSON.stringify(data));
+            await this.openCard(channel, activityId, venderId, ++times);
+        } else {
+            data?.code === 0 && data?.success ? this.log(data?.message) : this.log('开卡成功', JSON.stringify(data));
+        }
+
         return data;
     }
 
-    async api(fn, body) {
-        let url = `https://${this.domain}/${fn}`
-        let ck = `IsvToken=${this.Token};` + this.lz + (this.Pin
-            && "AUTH_C_USER=" + this.Pin + ";" || "")
-        this.domain.includes('cjhy') ? ck += 'APP_ABBR=CJHY;' : ''
-        if (fn.includes('followShop')) ck += `${LZ_AES_PIN}`
-        if (fn.includes('addCart')) ck += `${LZ_AES_PIN}`
-        // 加购必须进行一次，才不会提示非法操作，有几率行吧
-        if (fn.includes('getPrize')) ck += `${LZ_AES_PIN}`
-        let headers = {
-            "Host": this.domain,
-            "Accept": "application/json",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-cn",
-            "Connection": "keep-alive",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Origin": `https://${this.domain}`,
-            "Cookie": ck,
-            "Referer": `${this.activityUrl}&sid=&un_area=`,
-            "User-Agent": this.UA
-        }
-        let {data} = await this.request(url, headers, body);
-        return data;
+    async h5st() {
+        return h5sts.random();
     }
 
-    async wxStop(err) {
-        let flag = false;
-        if (!err) {
-            return flag
-        }
-        let stopKeywords = ['来晚了', '已发完', '非法操作', '奖品发送失败', '活动还未开始',
-            '发放完', '全部被领取', '余额不足', '已结束']
-        process.env.M_WX_STOP_KEYWORD ? process.env.M_WX_STOP_KEYWORD.split(
-            '@').forEach((item) => stopKeywords.push(item)) : ''
-        for (let e of stopKeywords) {
-            if (err.includes(e)) {
-                flag = true;
-                break
-            }
-        }
-        return flag;
-    }
-
-    async sendMessage(chat_id, text, count = 1) {
-        let url = `https://api.telegram.org/bot${process.env.TG_BOT_TOKEN}/sendMessage`
-        let body = {
-            'chat_id': chat_id,
-            'text': text,
-            'disable_web_page_preview': true
-        }
-        let headers = {
-            'Content-Type': 'application/json',
-            'Cookie': '10089'
-        }
-        let {data} = await this.request(url, headers, body);
-        this.log('发送数据', text)
-        if (!data?.ok && count === 1) {
-            $.log('重试中', text)
-            await $.wait(1000, 2000)
-            await this.sendMessage(chat_id, text, count++);
-        }
-    }
 }
 
-module.exports = {Env, CryptoJS};
+module.exports = { Env, CryptoJS, notify };
