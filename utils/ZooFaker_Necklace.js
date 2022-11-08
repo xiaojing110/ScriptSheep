@@ -968,7 +968,7 @@ const utils = function (_0x174d55 = {}) {
 		blog_refer: '',
 		blog_joyytoken: '',
 		bogTime: +new Date(),
-		get_blog: function (pin, _0x20bf44, token) {
+		get_blog: function (pin, _0x20bf44, joyytoken) {
 			const refer = [
 				'com.baidu',
 				'com.huawei',
@@ -1073,7 +1073,7 @@ const utils = function (_0x174d55 = {}) {
 					return new Buffer.from(str).toString('base64');
 				}
 			};
-			const token = this.blog_joyytoken || token || md5(pin);
+			const token = this.blog_joyytoken || joyytoken || md5(pin);
 			const cf = getTokenInfo(token);
 			let encrypeid = '';
 			const timestamp = this.bogTime || (this.getCurrentTime() - randomRangeNum(5000, 10000));
