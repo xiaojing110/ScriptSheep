@@ -872,7 +872,7 @@ const utils = function (_0x174d55 = {}) {
 				return n.q = l, n.cf_v = s, n;
 			}
 			return n;
-		}, 
+		},
 		sha1: function (s) {
 			var data = new Uint8Array(this.encodeUTF8(s))
 			var i, j, t;
@@ -907,13 +907,13 @@ const utils = function (_0x174d55 = {}) {
 				var o = m.slice(0);
 				for (j = 0; j < 80; j++)
 					w[j] = j < 16 ? s[i + j] : rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1),
-					t = rol(m[0], 5) + f[j / 20 | 0]() + m[4] + w[j] + k[j / 20 | 0] | 0,
-					m[1] = rol(m[1], 30), m.pop(), m.unshift(t);
+						t = rol(m[0], 5) + f[j / 20 | 0]() + m[4] + w[j] + k[j / 20 | 0] | 0,
+						m[1] = rol(m[1], 30), m.pop(), m.unshift(t);
 				for (j = 0; j < 5; j++) m[j] = m[j] + o[j] | 0;
 			};
 			t = new DataView(new Uint32Array(m).buffer);
 			for (var i = 0; i < 5; i++) m[i] = t.getUint32(i << 2);
-	
+
 			var hex = Array.prototype.map.call(new Uint8Array(new Uint32Array(m).buffer), function (e) {
 				return (e < 16 ? "0" : "") + e.toString(16);
 			}).join("");
@@ -925,18 +925,18 @@ const utils = function (_0x174d55 = {}) {
 			for (i = 0; i < s.length; i++)
 				if ((c = s.charCodeAt(i)) < 0x80) r.push(c);
 				else if (c < 0x800) r.push(0xC0 + (c >> 6 & 0x1F), 0x80 + (c & 0x3F));
-			else {
-				if ((x = c ^ 0xD800) >> 10 == 0) //对四字节UTF-16转换为Unicode
-					c = (x << 10) + (s.charCodeAt(++i) ^ 0xDC00) + 0x10000,
-					r.push(0xF0 + (c >> 18 & 0x7), 0x80 + (c >> 12 & 0x3F));
-				else r.push(0xE0 + (c >> 12 & 0xF));
-				r.push(0x80 + (c >> 6 & 0x3F), 0x80 + (c & 0x3F));
-			};
+				else {
+					if ((x = c ^ 0xD800) >> 10 == 0) //对四字节UTF-16转换为Unicode
+						c = (x << 10) + (s.charCodeAt(++i) ^ 0xDC00) + 0x10000,
+							r.push(0xF0 + (c >> 18 & 0x7), 0x80 + (c >> 12 & 0x3F));
+					else r.push(0xE0 + (c >> 12 & 0xF));
+					r.push(0x80 + (c >> 6 & 0x3F), 0x80 + (c & 0x3F));
+				};
 			return r;
 		},
-		gettoken: function (UA) {
+		gettoken: function (UA, bodys) {
 			const https = require('https');
-			var body = 'content={"appname":"50082","whwswswws":"","jdkey":"","body":{"platform":"1"}}';
+			var body = bodys ? bodys : 'content={"appname":"50082","whwswswws":"","jdkey":"","body":{"platform":"1"}}';
 			return new Promise((resolve, reject) => {
 				let options = {
 					hostname: "bh.m.jd.com",
@@ -1227,21 +1227,21 @@ const utils = function (_0x174d55 = {}) {
 				flag = true;
 				return random = randomRangeNum(70, 90);
 			};
-		})(), 
+		})(),
 		getMachineCode: function () {
 			return this.getAndroidId() + '-' + this.getOaid();
-		}, 
+		},
 		getJDKeyPre: function () {
 			return (this.getImei() + '-') + this.getOaid() || this.getAndroidId();
-		}, 
+		},
 		getJoyCount: (() => {
 			var count = 1;
 			return () => ++count;
-		})(), 
+		})(),
 		getWxJoyCount: (() => {
 			var count = 1;
 			return () => ++count;
-		})(), 
+		})(),
 		baseConverter: function (e, lenght) {
 			try {
 				var _0x53e8c3, a = [], arrlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', t = e, str = '';
@@ -1253,14 +1253,14 @@ const utils = function (_0x174d55 = {}) {
 				str = a.reduce((j, i) => j += arrlist[i], '');
 				return str;
 			} catch (e) { }
-		}, 
+		},
 		arrayLength: function (e, array, flag) {
 			flag && (array.push(flag), e < array.length && array.shift());
-		}, 
+		},
 		getTouchForce: (() => {
 			var random = randomRangeNum(3, 8);
 			return () => randomRangeNum((random - 1) * 1000000, (random + 1) * 1000000) / 10000000;
-		})(), 
+		})(),
 		getCurrnetData: function (e, _0x6b575) {
 			const action = ['click', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend'];
 			try {
@@ -1273,7 +1273,7 @@ const utils = function (_0x174d55 = {}) {
 				console.log(e);
 				return '';
 			}
-		}, 
+		},
 		TouchEvent: function () {
 			var Event = {}, $ = this;
 			Event.getDoTaskTouchInfo = function (needrandom = false) {
@@ -1494,11 +1494,11 @@ const utils = function (_0x174d55 = {}) {
 			outstr.push(this.getCrcCode(data));
 			Event.end();
 			return { 'log': outstr.join('~'), 'sceneid': e.sceneid || 'HYJhPageh5' };
-		}, 
+		},
 		getOrderString: function () {
 			let string = 'getOrderString', i = 1;
 			return () => (string += String.fromCharCode(i++), string);
-		}(), 
+		}(),
 		getCookie: function (input) {
 			const pin = input.match(/pt_pin=([^; ]+)(?=;?)/)[1] || '';
 			const {
@@ -1507,7 +1507,7 @@ const utils = function (_0x174d55 = {}) {
 			const Cookie1 = tranCookie({ '__jd_ref_cls': __jd_ref_cls, 'mba_muid': mba_muid, 'mba_sid': mba_sid, 'shshshfpb': shshshfpb, '__jda': __jda, '__jdb': __jdb, '__jdc': __jdc, 'pre_seq': pre_seq, 'pre_session': pre_session }, true);
 			const Cookie2 = tranCookie({ 'pwdt_id': pin, 'shshshfp': shshshfp, 'shshshfpa': shshshfpa, 'shshshsID': shshshsID, 'sid': sid, 'wxa_level': 1, 'cid': cid, '__jdv': __jdv }, true);
 			return tranCookie(Cookie1 + ' ' + input + ' ' + Cookie2);
-		}, 
+		},
 		getWxSs: function (e, pin) {
 			if (!e.joyytoken) {
 				throw new Error('嘿，你给我传个null的joyytoken作甚');
@@ -1527,29 +1527,29 @@ const utils = function (_0x174d55 = {}) {
 			outstr.push(this.getCrcCode(str1));
 			outstr.push('C');
 			var data = {
-				'fpb': e.shshshfpb ? e.shshshfpb : '', 
-				'hy': this.getWxJoyCount(), 
-				'bm': 'u', 
-				'jj': '', 
-				'cs': pin && e.cs || '7454d346a000b1d85ab8bb5a89c7deee' || hexMD5(this.getOrderString()), 
-				'epf': 't', 
-				'coa': false, 
-				'ocs': 'u', 
-				'ncn': e.networkMode ? e.networkMode : 'wifi', 
-				'gbi': this.getLittleNum(), 
-				'brd': pin && e.brd || 'iPhone', 
-				'ml': pin && e.ml || e.mobile, 
-				'src': pin && e.src || ['812', '375'], 
-				'vs': pin && e.vs || '8.0.15', 
-				'ss': pin && e.ss || 'IOS ' + e.osVersion, 
-				'np': 'ios', 
-				'ci': 'x3.2.2', 
-				'ad': e.wxAppid || 'wx91d27dbf599dff74', 
-				'ev': 'release', 
-				't': time, 
-				'cf_v': '01', 
-				'bd': random_str, 
-				'jjt': 't', 
+				'fpb': e.shshshfpb ? e.shshshfpb : '',
+				'hy': this.getWxJoyCount(),
+				'bm': 'u',
+				'jj': '',
+				'cs': pin && e.cs || '7454d346a000b1d85ab8bb5a89c7deee' || hexMD5(this.getOrderString()),
+				'epf': 't',
+				'coa': false,
+				'ocs': 'u',
+				'ncn': e.networkMode ? e.networkMode : 'wifi',
+				'gbi': this.getLittleNum(),
+				'brd': pin && e.brd || 'iPhone',
+				'ml': pin && e.ml || e.mobile,
+				'src': pin && e.src || ['812', '375'],
+				'vs': pin && e.vs || '8.0.15',
+				'ss': pin && e.ss || 'IOS ' + e.osVersion,
+				'np': 'ios',
+				'ci': 'x3.2.2',
+				'ad': e.wxAppid || 'wx91d27dbf599dff74',
+				'ev': 'release',
+				't': time,
+				'cf_v': '01',
+				'bd': random_str,
+				'jjt': 't',
 				'azh': 'a'
 			};
 			data = new Buffer[('from')](this.xorEncrypt(JSON.stringify(data), key)).toString('base64');
