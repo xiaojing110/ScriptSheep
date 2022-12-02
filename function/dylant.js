@@ -399,6 +399,7 @@ async function rb(l) {
     y[3] == 1 ? B = rh.sha1(B) : B = rh.sha2(B);
     var C = [r, '1' + z + l.joyytoken, y[2] + ',' + y[3]];
     C.push(B), C.push(rh.getCrcCode(B)), C.push('C');
+    let D = '{"tm":[],"tnm":["d1-7R,JI,4OD,u,t","d5-9L,AC,6GU,1.000,t","d7-9L,AC,6HM,1.000,t"],"grn":1,"ss":"16672715829285809","wed":"tttttfuf","wea":"ffttttua","pdn":[7,2428,8,8,1,1],"jj":3,"cs":"bbce24b486769155d248ed48e5854ab9","np":"Linux aarch64","t":1669278112024,"jk":"--6439a2ade61a4db4-16c7a93794da15b4590ab94b96aca28fd7467","fpb":"hZhCA7-iaPtXb9MOk3FUBuA","nv":"Google Inc.","nav":"98247","scr":[873,393],"ro":["HLK-AL00 Build/HONORHLK-AL00","android","10","11.2.3","98413","4bcadd3156406678-b666b02fbba0bd9e","1"],"ioa":"fffffftt","aj":"u","ci":"w3.2.4","cf_v":"01","bd":"random=88733526","mj":[2,0,0],"blog":"","msg":""}';
     t = new Buffer.from(rh.xorEncrypt(t, A)).toString('base64');
     let E = rh.getCrcCode(t);
 
@@ -606,7 +607,7 @@ let rh = {
             return null;
         }
     },
-    'getCurrentDate': function () {
+    getCurrentDate: function () {
         return new Date();
     },
     'getCurrentTime': function () {
