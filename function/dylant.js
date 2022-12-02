@@ -363,7 +363,7 @@ async function rb(l) {
             break;
     }
 
-    let r = this.getCurrentDate().getTime(),
+    let r = this.Date().getTime(),
         s,
         t,
         u;
