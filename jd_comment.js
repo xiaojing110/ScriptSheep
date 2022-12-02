@@ -1,8 +1,9 @@
 /**
 自动评价
 cron 21 12 * * * jd_comment.js
+搬运fake
 */
-const $ = new Env('自动评价');
+const $ = new Env('带图评价-加密');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -69,9 +70,9 @@ let defcommentlist=['网上购物这么激烈，没想到店家的服务这么�
 			await $.wait(20000);
 		}
 	}
-})().catch(_0x19720c=>{
+})()['catch'](_0x19720c=>{
 	$.log('','❌ '+$.name+', 失败! 原因: '+_0x19720c+'!','');
-}).finally(()=>{
+})['finally'](()=>{
 	$.done();
 });
 async function main(){
@@ -87,22 +88,22 @@ async function main(){
 		await $.wait(2000);
 		let _0xc2e1e3=$.commentInfoList;
 		for(const _0x1811dd of _0xc2e1e3){
-			if(_0x1811dd.commentInfo.pictureInfoList){
-				for(const _0x308bc2 of _0x1811dd.commentInfo.pictureInfoList||{}){
+			if(_0x1811dd.commentInfo['pictureInfoList']){
+				for(const _0x308bc2 of _0x1811dd.commentInfo['pictureInfoList']||{}){
 					if(_0x308bc2.mediaType!='2'){
-						if(_0x308bc2.picURL.indexOf('dpg')!==-1){
-							picURL=_0x308bc2.picURL.replace(/s[0-9]{3}x[0-9]{3}_(.*).dpg/g,'$1');
-						}else if(_0x308bc2.picURL.indexOf('webp')!==-1){
-							picURL=_0x308bc2.picURL.replace(/s[0-9]{3}x[0-9]{3}_(.*).webp/g,'$1');
-						}else if(_0x308bc2.picURL.indexOf('avif')!==-1){
-							picURL=_0x308bc2.picURL.replace(/s[0-9]{3}x[0-9]{3}_(.*).avif/g,'$1');
+						if(_0x308bc2.picURL['indexOf']('dpg')!==-1){
+							picURL=_0x308bc2.picURL['replace'](/s[0-9]{3}x[0-9]{3}_(.*).dpg/g,'$1');
+						}else if(_0x308bc2.picURL['indexOf']('webp')!==-1){
+							picURL=_0x308bc2.picURL['replace'](/s[0-9]{3}x[0-9]{3}_(.*).webp/g,'$1');
+						}else if(_0x308bc2.picURL['indexOf']('avif')!==-1){
+							picURL=_0x308bc2.picURL['replace'](/s[0-9]{3}x[0-9]{3}_(.*).avif/g,'$1');
 						}
 						_0x46b344.push(picURL);
 					};
 				};
 			};
-			if(_0x1811dd.commentInfo.commentScore==='5'&&_0x1811dd.commentInfo.commentData.length>wordcount){
-				_0x523b44.push(_0x1811dd.commentInfo.commentData);
+			if(_0x1811dd.commentInfo['commentScore']==='5'&&_0x1811dd.commentInfo['commentData']['length']>wordcount){
+				_0x523b44.push(_0x1811dd.commentInfo['commentData']);
 			};
 		};
 		nullKeyword='';
@@ -141,8 +142,8 @@ async function getCommentListWithCard(_0xe33f3c){
 }
 async function getCommentWareList(_0x1fd34f='1'){
 	s=await task('getCommentWareList',{'status':'1','planType':'1','pageIndex':_0x1fd34f,'pageSize':'10'});
-	$.maxPage=s.commentWareListInfo.maxPage;
-	$.commentWareList=s.commentWareListInfo.commentWareList.reverse()[0];
+	$.maxPage=s.commentWareListInfo['maxPage'];
+	$.commentWareList=s.commentWareListInfo['commentWareList']['reverse']()[0];
 }
 async function task(_0x41d504,_0x1bfc38){
 	return s=await getSign(_0x41d504,_0x1bfc38),opt={'url':'https://api.m.jd.com/client.action?functionId='+_0x41d504,'body':s.body,'headers':{'Host':'api.m.jd.com','content-type':'application/x-www-form-urlencoded','accept':'*/*','user-agent':UA,'accept-language':'zh-Hans-JP;q=1, en-JP;q=0.9, zh-Hant-TW;q=0.8, ja-JP;q=0.7, en-US;q=0.6','Cookie':cookie}},new Promise(_0x19d862=>{
@@ -167,7 +168,7 @@ async function task(_0x41d504,_0x1bfc38){
 	});
 }
 function uuidRandom(){
-	return Math.random().toString(16).slice(2,10)+Math.random().toString(16).slice(2,10)+Math.random().toString(16).slice(2,10)+Math.random().toString(16).slice(2,10)+Math.random().toString(16).slice(2,10);
+	return Math.random()['toString'](16)['slice'](2,10)+Math.random()['toString'](16)['slice'](2,10)+Math.random()['toString'](16)['slice'](2,10)+Math.random()['toString'](16)['slice'](2,10)+Math.random()['toString'](16)['slice'](2,10);
 }
 function random(_0x110c03){
 	return _0x110c03[Math.floor(Math.random()*_0x110c03.length)];
@@ -192,8 +193,8 @@ function TotalBean(){
 		$.get(_0x5e519d,(_0x5e519d,_0x4a67d9,_0x5637c2)=>{
 			try{
 				if(_0x5e519d)$.logErr(_0x5e519d);else if(_0x5637c2){
-					if(1001===(_0x5637c2=JSON.parse(_0x5637c2)).retcode)return void($.isLogin=!1);
-					0===_0x5637c2.retcode&&_0x5637c2.data&&_0x5637c2.data.hasOwnProperty('userInfo')&&($.nickName=_0x5637c2.data.userInfo.baseInfo.nickname),0===_0x5637c2.retcode&&_0x5637c2.data&&_0x5637c2.data.assetInfo&&($.beanCount=_0x5637c2.data&&_0x5637c2.data.assetInfo.beanNum);
+					if(1001===(_0x5637c2=JSON.parse(_0x5637c2))['retcode'])return void($.isLogin=!1);
+					0===_0x5637c2.retcode&&_0x5637c2.data&&_0x5637c2.data['hasOwnProperty']('userInfo')&&($.nickName=_0x5637c2.data['userInfo']['baseInfo']['nickname']),0===_0x5637c2.retcode&&_0x5637c2.data&&_0x5637c2.data['assetInfo']&&($.beanCount=_0x5637c2.data&&_0x5637c2.data['assetInfo']['beanNum']);
 				}else console.log('京东服务器返回空数据');
 			}catch(_0x50a4cd){
 				$.logErr(_0x50a4cd);

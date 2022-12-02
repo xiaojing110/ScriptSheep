@@ -15,7 +15,7 @@
 
 **旧版青龙拉库代码**
 
-`ql repo https://github.com/Tlaeld/ScriptSheep.git "jd_|jx_|gua_|jddj_|getJDCookie" "activity|backUp|Coupon|update" "^jd[^_]|USER|utils|^JS|^TS|^JDJRValidator_|^ZooFaker|^sign|ql|magic|JDSignValidator|function|JDJR|sentNotify"`
+`ql repo https://Tlaeld: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@github.com/Tlaeld/ScriptSheep.git "jd_|jx_|gua_|jddj_|getJDCookie" "activity|backUp|Coupon|update" "^jd[^_]|USER|utils|^JS|^TS|^JDJRValidator_|^ZooFaker|^sign|ql|magic|JDSignValidator|function|JDJR|sentNotify"`
 
 **新版青龙订阅管理**
 

@@ -1,19 +1,12 @@
 /*
-================================================================================
-魔改自 https://github.com/555555/faker2/blob/main/jdCookie.js
-修改内容：与task_before.sh配合，由task_before.sh设置要设置要做互助的活动的 ShareCodeConfigName 和 ShareCodeEnvName 环境变量，
-        然后在这里实际解析/ql/log/.ShareCode中该活动对应的配置信息（由code.sh生成和维护），注入到nodejs的环境变量中
-修改原因：原先的task_before.sh直接将互助信息注入到shell的env中，在ck超过45以上时，互助码环境变量过大会导致调用一些系统命令
-        （如date/cat）时报 Argument list too long，而在node中修改环境变量不会受这个限制，也不会影响外部shell环境，确保脚本可以正常运行
-魔改作者：风之凌殇
-================================================================================
-
 此文件为Node.js专用。其他用户请忽略
  */
 //此处填写京东账号cookie。
 let CookieJDs = [
-    ""
+  '',//账号一ck,例:pt_key=XXX;pt_pin=XXX;
+  '',//账号二ck,例:pt_key=XXX;pt_pin=XXX;如有更多,依次类推
 ]
+let IP='';
 // 判断环境变量里面是否有京东ck
 if (process.env.JD_COOKIE) {
   if (process.env.JD_COOKIE.indexOf('&') > -1) {
@@ -31,23 +24,56 @@ if (JSON.stringify(process.env).indexOf('GITHUB')>-1) {
     await process.exit(0);
   })()
 }
+//!(async () => {
+//	IP = await getIP();
+//    try {
+//        IP = IP.match(/((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}/)[0];
+//        console.log(`\n当前公网IP: ${IP}`);
+//    } catch (e) { }
+//})()
 CookieJDs = [...new Set(CookieJDs.filter(item => !!item))]
-console.log(`\n====================共${CookieJDs.length}个京东账号Cookie=========\n`);
-console.log(`==================脚本执行- 北京时间(UTC+8)：${new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).toLocaleString('zh', {hour12: false}).replace(' 24:',' 00:')}=====================\n`)
 if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+console.log(`\n====================共${CookieJDs.length}个京东账号Cookie=================\n`);
+console.log(`============脚本执行时间：${new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).toLocaleString('chinese',{hour12:false})}=============\n`)
+console.log('>>>>>>>>>>>>>>6Dylan6 提示：任务正常运行中>>>>>>>>>>>>>>>\n')
 for (let i = 0; i < CookieJDs.length; i++) {
   if (!CookieJDs[i].match(/pt_pin=(.+?);/) || !CookieJDs[i].match(/pt_key=(.+?);/)) console.log(`\n提示:京东cookie 【${CookieJDs[i]}】填写不规范,可能会影响部分脚本正常使用。正确格式为: pt_key=xxx;pt_pin=xxx;（分号;不可少）\n`);
   const index = (i + 1 === 1) ? '' : (i + 1);
   exports['CookieJD' + index] = CookieJDs[i].trim();
 }
 
+
+function getIP() {
+    const https = require('https');
+    return new Promise((resolve, reject) => {
+        let opt = {
+            hostname: "www.cip.cc",
+            port: 443,
+            path: "/",
+            method: "GET",
+            headers: {
+                "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36',
+            },
+            timeout: 5000
+        }
+        const req = https.request(opt, (res) => {
+             res.setEncoding('utf-8');
+             let tmp = '';
+             res.on('error', reject);
+             res.on('data', d => tmp += d);
+             res.on('end',() => resolve(tmp));
+        });
+
+        req.on('error', reject);
+        req.end();
+    });
+}
 // 以下为注入互助码环境变量（仅nodejs内起效）的代码
 function SetShareCodesEnv(nameChinese = "", nameConfig = "", envName = "") {
     let rawCodeConfig = {}
-
-    // 读取互助码
-    let shareCodeLogPath = `${process.env.QL_DIR}/log/.ShareCode/${nameConfig}.log`
     let fs = require('fs')
+    // 读取互助码
+    let shareCodeLogPath = fs.existsSync(`${process.env.QL_DIR}/data`) ? `${process.env.QL_DIR}/data/log/.ShareCode/${nameConfig}.log` : `${process.env.QL_DIR}/log/.ShareCode/${nameConfig}.log`;
     if (fs.existsSync(shareCodeLogPath)) {
         // 因为faker2目前没有自带ini，改用已有的dotenv来解析
         // // 利用ini模块读取原始互助码和互助组信息
@@ -99,7 +125,7 @@ function SetShareCodesEnv(nameChinese = "", nameConfig = "", envName = "") {
     process.env[envName] = shareCodesStr
 
     let totalCodeCount = rightIndex - leftIndex + 1
-    console.info(`${nameChinese}的 互助码环境变量 ${envName}，共计 ${totalCodeCount} 组互助码，总大小为 ${shareCodesStr.length} 字节`)
+    //console.info(`${nameChinese}的 互助码环境变量 ${envName}，共计 ${totalCodeCount} 组互助码，总大小为 ${shareCodesStr.length} 字节`)
 }
 
 // 判断当前活动脚本是否在互助脚本列表中
