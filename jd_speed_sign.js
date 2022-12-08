@@ -9,7 +9,7 @@
 ============Quantumultx===============
 [task_local]
 #京东极速版
-15 2,14 * * * jd_speed_sign.js,
+5 0,8 * * * jd_speed_sign.js,
 ================Loon==============
 [Script]
 cron "15 2,14 * * *" script-path=jd_speed_sign.js,tag=京东极速版
@@ -121,7 +121,7 @@ async function signInit() {
     $.get(taskUrl('speedSignInit', {
       "activityId": "8a8fabf3cccb417f8e691b6774938bc2",
       "kernelPlatform": "RN",
-      "inviterId":"U44jAghdpW58FKgfqPdotA=="
+      "inviterId":"wXX9SjXOdYMWe5Ru/1+x9A=="
     }), async (err, resp, data) => {
       try {
         if (err) {
@@ -771,7 +771,7 @@ function invite2() {
   let inviterId = inviterIdArr[Math.floor((Math.random() * inviterIdArr.length))]
   let options = {
     url: "https://api.m.jd.com/",
-    body: `functionId=TaskInviteService&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":encodeURIComponent(inviterId),"type":1}})}&appid=market-task-h5&uuid=&_t=${Date.now()}`,
+    body: `functionId=TaskInviteServiceNew&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":encodeURIComponent(inviterId),"type":1}})}&appid=jx_h5&uuid=&_t=${Date.now()}`,
     headers: {
       "Host": "api.m.jd.com",
       "Accept": "application/json, text/plain, */*",
