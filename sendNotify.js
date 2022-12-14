@@ -21,7 +21,7 @@ const querystring = require('querystring');
 const exec = require('child_process').exec;
 const $ = new Env();
 const timeout = 15000; //超时时间(单位毫秒)
-//console.log("加载sendNotify，当前版本: 20220723");
+console.log("加载sendNotify，当前版本: 20221118");
 // =======================================go-cqhttp通知设置区域===========================================
 //gobot_url 填写请求地址http://127.0.0.1/send_private_msg
 //gobot_token 填写在go-cqhttp文件设置的访问密钥
@@ -186,7 +186,7 @@ let isLogin = false;
 if (process.env.NOTIFY_SHOWNAMETYPE) {
     ShowRemarkType = process.env.NOTIFY_SHOWNAMETYPE;
 }
-async function sendNotify(text, desp, params = {}, author = "\n================================\n",strsummary="") {
+async function sendNotify(text, desp, params = {}, author = "\n================================\n好物推荐：https://u.jd.com/WLEVYTM",strsummary="") {
     console.log(`开始发送通知...`); 
 	
 	//NOTIFY_FILTERBYFILE代码来自Ca11back.
@@ -919,7 +919,7 @@ async function sendNotify(text, desp, params = {}, author = "\n=================
             ddBotNotify(text, desp), //钉钉机器人
             qywxBotNotify(text, desp), //企业微信机器人
             qywxamNotify(text, desp, strsummary), //企业微信应用消息推送
-            fsBotNotify(text, params),   //飞书机器人
+            fsBotNotify(text, desp),   //飞书机器人
             iGotNotify(text, desp, params), //iGot
             gobotNotify(text, desp), //go-cqhttp
             gotifyNotify(text, desp), //gotify
@@ -935,7 +935,7 @@ function getuuid(strRemark, PtPin) {
         if (Tempindex != -1) {
             console.log(PtPin + ": 检测到NVJDC的一对一格式,瑞思拜~!");
             var TempRemarkList = strRemark.split("@@");
-            for (let j = 1; j < TempRemarkList.length; j++) {
+            for (let j = 0; j < TempRemarkList.length; j++) {
                 if (TempRemarkList[j]) {
                     if (TempRemarkList[j].length > 4) {
                         if (TempRemarkList[j].substring(0, 4) == "UID_") {
@@ -2001,7 +2001,7 @@ function wxpusherNotify(text, desp) {
     });
 }
 
-function PushDeerNotify(text, desp, time = 2100) {
+function PushDeerNotify(text, desp) {
   return new Promise((resolve) => {
     if (PUSHDEER_KEY) {
       desp = encodeURI(desp);
@@ -2012,35 +2012,33 @@ function PushDeerNotify(text, desp, time = 2100) {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        timeout,
+        timeout: 5000,
       };
-      setTimeout(() => {
-        $.post(options, (err, resp, data) => {
-          try {
-            if (err) {
-              console.log('发送通知调用API失败！！\n');
-              console.log(err);
+      $.post(options, (err, resp, data) => {
+        try {
+          if (err) {
+            console.log('发送通知调用API失败！！\n');
+            console.log(err);
+          } else {
+            data = JSON.parse(data);
+            // 通过返回的result的长度来判断是否成功
+            if (
+              data.content.result.length !== undefined &&
+              data.content.result.length > 0
+            ) {
+              console.log('PushDeer发送通知消息成功🎉\n');
             } else {
-              data = JSON.parse(data);
-              // 通过返回的result的长度来判断是否成功
-              if (
-                data.content.result.length !== undefined &&
-                data.content.result.length > 0
-              ) {
-                console.log('PushDeer发送通知消息成功🎉\n');
-              } else {
-                console.log(
-                  `PushDeer发送通知消息异常\n${JSON.stringify(data)}`,
-                );
-              }
+              console.log(
+                `PushDeer发送通知消息异常\n${JSON.stringify(data)}`,
+              );
             }
-          } catch (e) {
-            $.logErr(e, resp);
-          } finally {
-            resolve(data);
           }
-        });
-      }, time);
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve(data);
+        }
+      });
     } else {
       resolve();
     }
@@ -2089,7 +2087,7 @@ function GetnickName() {
                 Accept: "*/*",
                 Connection: "keep-alive",
                 Cookie: cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.42",
                 "Accept-Language": "zh-cn",
                 "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
                 "Accept-Encoding": "gzip, deflate, br"
@@ -2126,16 +2124,17 @@ function GetnickName() {
 function GetnickName2() {
     return new Promise(async(resolve) => {
         const options = {
-            url: `https://wxapp.m.jd.com/kwxhome/myJd/home.json?&useGuideModule=0&bizId=&brandId=&fromType=wxapp&timestamp=${Date.now()}`,
-            headers: {
-                Cookie: cookie,
-                'content-type': `application/x-www-form-urlencoded`,
-                Connection: `keep-alive`,
-                'Accept-Encoding': `gzip,compress,br,deflate`,
-                Referer: `https://servicewechat.com/wxa5bf5ee667d91626/161/page-frame.html`,
-                Host: `wxapp.m.jd.com`,
-                'User-Agent': `Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.10(0x18000a2a) NetType/WIFI Language/zh_CN`,
-            },
+            "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+            "headers": {
+                "Accept": "application/json,text/plain, */*",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "zh-cn",
+                "Connection": "keep-alive",
+                "Cookie": cookie,
+                "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+            }
         };
         $.post(options, (err, resp, data) => {
             try {
@@ -2144,13 +2143,12 @@ function GetnickName2() {
                 } else {
                     if (data) {
                         data = JSON.parse(data);
-                        if (!data.user) {
+						if (data['retcode'] === 13) {
                             $.isLogin = false; //cookie过期
-                            return;
-                        }
-                        const userInfo = data.user;
-                        if (userInfo) {
-                            $.nickName = userInfo.petName;
+                            return
+                        }                        
+						if (data['retcode'] === 0) {
+                            $.nickName = (data['base'] && data['base'].nickname) || "";
                         }
                     } else {
                         $.log('京东服务器返回空数据');
