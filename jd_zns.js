@@ -4,7 +4,8 @@
 const $ = new Env('炸年兽');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
-let cookiesArr = [], cookie = '', message, helpCodeArr = [], helpPinArr = [];
+let cookiesArr = [], cookie = '', message, helpCodeArr = [], helpPinArr = [], wxCookie = "";
+let wxCookieArr = process.env.WXCookie?.split("@") || []
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const appid = $.appid = "50174"
 let teamMap = {}
@@ -33,6 +34,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
+            wxCookie = wxCookieArr[i] ?? "";
             // const pt_key = cookie.match(/pt_key=([^; ]+)(?=;?)/)?.[1] || ""
             // if (!/app_open/.test(pt_key)) {
             //     getAppCookie && (cookie = await getAppCookie(cookie));
@@ -175,6 +177,17 @@ async function travel() {
             if (doTaskFlag) {
                 console.log("\n去做主App任务\n")
                 await doAppTask()
+                if (helpFlag && wxCookie!==""){
+                    try {
+                        $.WxUA = getWxUA()
+                        const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
+                        $.WxSecretp = WxHomeData?.homeMainInfo?.secretp || $.secretp
+                        console.log("\n去做微信小程序任务\n")
+                        await doWxTask()
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
             }
         }
     } catch (e) {
@@ -182,7 +195,87 @@ async function travel() {
     }
 }
 
+async function doWxTask() {
+    $.stopWxTask = false
+    const feedList = []
+    const { taskVos } = await doWxApi("getTaskDetail", { taskId: "", appSign: 2 })
+    for (let mainTask of taskVos) {
+        const { taskId, taskName, waitDuration, times: timesTemp, maxTimes, status } = mainTask
+        let times = timesTemp, flag = false
+        if (status === 2) continue
+        const other = mohuReadJson(mainTask, "Vos?$", -1, "taskToken")
+        if (other) {
+            const { taskToken } = other
+            if (!taskToken) continue
+            if (taskId === 1) {
+                continue
+            }
+            console.log(`当前正在做任务：${taskName}`)
+            const res = await doWxApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
+            if ($.stopWxTask) return
+            res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
+            continue
+        }
+        $.stopCard = false
+        for (let activity of mohuReadJson(mainTask, "Vo(s)?$", maxTimes, "taskToken") || []) {
+            if (!flag) flag = true
+            const { shopName, title, taskToken, status } = activity
+            if (status !== 1) continue
+            console.log(`当前正在做任务：${shopName || title}`)
+            const res = await doWxApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
+            if ($.stopCard || $.stopWxTask) break
+            if (waitDuration || res.taskToken) {
+                await $.wait(waitDuration * 1000)
+                const res = await doWxApi("collectScore", { taskId, taskToken, actionType: 0 }, null, true)
+                if ($.stopWxTask) return
+                res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
+            } else {
+                if ($.stopWxTask) return
+                res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
+            }
+            times++
+            if (times >= maxTimes) break
+        }
+        if (flag) continue
+        feedList.push({
+            taskId: taskId.toString(),
+            taskName
+        })
+    }
+    for (let feed of feedList) {
+        const { taskId: id, taskName: name } = feed
+        const res = await doWxApi("getFeedDetail", { taskId: id.toString() }, null, true)
+        if (!res) continue
+        for (let mainTask of mohuReadJson(res, "Vos?$", 1, "taskId") || []) {
+            const { score, taskId, taskBeginTime, taskEndTime, taskName, times: timesTemp, maxTimes, waitDuration } = mainTask
+            const t = Date.now()
+            let times = timesTemp
+            if (t >= taskBeginTime && t <= taskEndTime) {
+                console.log(`当前正在做任务：${taskName}`)
+                for (let productInfo of mohuReadJson(mainTask, "Vo(s)?$", maxTimes, "taskToken") || []) {
+                    const { taskToken, status } = productInfo
+                    if (status !== 1) continue
+                    const res = await doWxApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
+                    if ($.stopWxTask) return
+                    times = res?.times ?? (times + 1)
+                    await $.wait(waitDuration * 1000)
+                    if (times >= maxTimes) {
+                        formatMsg(score, "任务收益")
+                        break
+                    }
+                }
+            }/*  else {
+            console.log(`任务：${taskName}：未到做任务时间`)
+        } */
+        }
+    }
+}
 
+function getWxUA() {
+    const osVersion = `${randomNum(12, 14)}.${randomNum(0, 6)}`
+    $.wxAppid = "wx91d27dbf599dff74"
+    return `Mozilla/5.0 (iPhone; CPU OS ${osVersion.replace(/\./g, "_")} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.15(0x18000f28) NetType/WIFI Language/zh_CN`
+}
 async function dealHelpRes(functionId, inviteId, pin) {
     $.stopHelp = false
     const helpRes = await doApi(functionId, null, { inviteId }, true, true)
@@ -398,6 +491,75 @@ function getSs(secretp) {
         log,
     }
 }
+
+async function doWxApi(functionId, prepend = {}, append = {}, needSs = false) {
+    functionId = `tigernian_${functionId}`
+    const url = JD_API_HOST + `?dev=${functionId}&g_ty=ls&g_tk=`
+    const bodyMain = {
+        sceneval: "",
+        callback: functionId,
+        functionId,
+        appid: "wh5",
+        client: "wh5",
+        clientVersion: "1.0.0",
+        uuid: -1,
+        body: encodeURIComponent(JSON.stringify({
+            ...prepend,
+            ss: needSs ? JSON.stringify(getWxSs($.WxSecretp)) : undefined,
+            ...append,
+        })),
+        loginType: 2,
+        loginWQBiz: "dacu"
+    }
+    const cookieA =
+        wxCookie
+            ?
+            ((bodyMain.loginType = 1), `jdpin=${$.pin};pin=${$.pin};pinStatus=0;wq_auth_token=${wxCookie};shshshfpb=${encodeURIComponent($.shshshfpb)};`)
+            :
+            cookie
+    const option = {
+        url,
+        body: objToStr2(bodyMain),
+        headers: {
+            'Cookie': cookieA,
+            'Host': 'api.m.jd.com',
+            'Referer': 'https://servicewechat.com/wx91d27dbf599dff74/570/page-frame.html',
+            'wxreferer': 'http://wq.jd.com/wxapp/pages/loveTravel/pages/index/index',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "User-Agent": $.WxUA,
+            'Accept': '*/*',
+            'Accept-Language': 'zh-cn',
+            'Accept-Encoding': 'gzip, deflate, br',
+        }
+    }
+    return new Promise(resolve => {
+        $.post(option, (err, resp, data) => {
+            let res = null
+            try {
+                if (err) console.log(formatErr(functionId, err, toCurl(option)))
+                else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data)
+                        if (data?.data?.bizCode !== 0) {
+                            if (data?.data?.bizCode === -1002) $.stopWxTask = true
+                            console.log(formatErr(functionId, data?.data?.bizMsg ? (data?.data?.bizMsg + `（${data?.data?.bizCode}）`) : JSON.stringify(data), toCurl(option)))
+                        } else {
+                            res = data.data.result
+                        }
+                    } else {
+                        console.log(formatErr(functionId, data, toCurl(option)))
+                    }
+                }
+            } catch (e) {
+                console.log(formatErr(functionId, e.toString(), toCurl(option)))
+            } finally {
+                resolve(res)
+            }
+        })
+    })
+}
+
 
 async function doApi(functionId, prepend = {}, append = {}, needSs = false, getLast = false) {
     functionId = `promote_${functionId}`
