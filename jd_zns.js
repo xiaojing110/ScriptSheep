@@ -193,7 +193,7 @@ async function dealHelpRes(functionId, inviteId, pin) {
         if (needNum === 0) {
             $.newHelpCodeArr = $.newHelpCodeArr.filter(x => x.pin !== pin)
         }
-        console.log(`互助成功，获得${score}个次元币⭐️，他还需要${needNum}人完成助力，你还有${maxAssistTimes - alreadyAssistTimes}次助力机会`)
+        console.log(`互助成功，获得${score}个爆竹🧨，他还需要${needNum}人完成助力，你还有${maxAssistTimes - alreadyAssistTimes}次助力机会`)
         if (!c) $.stopHelp = true
     } else {
         console.log(`互助失败，原因：${helpRes?.bizMsg}（${helpRes?.bizCode}）`)
@@ -224,7 +224,7 @@ async function raise(isFirst = false) {
                     if (!flag) flag = true
                     let arr = [`解锁'${pointName}'成功`]
                     const { levelUpAward: { awardCoins, canFirstShare, couponInfo, firstShareAwardCoins, redNum } } = res
-                    arr.push(`获得${awardCoins}个次元币⭐️`)
+                    arr.push(`获得${awardCoins}个爆竹🧨`)
                     if (couponInfo) {
                         arr.push(`获得【${couponInfo.name}】优惠券：满${couponInfo.usageThreshold}减${couponInfo.quota}（${couponInfo.desc}）`)
                     }
@@ -382,7 +382,7 @@ function mohuReadJson(json, key, len, keyName) {
 }
 
 function formatMsg(num, pre, ap) {
-    console.log(`${pre ? pre + "：" : ""}获得${num}个次元币⭐️${ap ? "，" + ap : ""}`)
+    console.log(`${pre ? pre + "：" : ""}获得${num}个爆竹🧨${ap ? "，" + ap : ""}`)
 }
 
 function getSs(secretp) {
