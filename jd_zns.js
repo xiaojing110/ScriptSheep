@@ -299,7 +299,11 @@ async function doAppTask() {
             console.log(`当前正在做任务：${taskName}`)
             const body = { taskId, taskToken, actionType: 1 }
             if (taskId === 31) {
-                console.log("助力任务，跳过")
+                console.log("组队任务，跳过")
+                continue
+            }
+            if (taskId === 14) {
+                console.log("邀请任务，跳过")
                 continue
             }
             const res = await doApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
