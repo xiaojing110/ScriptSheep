@@ -13,7 +13,7 @@ let userToTeamMap = {}
 $.curlCmd = ""
 const h = (new Date()).getHours()
 const helpFlag = h >= 9 && h < 12
-const doTaskFlag = h >= 9 && h < 14
+const doTaskFlag = h >= 9 && h < 24
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
