@@ -298,7 +298,7 @@ async function doAppTask() {
             }
             console.log(`当前正在做任务：${taskName}`)
             const body = { taskId, taskToken, actionType: 1 }
-            if (taskId === 22) {
+            if (taskId === 31) {
                 console.log("助力任务，跳过")
                 continue
             }
