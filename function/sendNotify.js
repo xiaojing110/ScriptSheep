@@ -139,7 +139,7 @@ const {
     getEnvs,
     DisableCk,
     getEnvByPtPin
-} = require('./function/ql');
+} = require('./ql');
 const fs = require('fs');
 let isnewql = fs.existsSync('/ql/data/config/auth.json');
 let strCKFile="";
