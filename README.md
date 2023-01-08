@@ -32,3 +32,4 @@
 | axios    |          |
 | jsdom    |          |
 | date-fns |          |
+| global-agent|          |
