@@ -1,7 +1,7 @@
 
 /*
 40w金币
-0 12 * * * zns_game1.js
+0 12 * * * jd_zns_game1.js
  */
 
 const $ = new Env('年兽游戏1');
