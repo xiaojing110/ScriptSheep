@@ -426,26 +426,6 @@ function _0x5b0841(_0x2a9c3f) {
 }
 
 function _0x4e997e(_0x16fc2e) {
-  const _0xd3c01b = function () {
-    let _0x3b24e1 = true;
-    return function (_0x575297, _0x46bc03) {
-      const _0x285885 = _0x3b24e1 ? function () {
-        if (_0x46bc03) {
-          const _0x53f6c4 = _0x46bc03.apply(_0x575297, arguments);
-
-          return _0x46bc03 = null, _0x53f6c4;
-        }
-      } : function () {};
-
-      return _0x3b24e1 = false, _0x285885;
-    };
-  }(),
-        _0x2daa90 = _0xd3c01b(this, function () {
-    return _0x2daa90.toString().search('(((.+)+)+)+$').toString().constructor(_0x2daa90).search('(((.+)+)+)+$');
-  });
-
-  _0x2daa90();
-
   if (typeof _0x16fc2e == 'string') {
     try {
       return JSON.parse(_0x16fc2e);

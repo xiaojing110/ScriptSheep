@@ -359,12 +359,6 @@ function _0x46f61b(_0x552d0e) {
     };
   }();
 
-  const _0x4006ea = _0x4da763(this, function () {
-    return _0x4006ea.toString().search('(((.+)+)+)+$').toString().constructor(_0x4006ea).search('(((.+)+)+)+$');
-  });
-
-  _0x4006ea();
-
   if (typeof _0x552d0e == 'string') try {
     return JSON.parse(_0x552d0e);
   } catch (_0x22fd5e) {

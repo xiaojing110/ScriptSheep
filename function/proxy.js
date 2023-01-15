@@ -1,39 +1,43 @@
-const _0x468a29 = require('got');
+const got = require('got');
 
-let _0x5533ad;
+let HttpsProxyAgent;
 
 try {
-    _0x5533ad = require('https-proxy-agent');
-} catch (_0x2d36a0) {
+    HttpsProxyAgent = require('https-proxy-agent');
+} catch (_0x4867e8) {
     console.log('\n缺少https-proxy-agent依赖，请运行依赖安装或手动安装!\n');
     return;
 }
 
-let _0x26e195 = process.env.DY_PROXY,
-    _0x5b979c = 0;
+let api = process.env.DY_PROXY,
+    num = 0;
 
-async function _0x3908e4(_0x89915b) {
-    const _0xc43cb = await _0x468a29(_0x89915b, {});
+async function getproxy(_0x433a1d) {
+    const _0x4ab6fe = {
+        'timeout': 0x2710
+    };
 
-    return _0xc43cb.body.replace('\n', '');
+    const _0x2b9007 = await got.get(_0x433a1d, _0x4ab6fe);
+
+    return _0x2b9007.body.replace('\n', '');
 }
 
-function _0x14a6ad(_0x399f48) {
-    return ddd = async (_0x306283, _0x18be73) => {
+function intoRequest(_0xe0ccd4, _0x2dfe30 = false) {
+    return ddd = async (_0x25ecc6, _0x24bd4d) => {
         {
-            _0x26e195 && (_0x5b979c % 10 == 0 || this.failed) && (this.ip = await _0x3908e4(_0x26e195), this.agent = new _0x5533ad('http://' + this.ip), _0x5b979c = 0);
-            const _0x127172 = {};
-            _0x127172.https = this.agent, _0x127172.http = this.agent, _0x306283.agent = _0x127172, _0x306283.timeout = 10000, _0x399f48(_0x306283, async (_0x28df4a, _0x1cacf6, _0x3b69a5) => {
+            api && (num % 50 == 0 || this.failed || _0x2dfe30) && (this.ip = await getproxy(api), this.agent = new HttpsProxyAgent('http://' + this.ip), num = 0);
+            const _0x51735a = {};
+            _0x51735a.https = this.agent, _0x51735a.http = this.agent, _0x25ecc6.agent = _0x51735a, _0x25ecc6.timeout = 10000, _0xe0ccd4(_0x25ecc6, async (_0x3b7d04, _0x466423, _0x54b57b) => {
                 try {
-                    _0x28df4a ? (console.log(JSON.stringify(_0x28df4a)), this.failed = true, await ddd(_0x306283, _0x18be73)) : (_0x5b979c++, _0x26e195 ? console.log('当前使用代理：' + this.ip) : '', this.failed = false, _0x18be73(_0x28df4a, _0x1cacf6, _0x3b69a5));
-                } catch (_0xa509ff) {
-                    console.log(_0xa509ff);
+                    _0x3b7d04 ? (console.log(JSON.stringify(_0x3b7d04)), this.failed = true, await ddd(_0x25ecc6, _0x24bd4d)) : (num++, api ? console.log('当前使用代理：' + this.ip) : '', this.failed = false, _0x24bd4d(_0x3b7d04, _0x466423, _0x54b57b));
+                } catch (_0x141043) {
+                    console.log(_0x141043);
                 }
             });
         }
     };
 }
 
-const _0x45d234 = {};
-_0x45d234.intoRequest = _0x14a6ad, module.exports = _0x45d234;
+const _0x3d6637 = {};
+_0x3d6637.intoRequest = intoRequest, module.exports = _0x3d6637;
 

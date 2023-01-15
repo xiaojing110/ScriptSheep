@@ -329,31 +329,6 @@ async function bv(j) {
 }
 
 function bw(f) {
-  const h = function () {
-    {
-      let k = true;
-      return function (l, m) {
-        {
-          const p = function () {
-            {
-              if (m) {
-                const t = m.apply(l, arguments);
-                return m = null, t;
-              }
-            }
-          };
-
-          return k = false, p;
-        }
-      };
-    }
-  }();
-
-  const i = h(this, function () {
-    return i.toString().search('(((.+)+)+)+$').toString().constructor(i).search('(((.+)+)+)+$');
-  });
-  i();
-
   if (typeof f == 'string') {
     try {
       return JSON.parse(f);

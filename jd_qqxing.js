@@ -485,29 +485,6 @@ function _0x31f1e1(_0x282a86, _0x4cc43e) {
 }
 
 function _0x1a8ad3(_0x250199) {
-  const _0x134f78 = function () {
-    {
-      let _0x19a412 = true;
-      return function (_0x364548, _0x3c9c72) {
-        const _0x34e045 = _0x19a412 ? function () {
-          if (_0x3c9c72) {
-            const _0x25c02e = _0x3c9c72.apply(_0x364548, arguments);
-
-            return _0x3c9c72 = null, _0x25c02e;
-          }
-        } : function () {};
-
-        return _0x19a412 = false, _0x34e045;
-      };
-    }
-  }();
-
-  const _0x50cebf = _0x134f78(this, function () {
-    return _0x50cebf.toString().search('(((.+)+)+)+$').toString().constructor(_0x50cebf).search('(((.+)+)+)+$');
-  });
-
-  _0x50cebf();
-
   if (typeof _0x250199 == 'string') try {
     return JSON.parse(_0x250199);
   } catch (_0x12a851) {
