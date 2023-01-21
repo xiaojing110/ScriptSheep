@@ -20,17 +20,17 @@ const getH5st = require('./function/krh5st');
 let domains = 'https://lzdz1-isv.isvjcloud.com';
 $.shareUuid_auth=$.isNode() ? process.env['UUID'] ? process.env['UUID'] : '' : '';
 let krdraw = 0;
-krdraw = $.isNode() ? process.env['krdraw'] ? process.env['krdraw'] : krdraw : $.getdata('krdraw') ? $.getdata('krdraw') : krdraw;
-let opencard_draw = $.isNode() ? process.env['opencard_draw'] ? process.env['opencard_draw'] : '0' : $.getdata('opencard_draw') ? $.getdata('opencard_draw') : '0';
+krdraw = $.isNode() ? process.env.krdraw ? process.env.krdraw : krdraw : $.getdata('krdraw') ? $.getdata('krdraw') : krdraw;
+let opencard_draw = '20';
 let lz_cookie = {};
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {
-    Object.keys(jdCookieNode)['forEach'](_0x44de43 => {
+    Object.keys(jdCookieNode).forEach(_0x44de43 => {
         cookiesArr.push(jdCookieNode[_0x44de43]);
     });
-    if (process.env['JD_DEBUG'] && process.env['JD_DEBUG'] === 'false') console.log = () => { };
+    if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
 } else {
-    cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || '[]')['map'](_0x106f5e => _0x106f5e.cookie)]['filter'](_0x410f1b => !!_0x410f1b);
+    cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || '[]').map(_0x106f5e => _0x106f5e.cookie)].filter(_0x410f1b => !!_0x410f1b);
 }
 allMessage = '';
 message = '';
@@ -73,7 +73,7 @@ let activityUrl = 'https://lzdz1-isv.isvjcloud.com/m/1000085871/8966722/dz6e9428
     if (allMessage) {
         $.msg($.name, '', '' + allMessage);
     }
-})()['catch'](_0x46724e => $.logErr(_0x46724e))['finally'](() => $.done());
+})().catch(_0x46724e => $.logErr(_0x46724e)).finally(() => $.done());
 async function run() {
     try {
         $.assistCount = 0;
@@ -134,14 +134,14 @@ async function run() {
                 await takePostRequest('draw');
                 if ($.runFalag == false) break;
                 if (Number(_0x564737) <= 0) break;
-                if (m >= 10) {
+                if (m >= 50) {
                     console.log('抽奖太多次，多余的次数请再执行脚本');
                     break;
                 }
                 await $.wait(parseInt(Math.random() * 2000 + 2000, 10));
             }
         }
-        if ($.index == 1) {
+        if (1) {
             console.log('查询福卡是否可合成...');
             await takePostRequest('getHasCard');
             const _0x43a78e = new Set();
@@ -274,8 +274,8 @@ async function dealReturn(_0x75a686, _0x15a1e5) {
             case 'getMyPing':
                 if (typeof _0x3452d3 == 'object') {
                     if (_0x3452d3.result && _0x3452d3.result === true) {
-                        if (_0x3452d3.data && typeof _0x3452d3.data['secretPin'] != 'undefined') $.Pin = _0x3452d3.data['secretPin'];
-                        if (_0x3452d3.data && typeof _0x3452d3.data['nickname'] != 'undefined') $.nickname = _0x3452d3.data['nickname'];
+                        if (_0x3452d3.data && typeof _0x3452d3.data.secretPin != 'undefined') $.Pin = _0x3452d3.data.secretPin;
+                        if (_0x3452d3.data && typeof _0x3452d3.data.nickname != 'undefined') $.nickname = _0x3452d3.data.nickname;
                     } else if (_0x3452d3.errorMessage) {
                         console.log(_0x75a686 + ' ' + (_0x3452d3.errorMessage || ''));
                     } else {
@@ -291,7 +291,7 @@ async function dealReturn(_0x75a686, _0x15a1e5) {
             case 'followShop':
                 if (typeof _0x3452d3 == 'object') {
                     if (_0x3452d3.result && _0x3452d3.result === true) {
-                        console.log('任务完成，福气值：' + _0x3452d3.data['addScore']);
+                        console.log('任务完成，福气值：' + _0x3452d3.data.addScore);
                     } else if (_0x3452d3.errorMessage) {
                         console.log('' + (_0x3452d3.errorMessage || ''));
                     } else {
@@ -320,7 +320,7 @@ async function dealReturn(_0x75a686, _0x15a1e5) {
             case 'getHasCard':
                 if (typeof _0x3452d3 == 'object') {
                     if (_0x3452d3.result && _0x3452d3.result === true) {
-                        $.hasCardList = _0x3452d3.data['hasCardList'] || [];
+                        $.hasCardList = _0x3452d3.data.hasCardList || [];
                     } else if (_0x3452d3.errorMessage) {
                         console.log('' + (_0x3452d3.errorMessage || ''));
                     } else {
@@ -333,7 +333,7 @@ async function dealReturn(_0x75a686, _0x15a1e5) {
             case 'compoundCard':
                 if (typeof _0x3452d3 == 'object') {
                     if (_0x3452d3.result && _0x3452d3.result === true) {
-                        $.isSuccess = _0x3452d3.data['isSuccess'] || false;
+                        $.isSuccess = _0x3452d3.data.isSuccess || false;
                         console.log('合成状态：' + $.isSuccess);
                     } else if (_0x3452d3.errorMessage) {
                         console.log('' + (_0x3452d3.errorMessage || ''));
@@ -347,17 +347,17 @@ async function dealReturn(_0x75a686, _0x15a1e5) {
             case 'activityContent':
                 if (typeof _0x3452d3 == 'object') {
                     if (_0x3452d3.result && _0x3452d3.result === true) {
-                        $.actorUuid = _0x3452d3.data['actorUuid'] || '';
-                        $.openCard = _0x3452d3.data['openCard'] || false;
-                        $.followShop = _0x3452d3.data['followShop'] || false;
-                        $.addSku = _0x3452d3.data['addSku'] || false;
-                        $.sign = _0x3452d3.data['sign'] || false;
-                        $.xnfkNum = _0x3452d3.data['xnfkNum'] || 0;
-                        $.hccs = _0x3452d3.data['hccs'] || 0;
-                        $.score = _0x3452d3.data['fqz'] || 0;
-                        $.assistStatus = _0x3452d3.data['assistStatus'] || 0;
+                        $.actorUuid = _0x3452d3.data.actorUuid || '';
+                        $.openCard = _0x3452d3.data.openCard || false;
+                        $.followShop = _0x3452d3.data.followShop || false;
+                        $.addSku = _0x3452d3.data.addSku || false;
+                        $.sign = _0x3452d3.data.sign || false;
+                        $.xnfkNum = _0x3452d3.data.xnfkNum || 0;
+                        $.hccs = _0x3452d3.data.hccs || 0;
+                        $.score = _0x3452d3.data.fqz || 0;
+                        $.assistStatus = _0x3452d3.data.assistStatus || 0;
                     } else if (_0x3452d3.errorMessage) {
-                        if (_0x3452d3.errorMessage['indexOf']('结束') > -1) $.activityEnd = true;
+                        if (_0x3452d3.errorMessage.indexOf('结束') > -1) $.activityEnd = true;
                         console.log(_0x75a686 + ' ' + (_0x3452d3.errorMessage || ''));
                     } else {
                         console.log(_0x75a686 + ' ' + _0x15a1e5);
@@ -375,7 +375,7 @@ async function dealReturn(_0x75a686, _0x15a1e5) {
         }
         if (typeof _0x3452d3 == 'object') {
             if (_0x3452d3.errorMessage) {
-                if (_0x3452d3.errorMessage['indexOf']('火爆') > -1) {
+                if (_0x3452d3.errorMessage.indexOf('火爆') > -1) {
                     $.hotFlag = true;
                 }
             }
@@ -410,8 +410,8 @@ function getSimpleActInfoVo() {
                     let _0x29df5d = $.toObj(_0x595154, _0x595154);
                     if (typeof _0x29df5d == 'object') {
                         if (_0x29df5d.result && _0x29df5d.result === true) {
-                            $.endTime = _0x29df5d.data['endTime'] || 0;
-                            $.startTimes = _0x29df5d.data['startTime'] || Date.now();
+                            $.endTime = _0x29df5d.data.endTime || 0;
+                            $.startTimes = _0x29df5d.data.startTime || Date.now();
                         } else if (_0x29df5d.errorMessage) {
                             console.log('' + (_0x29df5d.errorMessage || ''));
                         } else {
@@ -464,7 +464,7 @@ function setActivityCookie(_0x57bd78) {
         if (_0x57bd78.headers['set-cookie']) {
             cookie = originCookie + ';';
             for (let _0x483003 of _0x57bd78.headers['set-cookie']) {
-                lz_cookie[_0x483003.split(';')[0]['substr'](0, _0x483003.split(';')[0]['indexOf']('='))] = _0x483003.split(';')[0]['substr'](_0x483003.split(';')[0]['indexOf']('=') + 1);
+                lz_cookie[_0x483003.split(';')[0].substr(0, _0x483003.split(';')[0].indexOf('='))] = _0x483003.split(';')[0].substr(_0x483003.split(';')[0].indexOf('=') + 1);
             }
             for (const _0x4163cc of Object.keys(lz_cookie)) {
                 cookie += _0x4163cc + '=' + lz_cookie[_0x4163cc] + ';';
@@ -507,8 +507,8 @@ async function joinShop() {
                         if (_0x3fa14c && _0x3fa14c.success === true) {
                             console.log(' >> ' + _0x3fa14c.message);
                             $.errorJoinShop = _0x3fa14c.message;
-                            if (_0x3fa14c.result && _0x3fa14c.result['giftInfo']) {
-                                for (let _0x377ff7 of _0x3fa14c.result['giftInfo']['giftList']) {
+                            if (_0x3fa14c.result && _0x3fa14c.result.giftInfo) {
+                                for (let _0x377ff7 of _0x3fa14c.result.giftInfo.giftList) {
                                     console.log(' >> 入会获得：' + _0x377ff7.discountString + _0x377ff7.prizeName + _0x377ff7.secondLineDesc);
                                 }
                             }
@@ -549,8 +549,8 @@ async function getshopactivityId() {
                     let _0x566122 = $.toObj(_0x4b0208, _0x4b0208);
                     if (_0x566122 && typeof _0x566122 == 'object') {
                         if (_0x566122 && _0x566122.success == true) {
-                            console.log('去加入：' + (_0x566122.result['shopMemberCardInfo']['venderCardName'] || '') + ' (' + $.joinVenderId + ')');
-                            $.shopactivityId = _0x566122.result['interestsRuleList'] && _0x566122.result['interestsRuleList'][0] && _0x566122.result['interestsRuleList'][0]['interestsInfo'] && _0x566122.result['interestsRuleList'][0]['interestsInfo']['activityId'] || '';
+                            console.log('去加入：' + (_0x566122.result.shopMemberCardInfo.venderCardName || '') + ' (' + $.joinVenderId + ')');
+                            $.shopactivityId = _0x566122.result.interestsRuleList && _0x566122.result.interestsRuleList[0] && _0x566122.result.interestsRuleList[0].interestsInfo && _0x566122.result.interestsRuleList[0].interestsInfo.activityId || '';
                         }
                     } else {
                         console.log(_0x4b0208);
@@ -566,9 +566,9 @@ async function getshopactivityId() {
 }
 function getMaxMin(_0x4c6517, _0x837822) {
     if (_0x837822 === 'max') {
-        return Math.max['apply'](Math, _0x4c6517);
+        return Math.max.apply(Math, _0x4c6517);
     } else if (_0x837822 === 'min') {
-        return Math.min['apply'](Math, _0x4c6517);
+        return Math.min.apply(Math, _0x4c6517);
     }
 }
 function getAuthorCodeList(_0x20bc1f) {
