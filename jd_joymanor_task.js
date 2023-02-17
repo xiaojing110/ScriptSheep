@@ -6,6 +6,8 @@
 
 入口：APP首页下拉-JOY庄园
 
+update 2023-2-17 14:00:00
+
 ============Quantumultx===============
 [task_local]
 #JOY庄园每日任务
@@ -37,7 +39,6 @@ if ($.isNode()) {
 }
 $.invitePinTaskList = []
 $.invitePin = [
-  ""
 ]
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
@@ -204,7 +205,7 @@ message = ""
 function getTaskList() {
   //await $.wait(20)
   return new Promise(resolve => {
-    $.post(taskPostClientActionUrl(`body={"linkId":"Vr5e5qokLNCRxNmi4VTW4Q"}&appid=activities_platform`, `apTaskList`), async (err, resp, data) => {
+    $.post(taskPostClientActionUrl(`body={"linkId":"99DZNpaCTAv8f4TuKXr0Ew"}&appid=activities_platform`, `apTaskList`), async (err, resp, data) => {
       $.log('=== 任务列表 start ===')
       try {
         if (err) {
@@ -237,7 +238,7 @@ function getTaskList() {
 function getJoyBaseInfo(taskId = '', inviteType = '', inviterPin = '') {
     //await $.wait(20)
     return new Promise(resolve => {
-        $.post(taskPostClientActionUrl(`body={"taskId":"${taskId}","inviteType":"${inviteType}","inviterPin":"${inviterPin}","linkId":"Vr5e5qokLNCRxNmi4VTW4Q"}&appid=activities_platform&t=${Date.now()}&client=activities_platform&h5st=20220509105406529%3B9112909836479988%3B4abce%3Btk02w774b1bbd18nGS0GgF00CXWFenyTPHs%2Bp26eYf9ZmlZVf%2BvEe3Gf0Zd80IGUasS%2FWd%2FoZlsJdtXKnoeXyciIpR1U%3B367214d88c1dbeda0cee50036420f60572854e94d718de89adee91dc59e42668%3B3.0%3B1652064846529&cthr=1`, `joyBaseInfo`), async (err, resp, data) => {
+        $.post(taskPostClientActionUrl(`body={"taskId":"${taskId}","inviteType":"${inviteType}","inviterPin":"${inviterPin}","linkId":"99DZNpaCTAv8f4TuKXr0Ew"}&appid=activities_platform&t=${Date.now()}&client=activities_platform&h5st=20220509105406529%3B9112909836479988%3B4abce%3Btk02w774b1bbd18nGS0GgF00CXWFenyTPHs%2Bp26eYf9ZmlZVf%2BvEe3Gf0Zd80IGUasS%2FWd%2FoZlsJdtXKnoeXyciIpR1U%3B367214d88c1dbeda0cee50036420f60572854e94d718de89adee91dc59e42668%3B3.0%3B1652064846529&cthr=1`, `joyBaseInfo`), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -262,7 +263,7 @@ function getJoyBaseInfo(taskId = '', inviteType = '', inviterPin = '') {
 function apDoTask(taskId, taskType, itemId = '', appid = 'activities_platform') {
   //await $.wait(20)
   return new Promise(resolve => {
-    $.post(taskPostClientActionUrl(`body={"taskType":"${taskType}","taskId":${taskId},"channel":4,"linkId":"Vr5e5qokLNCRxNmi4VTW4Q","itemId":"${itemId}"}&appid=${appid}`, `apDoTask`), async (err, resp, data) => {
+    $.post(taskPostClientActionUrl(`body={"taskType":"${taskType}","taskId":${taskId},"channel":4,"linkId":"99DZNpaCTAv8f4TuKXr0Ew","itemId":"${itemId}"}&appid=${appid}`, `apDoTask`), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -281,7 +282,7 @@ function apDoTask(taskId, taskType, itemId = '', appid = 'activities_platform') 
 
 function apDoTask2(taskId, taskType, itemId, appid = 'activities_platform') {
   return new Promise(resolve => {
-    $.post(taskPostClientActionUrl(`body={"taskType":"${taskType}","taskId":${taskId},"linkId":"Vr5e5qokLNCRxNmi4VTW4Q","itemId":"${itemId}"}&appid=${appid}`, `apDoTask`), async (err, resp, data) => {
+    $.post(taskPostClientActionUrl(`body={"taskType":"${taskType}","taskId":${taskId},"linkId":"99DZNpaCTAv8f4TuKXr0Ew","itemId":"${itemId}"}&appid=${appid}`, `apDoTask`), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -301,7 +302,7 @@ function apDoTask2(taskId, taskType, itemId, appid = 'activities_platform') {
 function apTaskDetail(taskId, taskType) {
   //await $.wait(20)
   return new Promise(resolve => {
-    $.post(taskPostClientActionUrl(`functionId=apTaskDetail&body={"taskType":"${taskType}","taskId":${taskId},"channel":4,"linkId":"Vr5e5qokLNCRxNmi4VTW4Q"}&appid=activities_platform`, `apTaskDetail`), async (err, resp, data) => {
+    $.post(taskPostClientActionUrl(`functionId=apTaskDetail&body={"taskType":"${taskType}","taskId":${taskId},"channel":4,"linkId":"99DZNpaCTAv8f4TuKXr0Ew"}&appid=activities_platform`, `apTaskDetail`), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -330,7 +331,7 @@ function apTaskDetail(taskId, taskType) {
 function apTaskDrawAward(taskId, taskType) {
   //await $.wait(20)
   return new Promise(resolve => {
-    $.post(taskPostClientActionUrl(`body={"taskType":"${taskType}","taskId":${taskId},"linkId":"Vr5e5qokLNCRxNmi4VTW4Q"}&appid=activities_platform`, `apTaskDrawAward`), async (err, resp, data) => {
+    $.post(taskPostClientActionUrl(`body={"taskType":"${taskType}","taskId":${taskId},"linkId":"99DZNpaCTAv8f4TuKXr0Ew"}&appid=activities_platform`, `apTaskDrawAward`), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -350,14 +351,14 @@ function apTaskDrawAward(taskId, taskType) {
 
 function taskPostClientActionUrl(body, functionId) {
   return {
-    url: `https://api.m.jd.com/client.action?${functionId ? `functionId=${functionId}` : ``}`,
+    url: `https://api.m.jd.com/client.action${functionId ? `?functionId=${functionId}` : ''}`,
     body: body,
     headers: {
       'User-Agent': $.UA,
       'Content-Type': 'application/x-www-form-urlencoded',
       'Host': 'api.m.jd.com',
       'Origin': 'https://joypark.jd.com',
-      'Referer': 'https://joypark.jd.com/?activityId=Vr5e5qokLNCRxNmi4VTW4Q&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0',
+      'Referer': 'https://joypark.jd.com/?activityId=99DZNpaCTAv8f4TuKXr0Ew&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0',
       'Cookie': cookie,
     }
   }
