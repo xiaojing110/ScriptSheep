@@ -15,7 +15,7 @@ const _0x478335 = $.isNode() ? require('./sendNotify') : '',
 
 let _0x286e11 = [],
     _0x75f0e5 = '';
-
+let Exchange = true;
 function _0x10fc48(_0x55423a, _0x34c3c9) {
   try {
     return _0x55423a();
