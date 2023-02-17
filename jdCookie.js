@@ -6,17 +6,23 @@
 变量
 添加代理变量 JK_ALL_PROXY
 export JK_ALL_PROXY="http://IP:端口";
+
 定时任务 BAN_TIMING
 export BAN_TIMING="0&1&2";
 时间0-23 如果问为什么没有24
+
 脚本黑白名单 PASS_SCRIPT
 export PASS_SCRIPT="jd_fruit_task.js&jd_wsdlb.js";
-如果代理使用白名单，就把68 69行删了, 如果使用黑名单就把51 52 行删了或者前面加 // ，默认添加都走代理
+如果代理使用白名单，就把69 70行删了, 如果使用黑名单就把52 53 行删了或者前面加 // ，默认添加都走代理
+如果同时使用活动和代理不想活动走代理请注释或者删除 63 64行
 bootstrap();
 GLOBAL_AGENT.HTTP_PROXY = JK_ALL_PROXY;
+
 专门适配活动参数的
 export NOT_CJ="pt_pin1&pt_pin2" CJ开头黑名单
 export NOT_LZ="pt_pin1&pt_pin2" LZ开头黑名单
+
+
  */
 const {bootstrap} = require("global-agent");
 
@@ -47,16 +53,15 @@ if (BAN_TIMING.split('&').indexOf(String(hours_ti)) > -1) {
         GLOBAL_AGENT.HTTP_PROXY = JK_ALL_PROXY;
     } else if (NOT_TYPE) {
         // 这里是活动的，如果你只是使用代理而没有使用活动请勿修改
-        if (NOT_TYPE) {
-            // QL_variable 项目的，执行活动必进来
-            NOT_CJ = process.env.NOT_CJ ? process.env.NOT_CJ : '';
-            NOT_LZ = process.env.NOT_LZ ? process.env.NOT_LZ : '';
-            NOT_LZ = NOT_LZ.split('&');
-            NOT_CJ = NOT_CJ.split('&');
-            // 下面两行和代理有关
-            bootstrap();
-            GLOBAL_AGENT.HTTP_PROXY = JK_ALL_PROXY;
-        }
+        // QL_variable 项目的，执行活动必进来
+        NOT_CJ = process.env.NOT_CJ ? process.env.NOT_CJ : '';
+        NOT_LZ = process.env.NOT_LZ ? process.env.NOT_LZ : '';
+        NOT_LZ = NOT_LZ.split('&');
+        NOT_CJ = NOT_CJ.split('&');
+        console.log('检测到活动类型执行');
+        // 下面两行和代理有关
+        bootstrap();
+        GLOBAL_AGENT.HTTP_PROXY = JK_ALL_PROXY;
     } else {
         console.log("这里也可以填写代理 PASS_SCRIPT 为黑名单");
         // 下面两行和代理有关
@@ -95,7 +100,7 @@ for (let i = 0; i < CookieJDs.length; i++) {
     if (!CookieJDs[i].match(/pt_pin=(.+?);/) || !CookieJDs[i].match(/pt_key=(.+?);/)) {
         console.log(`\n提示:京东cookie 【${CookieJDs[i]}】填写不规范,可能会影响部分脚本正常使用。正确格式为: pt_key=xxx;pt_pin=xxx;（分号;不可少）\n`);
         continue
-    } else if (NOT_TYPE) {
+    } else if (NOT_TYPE === 'lz') {
         var jd_ck = CookieJDs[i].match(/pt_pin=(.+?);/)[1]
         if (NOT_LZ.indexOf(jd_ck) > -1) {
             console.log(jd_ck + "在LZ黑名单中,跳过本次线报执行")
@@ -111,3 +116,5 @@ for (let i = 0; i < CookieJDs.length; i++) {
     const index = (i + 1 === 1) ? '' : (i + 1);
     exports['CookieJD' + index] = CookieJDs[i].trim();
 }
+// 获取到cookie后屏蔽 使其他脚本引用时 获取不到环境变量[JD_COOKIE]
+process.env.JD_COOKIE = ''
