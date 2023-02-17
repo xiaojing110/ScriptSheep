@@ -83,14 +83,18 @@ async function main(){
             }
         } while($.taskInfos.length !== 0);
         // 从京东首页领京豆进入
-        if(!$.viewAppHome){
-            console.log(`[从京东首页领京豆进入] 正在做任务...`)
-            await taskRequest("beanHomeIconDoTask", `{"flag":"0","viewChannel":"AppHome"}`)
-            if(!$.viewAppHome){
-                await $.wait(2000)
-                await taskRequest("beanHomeIconDoTask", `{"flag":"1","viewChannel":"AppHome"}`)
-            }
-        }
+        // if(!$.viewAppHome){
+        //     console.log(`[从京东首页领京豆进入] 正在做任务...`)
+        //     await taskRequest("beanHomeIconDoTask", `{"flag":"0","viewChannel":"AppHome"}`)
+        //     if(!$.viewAppHome){
+        //         await $.wait(2000)
+        //         await taskRequest("beanHomeIconDoTask", `{"flag":"1","viewChannel":"AppHome"}`)
+        //     }
+        // }
+        // 每日签到
+        console.log(`[每日签到] 正在做任务...`) 
+        await taskRequest("signBeanAct", `{"fp":"-1","shshshfp":"-1","shshshfpa":"-1","referUrl":"-1","userAgent":"-1","jda":"-1","rnVersion":"3.9"}`)
+        
         message += `[本次执行] 获得成长值：${$.addedGrowth}\n`
     }
 }
@@ -121,7 +125,7 @@ function taskRequest(functionId, body){
                                 break;
                             case "beanTaskList" :
                                 for(let task of data.data.taskInfos) task.status === 1 ? $.taskInfos.push(task) : ''
-                                $.viewAppHome = data.data.viewAppHome.doneTask
+                                // $.viewAppHome = true
                                 break;
                             case "beanDoTask" :
                                 if(typeof data.errorCode === "undefined"){
@@ -136,6 +140,13 @@ function taskRequest(functionId, body){
                                     $.addedGrowth += 50;
                                     console.log(`${data.data.remindMsg}\n`)
                                 } else console.log(`${data.errorMessage}`)
+                            case "signBeanAct":
+                                if(typeof data.status === '1'){
+                                    console.log(`签到成功\n`)
+                            } else if (typeof data.status === '2'){
+                                console.log(`今日已签到\n`)
+                            }   else console.log(`签到失败\n`)
+                            
                         }
                     }
                 }
