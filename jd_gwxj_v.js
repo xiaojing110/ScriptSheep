@@ -184,66 +184,6 @@ function _0x4b0b1d(_0x369f78) {
 }
 
 function _0x4590ae(_0x4f9eb0) {
-  var _0x8f1251 = function () {
-    return function (_0x3946d7, _0x3a48e7) {
-      var _0x220032 = function () {
-        if (_0x3a48e7) {
-          var _0x339369 = _0x3a48e7.apply(_0x3946d7, arguments);
-
-          _0x3a48e7 = null;
-          return _0x339369;
-        }
-      };
-
-      return _0x220032;
-    };
-  }();
-
-  var _0x310dfe = _0x8f1251(this, function () {
-    var _0x605b37 = function () {
-      return 'dev';
-    },
-        _0x580fce = function () {
-      return 'window';
-    };
-
-    var _0x9a3c63 = function () {
-      var _0x3518ac = new RegExp('\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}');
-
-      return !_0x3518ac.test(_0x605b37.toString());
-    };
-
-    var _0x5c294c = function () {
-      var _0x2e9bcf = new RegExp('(\\\\[x|u](\\w){2,4})+');
-
-      return _0x2e9bcf.test(_0x580fce.toString());
-    };
-
-    var _0x4303b4 = function (_0x24cc2) {
-      if (_0x24cc2.indexOf(false)) {
-        _0x45278e(_0x24cc2);
-      }
-    };
-
-    var _0x45278e = function (_0x41a154) {
-      if (_0x41a154.indexOf('e') !== 3) {
-        _0x4303b4(_0x41a154);
-      }
-    };
-
-    if (!_0x9a3c63()) {
-      if (!_0x5c294c()) {
-        _0x4303b4('indеxOf');
-      } else {
-        _0x4303b4('indexOf');
-      }
-    } else {
-      _0x4303b4('indеxOf');
-    }
-  });
-
-  _0x310dfe();
-
   if (typeof _0x4f9eb0 == 'string') {
     try {
       return JSON.parse(_0x4f9eb0);
