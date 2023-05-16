@@ -1,8 +1,9 @@
 /*
  * @Author: X1a0He
- * @LastEditors: X1a0He
+ * @LastEditors: 6dy
  * @Description: 批量取关京东店铺和商品
- * @Fixed: 不再支持Qx，仅支持Node.js
+ * @Fixed: 不再支持Qx，仅支持Node.js,修复取关商品
+ * @Updatetime: 2023/4/18
  */
 const $ = new Env('批量取关店铺和商品');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -72,356 +73,356 @@ let args_xh = {
      * */
     failTimes: process.env.JD_UNSUB_FAILTIMES || 3
 }
-!(async() => {
-    console.log('X1a0He留：运行前请看好脚本内的注释，日志已经很清楚了，有问题带着日志来问')
-    if(args_xh.isRun){
-        if(!cookiesArr[0]){
-            $.msg('【京东账号一】取关京东店铺商品失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
-                "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-            });
+!(async () => {
+if (args_xh.isRun) {
+    if (!cookiesArr[0]) {
+    $.msg("【京东账号一】取关京东店铺商品失败", "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
+        "open-url": "https://bean.m.jd.com/bean/signIndex.action"
+    });
+    }
+
+    await iI1il1II();
+
+    for (let ilii1lli = 0; ilii1lli < cookiesArr.length; ilii1lli++) {
+    if (cookiesArr[ilii1lli]) {
+        cookie = cookiesArr[ilii1lli];
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+        $.index = ilii1lli + 1;
+        $.isLogin = true;
+        $.nickName = "";
+        await i111iil1();
+        console.log("\n****开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*****\n");
+
+        if (args_xh.except.includes($.UserName)) {
+        console.log("跳过账号：" + ($.nickName || $.UserName));
+        continue;
         }
-        await requireConfig();
-        for(let i = 0; i < cookiesArr.length; i++){
-            if(cookiesArr[i]){
-                cookie = cookiesArr[i];
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-                $.index = i + 1;
-                $.isLogin = true;
-                $.nickName = '';
-                
-                console.log(`\n****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
-                if(args_xh.except.includes($.UserName)){
-                    console.log(`跳过账号：${$.nickName || $.UserName}`)
-                    continue
+
+        if (!$.isLogin) {
+        $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
+            "open-url": "https://bean.m.jd.com/bean/signIndex.action"
+        });
+        $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+        continue;
+        }
+
+        $.shopsKeyWordsNum = 0;
+        $.goodsKeyWordsNum = 0;
+        $.unsubscribeGoodsNum = 0;
+        $.unsubscribeShopsNum = 0;
+        $.goodsTotalNum = 0;
+        $.shopsTotalNum = 0;
+        $.commIdList = "";
+        $.shopIdList = "";
+        $.endGoods = $.endShops = false;
+        $.failTimes = 0;
+        await iIilIiII();
+        await $.wait(args_xh.unSubscribeInterval);
+
+        if (!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) {
+        let lll1i1ll = $.commIdList.split(",").filter(ililii1i => !!ililii1i);
+        $.log("开始取关商品...\n");
+
+        for (let ii1l1iII = 0; ii1l1iII < 20; ii1l1iII++) {
+            if (lll1i1ll.length === 0) break;
+            $.log("第" + (ii1l1iII + 1) + "次取关商品->");
+            let iiIIliII = lll1i1ll.splice(0, 20);
+            iiIIliII = iiIIliII.join(",");
+            await i1lll1i1(iiIIliII);
+            await $.wait(1000);
+        }
+        } else console.log("不执行取消收藏商品\n");
+
+        await $.wait(args_xh.unSubscribeInterval);
+        await lliiIliI();
+        await $.wait(args_xh.unSubscribeInterval);
+        if (!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await ii1illl1();else console.log("不执行取消收藏店铺\n");
+
+        do {
+        if (parseInt($.goodsTotalNum) === 0 && parseInt($.shopsTotalNum) === 0) break;else {
+            if (parseInt($.goodsTotalNum) !== 0) {
+            if (parseInt($.goodsTotalNum) === parseInt($.goodsKeyWordsNum)) break;else {
+                $.commIdList = "";
+                await iIilIiII();
+                await $.wait(args_xh.unSubscribeInterval);
+                if (!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await i1lll1i1();else console.log("不执行取消收藏商品\n");
+            }
+            } else {
+            if (parseInt($.shopsTotalNum) !== 0) {
+                if (parseInt($.shopsTotalNum) === parseInt($.shopsKeyWordsNum)) break;else {
+                $.shopIdList = "";
+                await lliiIliI();
+                await $.wait(args_xh.unSubscribeInterval);
+                if (!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await ii1illl1();else console.log("不执行取消收藏店铺\n");
                 }
-                if(!$.isLogin){
-                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
-                        "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-                    });
-                    if($.isNode()){
-                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                    }
-                    continue
-                }
-                $.shopsKeyWordsNum = 0;
-                $.goodsKeyWordsNum = 0;
-                $.unsubscribeGoodsNum = 0;
-                $.unsubscribeShopsNum = 0;
-                $.goodsTotalNum = 0     //记录当前总共关注了多少商品
-                $.shopsTotalNum = 0;    //记录当前总共关注了多少店铺
-                $.commIdList = ``;
-                $.shopIdList = ``;
-                $.endGoods = $.endShops = false;
-                $.failTimes = 0;
-                // console.log(`=====京东账号${$.index} ${$.nickName || $.UserName}内部变量=====`)
-                // console.log(`$.unsubscribeGoodsNum: ${$.unsubscribeGoodsNum}`)
-                // console.log(`$.unsubscribeShopsNum: ${$.unsubscribeShopsNum}`)
-                // console.log(`$.goodsTotalNum: ${$.goodsTotalNum}`)
-                // console.log(`$.shopsTotalNum: ${$.shopsTotalNum}`)
-                // console.log(`$.commIdList: ${$.commIdList}`)
-                // console.log(`$.shopIdList: ${$.shopIdList}`)
-                // console.log(`$.failTimes: ${$.failTimes}`)
-                // console.log(`================`)
-                await favCommQueryFilter(); //获取商品并过滤
-                await $.wait(args_xh.unSubscribeInterval)
-                if(!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await favCommBatchDel();//取关商品
-                else console.log("不执行取消收藏商品\n")
-                await $.wait(args_xh.unSubscribeInterval)
-                await queryShopFavList();   //获取店铺并过滤
-                await $.wait(args_xh.unSubscribeInterval)
-                if(!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await batchunfollow();      //取关店铺
-                else console.log("不执行取消收藏店铺\n")
-                do {
-                    //如果商品总数和店铺总数都为0则已清空，跳出循环
-                    if(parseInt($.goodsTotalNum) === 0 && parseInt($.shopsTotalNum) === 0) break;
-                    else {
-                        //如果商品总数或店铺总数有一个不为0的话，先判断是哪个不为0
-                        if(parseInt($.goodsTotalNum) !== 0){
-                            if(parseInt($.goodsTotalNum) === parseInt($.goodsKeyWordsNum)) break;
-                            else {
-                                $.commIdList = ``
-                                await favCommQueryFilter(); //获取商品并过滤
-                                await $.wait(args_xh.unSubscribeInterval)
-                                if(!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await favCommBatchDel();    //取关商品
-                                else console.log("不执行取消收藏商品\n")
-                            }
-                        } else if(parseInt($.shopsTotalNum) !== 0){
-                            if(parseInt($.shopsTotalNum) === parseInt($.shopsKeyWordsNum)) break;
-                            else {
-                                $.shopIdList = ``
-                                await queryShopFavList();   //获取店铺并过滤
-                                await $.wait(args_xh.unSubscribeInterval)
-                                if(!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await batchunfollow();      //取关店铺
-                                else console.log("不执行取消收藏店铺\n")
-                            }
-                        }
-                    }
-                    if($.failTimes >= args_xh.failTimes){
-                        console.log('失败次数到达设定值，触发防死循环机制，该帐号已跳过');
-                        break;
-                    }
-                } while(true)
-                await showMsg_xh();
+            }
             }
         }
+
+        if ($.failTimes >= args_xh.failTimes) {
+            console.log("失败次数到达设定值，触发防死循环机制，该帐号已跳过");
+            break;
+        }
+        } while (true);
+
+        await llii1Il();
     }
-})().catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    }
+}
+})().catch(IlIlllI1 => {
+$.log("", "❌ " + $.name + ", 失败! 原因: " + IlIlllI1 + "!", "");
 }).finally(() => {
-    $.done();
-})
+$.done();
+});
 
-function requireConfig(){
-    return new Promise(resolve => {
-        if($.isNode() && process.env.JD_UNSUB){
-            console.log('=====环境变量配置如下=====')
-            console.log(`except: ${typeof args_xh.except}, ${args_xh.except}`)
-            console.log(`isNotify: ${typeof args_xh.isNotify}, ${args_xh.isNotify}`)
-            console.log(`goodPageSize: ${typeof args_xh.goodPageSize}, ${args_xh.goodPageSize}`)
-            console.log(`shopPageSize: ${typeof args_xh.shopPageSize}, ${args_xh.shopPageSize}`)
-            console.log(`goodsKeyWords: ${typeof args_xh.goodsKeyWords}, ${args_xh.goodsKeyWords}`)
-            console.log(`shopKeyWords: ${typeof args_xh.shopKeyWords}, ${args_xh.shopKeyWords}`)
-            console.log(`unSubscribeInterval: ${typeof args_xh.unSubscribeInterval}, ${args_xh.unSubscribeInterval}`)
-            console.log(`printLog: ${typeof args_xh.printLog}, ${args_xh.printLog}`)
-            console.log(`failTimes: ${typeof args_xh.failTimes}, ${args_xh.failTimes}`)
-            console.log('=======================')
-        }
-        resolve()
-    })
+function iI1il1II() {
+return new Promise(liii1iIl => {
+    if ($.isNode() && process.env.JD_UNSUB) {
+    console.log("=====环境变量配置如下=====");
+    console.log("except: " + typeof args_xh.except + ", " + args_xh.except);
+    console.log("isNotify: " + typeof args_xh.isNotify + ", " + args_xh.isNotify);
+    console.log("goodPageSize: " + typeof args_xh.goodPageSize + ", " + args_xh.goodPageSize);
+    console.log("shopPageSize: " + typeof args_xh.shopPageSize + ", " + args_xh.shopPageSize);
+    console.log("goodsKeyWords: " + typeof args_xh.goodsKeyWords + ", " + args_xh.goodsKeyWords);
+    console.log("shopKeyWords: " + typeof args_xh.shopKeyWords + ", " + args_xh.shopKeyWords);
+    console.log("unSubscribeInterval: " + typeof args_xh.unSubscribeInterval + ", " + args_xh.unSubscribeInterval);
+    console.log("printLog: " + typeof args_xh.printLog + ", " + args_xh.printLog);
+    console.log("failTimes: " + typeof args_xh.failTimes + ", " + args_xh.failTimes);
+    console.log("=======================");
+    }
+
+    liii1iIl();
+});
 }
 
-function showMsg_xh(){
-    if(args_xh.isNotify){
-        $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【还剩关注店铺】${$.shopsTotalNum}个\n【还剩关注商品】${$.goodsTotalNum}个`);
-    } else {
-        $.log(`【京东账号${$.index}】${$.nickName}\n【还剩关注店铺】${$.shopsTotalNum}个\n【还剩关注商品】${$.goodsTotalNum}个`);
+function llii1Il() {
+args_xh.isNotify ? $.msg($.name, "", "【京东账号" + $.index + "】" + $.nickName + "\n【还剩关注店铺】" + $.shopsTotalNum + "个\n【还剩关注商品】" + $.goodsTotalNum + "个") : $.log("【京东账号" + $.index + "】" + $.nickName + "\n【还剩关注店铺】" + $.shopsTotalNum + "个\n【还剩关注商品】" + $.goodsTotalNum + "个");
+}
+
+function l1liiIli(I1lIilll, I1ii11il, II1iIIli) {
+let ii1iil1 = I1lIilll.indexOf(I1ii11il),
+    ii1lllli = I1lIilll.indexOf(II1iIIli, ii1iil1);
+if (ii1iil1 < 0 || ii1lllli < ii1iil1) return "";
+return I1lIilll.substring(ii1iil1 + I1ii11il.length, ii1lllli);
+}
+
+function iIilIiII() {
+return new Promise(async l1I11iIl => {
+    console.log("获取已关注的商品...");
+
+    const l1l1illi = require("./function/dylanx.js");
+
+    let IiliiiI1 = {
+    "page": "1",
+    "pagesize": "300",
+    "sortType": "time_desc"
+    },
+        Illlli1I = await l1l1illi.getbody("favoriteList", IiliiiI1),
+        Ili11I1l = {
+    "url": "https://api.m.jd.com/client.action",
+    "body": "functionId=favoriteList&" + Illlli1I + "&lmt=0",
+    "headers": {
+        "Host": "api.m.jd.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "okhttp/3.12.13",
+        "Cookie": cookie
+    }
+    };
+    $.post(Ili11I1l, async (IiI11Ii, iillI1, I1llIiI) => {
+    try {
+        if (IiI11Ii) {
+        console.log(IiI11Ii);
+        return;
+        }
+
+        I1llIiI = JSON.parse(I1llIiI);
+
+        if (I1llIiI.code === "0") {
+        $.goodsTotalNum = parseInt(I1llIiI.favoriteList.length);
+        console.log("当前已关注商品：" + $.goodsTotalNum + "个");
+        $.goodsKeyWordsNum = 0;
+
+        for (let iiI1llli of I1llIiI.favoriteList) {
+            args_xh.goodsKeyWords.some(II1I1i1I => iiI1llli.wname.includes(II1I1i1I)) ? (args_xh.printLog ? console.log(iiI1llli.wname + " ") : "", args_xh.printLog ? console.log("商品被过滤，含有关键词\n") : "", $.goodsKeyWordsNum += 1) : ($.commIdList += iiI1llli.fid + ",", $.unsubscribeGoodsNum++);
+        }
+        } else {
+        $.endGoods = true;
+        console.log("无商品可取消收藏\n");
+        }
+    } catch (i11Ii1ii) {
+        $.logErr(i11Ii1ii, iillI1);
+    } finally {
+        l1I11iIl(I1llIiI);
+    }
+    });
+});
+}
+
+function i1lll1i1(Ii1iiIil) {
+return new Promise(Ii1ilI => {
+    const Iilii1iI = {
+    "url": "https://wq.jd.com/fav/comm/FavCommBatchDel?commId=" + Ii1iiIil + "&sceneval=2&g_login_type=1",
+    "headers": {
+        "Cookie": cookie,
+        "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+        "Referer": "https://wqs.jd.com/"
+    }
+    };
+    $.get(Iilii1iI, (Iiii1Iii, iIiI111I, il1liI11) => {
+    try {
+        if (Iiii1Iii) {
+        console.log(Iiii1Iii);
+        return;
+        }
+
+        il1liI11 = JSON.parse(il1liI11);
+        il1liI11.iRet === "0" && il1liI11.errMsg === "success" ? (console.log("成功取关商品：" + Ii1iiIil.split(",").length + "个\n"), $.failTimes = 0) : console.log("批量取关商品失败，失败次数：" + ++$.failTimes + "\n", il1liI11);
+    } catch (iIlli1li) {
+        $.logErr(iIlli1li, iIiI111I);
+    } finally {
+        Ii1ilI(il1liI11);
+    }
+    });
+});
+}
+
+function lliiIliI() {
+return new Promise(IIiiilii => {
+    console.log("正在获取已关注的店铺...");
+    const ilill1Il = {
+    "url": "https://wq.jd.com/fav/shop/QueryShopFavList?cp=1&pageSize=" + args_xh.shopPageSize + "&sceneval=2&g_login_type=1&callback=jsonpCBKA",
+    "headers": {
+        "Cookie": cookie,
+        "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+        "Referer": "https://wqs.jd.com/"
+    }
+    };
+    $.get(ilill1Il, (iiIilIl, I1lili1I, I1liiI1I) => {
+    try {
+        if (I1liiI1I.indexOf("Authorization") !== -1) {
+        console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题");
+        return;
+        }
+
+        I1liiI1I = JSON.parse(l1liiIli(I1liiI1I, "try{jsonpCBKA(", ");}catch(e){}"));
+
+        if (I1liiI1I.iRet === "0") {
+        $.shopsTotalNum = parseInt(I1liiI1I.totalNum);
+        console.log("当前已关注店铺：" + $.shopsTotalNum + "个");
+
+        if (I1liiI1I.data.length > 0) {
+            $.shopsKeyWordsNum = 0;
+
+            for (let iiil1 of I1liiI1I.data) {
+            if (args_xh.shopKeyWords.some(il11ilII => iiil1.shopName.includes(il11ilII))) {
+                args_xh.printLog ? console.log("店铺被过滤，含有关键词") : "";
+                args_xh.printLog ? console.log(iiil1.shopName + "\n") : "";
+                $.shopsKeyWordsNum += 1;
+            } else {
+                $.shopIdList += iiil1.shopId + ",";
+                $.unsubscribeShopsNum++;
+            }
+            }
+        } else {
+            $.endShops = true;
+            console.log("无店铺可取消关注\n");
+        }
+        } else console.log("获取已关注店铺失败：" + JSON.stringify(I1liiI1I));
+    } catch (lIiIlIIi) {
+        $.logErr(lIiIlIIi, I1lili1I);
+    } finally {
+        IIiiilii(I1liiI1I);
+    }
+    });
+});
+}
+
+function ii1illl1() {
+return new Promise(iI1liiIi => {
+    console.log("正在执行批量取消关注店铺...");
+    const l1Ili1ll = {
+    "url": "https://wq.jd.com/fav/shop/batchunfollow?shopId=" + $.shopIdList + "&sceneval=2&g_login_type=1",
+    "headers": {
+        "Cookie": cookie,
+        "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+        "Referer": "https://wqs.jd.com/"
+    }
+    };
+    $.get(l1Ili1ll, (liIIllil, iIi1li, l11Ii) => {
+    try {
+        if (l11Ii.indexOf("Authorization") !== -1) {
+        console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题");
+        return;
+        }
+
+        l11Ii = JSON.parse(l11Ii);
+
+        if (l11Ii.iRet === "0") {
+        console.log("已成功取消关注店铺：" + $.unsubscribeShopsNum + "个\n");
+        $.failTimes = 0;
+        } else {
+        console.log("批量取消关注店铺失败，失败次数：" + ++$.failTimes + "\n");
+        }
+    } catch (iiii1iI) {
+        $.logErr(iiii1iI, iIi1li);
+    } finally {
+        iI1liiIi(l11Ii);
+    }
+    });
+});
+}
+
+function i111iil1() {
+return new Promise(async ii1liiiI => {
+    const lill1l1 = {
+    "url": "https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2",
+    "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
+    }
+    };
+    $.post(lill1l1, (IlIlil11, lIi1iIi1, iiil1Ili) => {
+    try {
+        if (IlIlil11) {
+        console.log("" + JSON.stringify(IlIlil11));
+        console.log($.name + " API请求失败，请检查网路重试");
+        } else {
+        if (iiil1Ili) {
+            iiil1Ili = JSON.parse(iiil1Ili);
+
+            if (iiil1Ili.retcode === 13) {
+            $.isLogin = false;
+            return;
+            }
+
+            iiil1Ili.retcode === 0 ? $.nickName = iiil1Ili.base && iiil1Ili.base.nickname || $.UserName : $.nickName = $.UserName;
+        } else console.log("京东服务器返回空数据");
+        }
+    } catch (IIIIi1ii) {
+        $.logErr(IIIIi1ii, lIi1iIi1);
+    } finally {
+        ii1liiiI();
+    }
+    });
+});
+}
+
+function Iil1iiii(liIii1l) {
+if (typeof liIii1l == "string") {
+    try {
+    return JSON.parse(liIii1l);
+    } catch (iilii11) {
+    return console.log(iilii11), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
 }
-
-function getSubstr(str, leftStr, rightStr){
-    let left = str.indexOf(leftStr);
-    let right = str.indexOf(rightStr, left);
-    if(left < 0 || right < left) return '';
-    return str.substring(left + leftStr.length, right);
 }
-
-function favCommQueryFilter(){
-    return new Promise((resolve) => {
-        console.log('正在获取已关注的商品...')
-        const option = {
-            url: `https://wq.jd.com/fav/comm/FavCommQueryFilter?cp=1&pageSize=${args_xh.goodPageSize}&category=0&promote=0&cutPrice=0&coupon=0&stock=0&sceneval=2`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, async(err, resp, data) => {
-            try{
-                if(data.indexOf("Authorization") !== -1){
-                    console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题")
-                    return;
-                }
-                data = JSON.parse(getSubstr(data, "try{(", ");}catch(e){}"));
-                if(data.iRet === '0'){
-                    $.goodsTotalNum = parseInt(data.totalNum);
-                    console.log(`当前已关注商品：${$.goodsTotalNum}个`)
-                    $.goodsKeyWordsNum = 0;
-                    for(let item of data.data){
-                        if(args_xh.goodsKeyWords.some(keyword => item.commTitle.includes(keyword))){
-                            args_xh.printLog ? console.log(`${item.commTitle} `) : ''
-                            args_xh.printLog ? console.log('商品被过滤，含有关键词\n') : ''
-                            $.goodsKeyWordsNum += 1;
-                        } else {
-                            $.commIdList += item.commId + ",";
-                            $.unsubscribeGoodsNum++;
-                        }
-                    }
-                } else {
-                    $.endGoods = true;
-                    console.log("无商品可取消收藏\n");
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function favCommBatchDel(){
-    return new Promise(resolve => {
-        console.log("正在取消收藏商品...")
-        const option = {
-            url: `https://wq.jd.com/fav/comm/FavCommBatchDel?commId=${$.commIdList}&sceneval=2&g_login_type=1`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, (err, resp, data) => {
-            try{
-                if(data.indexOf("Authorization") !== -1){
-                    console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题")
-                    return;
-                }
-                data = JSON.parse(data);
-                if(data.iRet === "0" && data.errMsg === "success"){
-                    console.log(`成功取消收藏商品：${$.unsubscribeGoodsNum}个\n`)
-                    $.failTimes = 0;
-                } else {
-                    console.log(`批量取消收藏商品失败，失败次数：${++$.failTimes}\n`, data)
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function queryShopFavList(){
-    return new Promise((resolve) => {
-        console.log("正在获取已关注的店铺...")
-        const option = {
-            url: `https://wq.jd.com/fav/shop/QueryShopFavList?cp=1&pageSize=${args_xh.shopPageSize}&sceneval=2&g_login_type=1&callback=jsonpCBKA`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, (err, resp, data) => {
-            try{
-                if(data.indexOf("Authorization") !== -1){
-                    console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题")
-                    return;
-                }
-                data = JSON.parse(getSubstr(data, "try{jsonpCBKA(", ");}catch(e){}"));
-                if(data.iRet === '0'){
-                    $.shopsTotalNum = parseInt(data.totalNum);
-                    console.log(`当前已关注店铺：${$.shopsTotalNum}个`)
-                    if(data.data.length > 0){
-                        $.shopsKeyWordsNum = 0;
-                        for(let item of data.data){
-                            if(args_xh.shopKeyWords.some(keyword => item.shopName.includes(keyword))){
-                                args_xh.printLog ? console.log('店铺被过滤，含有关键词') : ''
-                                args_xh.printLog ? console.log(`${item.shopName}\n`) : ''
-                                $.shopsKeyWordsNum += 1;
-                            } else {
-                                $.shopIdList += item.shopId + ",";
-                                $.unsubscribeShopsNum++;
-                            }
-                        }
-                    } else {
-                        $.endShops = true;
-                        console.log("无店铺可取消关注\n");
-                    }
-                } else console.log(`获取已关注店铺失败：${JSON.stringify(data)}`)
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function batchunfollow(){
-    return new Promise(resolve => {
-        console.log('正在执行批量取消关注店铺...')
-        const option = {
-            url: `https://wq.jd.com/fav/shop/batchunfollow?shopId=${$.shopIdList}&sceneval=2&g_login_type=1`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, (err, resp, data) => {
-            try{
-                if(data.indexOf("Authorization") !== -1){
-                    console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题")
-                    return;
-                }
-                data = JSON.parse(data);
-                if(data.iRet === "0"){
-                    console.log(`已成功取消关注店铺：${$.unsubscribeShopsNum}个\n`)
-                    $.failTimes = 0;
-                } else {
-                    console.log(`批量取消关注店铺失败，失败次数：${++$.failTimes}\n`)
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function TotalBean(){
-    return new Promise(async resolve => {
-        const options = {
-            "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
-            "headers": {
-                "Accept": "application/json,text/plain, */*",
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "zh-cn",
-                "Connection": "keep-alive",
-                "Cookie": cookie,
-                "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
-            }
-        }
-        $.post(options, (err, resp, data) => {
-            try{
-                if(err){
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if(data){
-                        data = JSON.parse(data);
-                        if(data['retcode'] === 13){
-                            $.isLogin = false; //cookie过期
-                            return
-                        }
-                        if(data['retcode'] === 0){
-                            $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
-                        } else {
-                            $.nickName = $.UserName
-                        }
-                    } else {
-                        console.log(`京东服务器返回空数据`)
-                    }
-                }
-            } catch(e){
-                $.logErr(e, resp)
-            } finally{
-                resolve();
-            }
-        })
-    })
-}
-
-function jsonParse(str){
-    if(typeof str == "string"){
-        try{
-            return JSON.parse(str);
-        } catch(e){
-            console.log(e);
-            $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
-            return [];
-        }
-    }
-}
-
-// prettier-ignore
-function Env(t, e){
+  function Env(t, e){
     "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0);
 
     class s{

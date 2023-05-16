@@ -1,213 +1,184 @@
 /*
-1，5，10豆，黑子擦肩
-定时随机
+入口：app-我的-领现金
+3 3 * * * jd_cashsign.js
  */
 
-const $ = new Env('每日抽豆');
-const liIiI11I = $.isNode() ? require("./sendNotify") : "",
-    lIl1Ill = $.isNode() ? require("./jdCookie.js") : "",
-    Iil1lil = require("./function/dylanx.js");
+const $ = new Env('领现金签到');
+const ll1lil1 = $.isNode() ? require("./sendNotify") : "",
+    l1i11iIl = $.isNode() ? require("./jdCookie") : "",
+    IillI1Ii = require("./USER_AGENTS");
 
-let I1IIl1II = true,
-    i1I1Ilil = [],
-    llliIllI = "",
-    lili111 = "";
+let i1lIi11l = true,
+    lI111llI = [],
+    IilIil1i = "",
+    IiI1Iiil = "";
 
 if ($.isNode()) {
-    Object.keys(lIl1Ill).forEach(i11lli11 => {
-        i1I1Ilil.push(lIl1Ill[i11lli11]);
+    Object.keys(l1i11iIl).forEach(I11i1lii => {
+        lI111llI.push(l1i11iIl[I11i1lii]);
     });
     if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => { };
-} else i1I1Ilil = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...IiiI1li($.getdata("CookiesJD") || "[]").map(Ii11li11 => Ii11li11.cookie)].filter(iliI1l => !!iliI1l);
+} else lI111llI = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...iilIliIl($.getdata("CookiesJD") || "[]").map(iliiIiIi => iliiIiIi.cookie)].filter(IiiIlil1 => !!IiiIlil1);
 
 !(async () => {
-    if (!i1I1Ilil[0]) {
+    if (!lI111llI[0]) {
         $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
             "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
         return;
     }
 
-    for (let IIIiIII1 = 0; IIIiIII1 < i1I1Ilil.length; IIIiIII1++) {
-        if (i1I1Ilil[IIIiIII1]) {
-            llliIllI = i1I1Ilil[IIIiIII1];
-            $.UserName = decodeURIComponent(llliIllI.match(/pt_pin=([^; ]+)(?=;?)/) && llliIllI.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-            $.index = IIIiIII1 + 1;
+    for (let IIi1i1il = 0; IIi1i1il < lI111llI.length; IIi1i1il++) {
+        if (lI111llI[IIi1i1il]) {
+            IilIil1i = lI111llI[IIi1i1il];
+            $.UserName = decodeURIComponent(IilIil1i.match(/pt_pin=([^; ]+)(?=;?)/) && IilIil1i.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+            $.index = IIi1i1il + 1;
             $.isLogin = true;
             $.nickName = "";
-            $.black = false;
-            $.UA = require("./USER_AGENTS").UARAM();
-            await I11l11i1();
+            $.UA = IillI1Ii.UARAM ? IillI1Ii.UARAM() : IillI1Ii.USER_AGENT;
+            await IlIiIili();
             console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*********\n");
 
             if (!$.isLogin) {
                 $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
                     "open-url": "https://bean.m.jd.com/bean/signIndex.action"
                 });
-                $.isNode() && (await liIiI11I.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+                $.isNode() && (await ll1lil1.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
                 continue;
             }
 
-            await l1IiIiil();
-            await $.wait(1000);
-            await I1I11lll({
-                "authType": "2",
-                "awardSource": "1",
-                "enAwardK": "ltvTJ/WYFPZcuWIWHCAjR/lUVVYszUqGN+JzEE06dPu7DDzXHNt5Br7i6hYH2826ssuKfHev2yv2\n8HWSugMPNJj0hO0oRf9K9vB1kroDDzT5uSUPG/Z35YJDHw8AyYmqk4Q1u2vSGKS/M+5ruJeepDDb\nGjIC3nIIbIE2I7/kWfG6LEOpCsfjzQD+tTlmq6znidq4bRZoUJ3MOg0BXga8nip79XSe0g5kHG/A\na2pjcqcS+Z0MdH5AoT28E84LptqHeCE6mkMJ/dL3sjRs44o9OuXOZklgdKme+XUAsi2or52idiaj\nejivdFQcDHA7HH3gaHvanKkkE8TU7ESujM2a18EuQglPvG63XuhsjEuTur7Q0q+RCbbzCUJO1qM0\nhM1uGj8RZGTjNPmgGqqkikOxgpl2et5AeQ0y_babel",
-                "encryptAssignmentId": "tb5nbUQ7kk45XoAexByamhEHeHy",
-                "encryptProjectId": "TmxyMFsNSsUTi1UoGoYd6WM2Bks",
-                "lotteryCode": "1271763",
-                "riskParam": {
-                    "childActivityUrl": "https://pro.m.jd.com/mall/active/3kmVmayf36Kmoyfq9pLuCSYUfU9t/index.html?babelChannel=ttt1",
-                    "eid": "",
-                    "pageClickKey": "Babel_WheelSurf",
-                    "shshshfpb": ""
-                },
-                "srv": "{\"bord\":\"0\",\"fno\":\"0-0-2\",\"mid\":\"70764372\",\"bi2\":\"2\",\"bid\":\"0\",\"aid\":\"01150161\"}"
-            });
-            await $.wait(10000);
+            await I1ii1iII();
+            await $.wait(2000);
         }
     }
-})().catch(Illll1iI => {
-    $.log("", "❌ " + $.name + ", 失败! 原因: " + Illll1iI + "!", "");
+})().catch(lI111iI => {
+    $.log("", "❌ " + $.name + ", 失败! 原因: " + lI111iI + "!", "");
 }).finally(() => {
     $.done();
 });
 
-async function I1I11lll(I11lIl1) {
-    let II1Iilii = Iil1lil.getbody("babelGetLottery", I11lIl1);
-    return new Promise(async IiIiII11 => {
-        $.post(iIililll("babelGetLottery", II1Iilii), async (I111II, IllilI11, IIlI11l1) => {
+async function lI1lliIi() {
+    let iilIIIl = {
+        "url": "https://api.m.jd.com/client.action?functionId=cash_sign&body=%7B%22remind%22%3A0%2C%22inviteCode%22%3A%22%22%2C%22type%22%3A0%2C%22breakReward%22%3A0%7D&client=apple&clientVersion=9.0.8&openudid=1fce88cd05c42fe2b054e846f11bdf33f016d676&sign=7e2f8bcec13978a691567257af4fdce9&st=1596954745073&sv=111",
+        "headers": {
+            "User-Agent": $.UA,
+            "Cookie": IilIil1i
+        }
+    };
+    return new Promise(async Il1lIi11 => {
+        $.get(iilIIIl, async (ii1iliil, il11I1lI, iIli1l1) => {
             try {
-                if (I111II) {
-                    console.log("" + JSON.stringify(I111II));
-                    console.log(" API请求失败，请检查网路重试");
+                if (ii1iliil) {
+                    console.log("" + JSON.stringify(ii1iliil));
+                    console.log("API请求失败，请检查网路重试");
                 } else {
-                    IIlI11l1 = JSON.parse(IIlI11l1);
-                    if (IIlI11l1.prizeName) console.log("恭喜获得：" + IIlI11l1.prizeName); else IIlI11l1.responseMessage.includes("未通过") ? ($.log("风险等级未通过！"), $.black = true) : $.log(JSON.stringify(IIlI11l1));
-                }
-            } catch (l11) {
-                $.logErr(l11, IllilI11);
-            } finally {
-                IiIiII11(IIlI11l1);
-            }
-        });
-    });
-}
-
-async function l1IiIiil() {
-    let I1iiill1 = Iil1lil.getbody("signInWithPrize", {
-        "floorId": "83596202"
-    });
-    return new Promise(async IliII11l => {
-        $.post(iIililll("signInWithPrize", I1iiill1), async (li1l11i1, iI11lil, i1l1llII) => {
-            try {
-                if (li1l11i1) {
-                    console.log("" + JSON.stringify(li1l11i1));
-                    console.log(" API请求失败，请检查网路重试");
-                } else {
-                    i1l1llII = JSON.parse(i1l1llII);
-
-                    if (i1l1llII.code == 0) {
-                        if (i1l1llII.result.signInText.includes("已经")) $.log("103-任务已完成"); else {
-                            if (i1l1llII.result.signInText.includes("恭喜")) $.log("恭喜获得：" + i1l1llII.result.beanCount + "京豆"); else { }
+                    const iIiiIliI = JSON.parse(iIli1l1);
+                    if (iIiiIliI.data.bizCode == 0) console.log("签到成功：" + iIiiIliI.data.result.signCash); else {
+                        if (iIli1l1.match(/已经签过/)) $.log("今日已签过！！！"); else {
+                            console.log(iIli1l1);
                         }
-                    } else console.log(i1l1llII.message);
+                    }
                 }
-            } catch (IiIIiiI) {
-                $.logErr(IiIIiiI, iI11lil);
+            } catch (I1ii1lil) {
+                $.logErr(I1ii1lil, il11I1lI);
             } finally {
-                IliII11l(i1l1llII);
+                Il1lIi11(iIli1l1);
             }
         });
     });
 }
 
-function iIililll(i111l1I, IIIlI11l) {
+function I1ii1iII() {
+    let I1ill1i1 = {
+        "version": "1",
+        "channel": "applet",
+        "remind": 0
+    };
+    return new Promise(async iilIl1i1 => {
+        $.post(Il111ili("cash_mob_sign", I1ill1i1), async (lIillilI, I1l11lii, IilIl1ll) => {
+            try {
+                if (lIillilI) {
+                    console.log("" + JSON.stringify(lIillilI));
+                    console.log(" API请求失败，请检查网路重试");
+                } else {
+                    IilIl1ll = JSON.parse(IilIl1ll);
+
+                    if (IilIl1ll.code == 0) {
+                        if (IilIl1ll.data.bizCode == 0) $.log("签到成功：获得" + IilIl1ll.data?.["result"]?.["signCash"] + "元！"); else {
+                            $.log("" + (IilIl1ll.data.bizMsg.includes("已完成") ? "今日已完成签到！" : IilIl1ll.data.bizMsg));
+                        }
+                    } else console.log(IilIl1ll.msg);
+                }
+            } catch (l1lI1iI) {
+                $.logErr(l1lI1iI, I1l11lii);
+            } finally {
+                iilIl1i1(IilIl1ll);
+            }
+        });
+    });
+}
+
+function Il111ili(I11iiiiI, liIi1Il) {
     return {
-        "url": "https://api.m.jd.com/client.action",
-        "body": "functionId=" + i111l1I + "&" + IIIlI11l,
+        "url": "https://api.m.jd.com/?g_ty=ls&g_tk=616816427",
+        "body": "loginType=2&clientType=wxapp&client=wh5&clientVersion=1.0.0&d_brand=&d_model=&lang=zh_CN&uuid=&appid=signed_mp&t=" + Date.now + "&functionId=" + I11iiiiI + "&body=" + encodeURIComponent(JSON.stringify(liIi1Il)) + "&loginWQBiz=pet-town&h5st=20230428215402232%3B8517094924558639%3Bc8815%3Btk02a8bf41be318pMXgzMWdxUk9FzVTwIa1Y5BN3GYXDFTCU37w9xPVffVC32ViGDe33QLt8JhzryaMoLDnWAMtJulav%3Ba339ec95c0fbabca4fd585fcfce78090d8bbe2672806805600cde4d8bc142ec3%3B3.1%3B1682690042232%3B4a21f21f3b5dd7c0338578afd557db584a2d1619854d3e9c4d89d2beb1b1333d9f6d38da5567917561654a3437b4c71a",
         "headers": {
             "Host": "api.m.jd.com",
+            "Referer": "https://servicewechat.com/wx91d27dbf599dff74/706/page-frame.html",
             "Content-Type": "application/x-www-form-urlencoded",
             "User-Agent": $.UA,
-            "Cookie": llliIllI
+            "Cookie": IilIil1i
         }
     };
 }
 
-function I11l11i1() {
-    return new Promise(iiIii11 => {
-        const Illili1I = {
+function IlIiIili() {
+    return new Promise(lliIIlI => {
+        const illllIiI = {
             "url": "https://plogin.m.jd.com/cgi-bin/ml/islogin",
             "headers": {
-                "Cookie": llliIllI,
+                "Cookie": IilIil1i,
                 "referer": "https://h5.m.jd.com/",
                 "User-Agent": $.UA
             },
             "timeout": 10000
         };
-        $.get(Illili1I, (I11IlIll, li1iIIl1, l1Ii1liI) => {
+        $.get(illllIiI, (liIll1ii, I1i1llIi, iliI11ii) => {
             try {
-                if (l1Ii1liI) {
-                    l1Ii1liI = JSON.parse(l1Ii1liI);
+                if (iliI11ii) {
+                    iliI11ii = JSON.parse(iliI11ii);
 
-                    if (l1Ii1liI.islogin === "1") { } else l1Ii1liI.islogin === "0" && ($.isLogin = false);
+                    if (iliI11ii.islogin === "1") { } else iliI11ii.islogin === "0" && ($.isLogin = false);
                 }
-            } catch (iliiI1I1) {
-                console.log(iliiI1I1);
+            } catch (i1lIi111) {
+                console.log(i1lIi111);
             } finally {
-                iiIii11();
+                lliIIlI();
             }
         });
     });
 }
 
-function i1IiiIi() {
-    return new Promise(i11I1lil => {
-        const Ili1II1i = {
-            "url": "https://lite-msg.m.jd.com/client.action?functionId=msgEntranceV1",
-            "headers": {
-                "User-Agent": $.UA
-            },
-            "timeout": 10000
-        };
-        $.get(Ili1II1i, (lliil1I1, lI1Iii1l, iIII11li) => {
-            try {
-                iIII11li && (iIII11li = JSON.parse(iIII11li), $.difftime = Date.now() - iIII11li.timestamp);
-            } catch (IIllIiIl) {
-                console.log(IIllIiIl);
-            } finally {
-                i11I1lil();
-            }
-        });
+function llI11il() {
+    return new Promise(l1IIIi1I => {
+        !i1lIi11l ? $.msg($.name, "", "" + IiI1Iiil) : $.log("京东账号" + $.index + $.nickName + "\n" + IiI1Iiil);
+        l1IIIi1I();
     });
 }
 
-function il1IIli1() {
-    return new Promise(llI1I1I1 => {
-        if (!I1IIl1II) $.msg($.name, "", "" + lili111); else {
-            $.log("京东账号" + $.index + $.nickName + "\n" + lili111);
-        }
-        llI1I1I1();
-    });
-}
-
-function l1illIIi(l11iIili) {
+function lli1I1i(lilII1I) {
     try {
-        if (typeof JSON.parse(l11iIili) == "object") return true;
-    } catch (l1iI1Ii) {
-        return console.log(l1iI1Ii), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
+        if (typeof JSON.parse(lilII1I) == "object") return true;
+    } catch (Ilili) {
+        return console.log(Ilili), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
     }
 }
 
-function IiiI1li(I1I1li1l) {
-    if (typeof I1I1li1l == "string") {
-        try {
-            return JSON.parse(I1I1li1l);
-        } catch (l11iIl1i) {
-            return console.log(l11iIl1i), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
-        }
+function iilIliIl(l1I1I1li) {
+    if (typeof l1I1I1li == "string") try {
+        return JSON.parse(l1I1I1li);
+    } catch (liIIiI1I) {
+        return console.log(liIIiI1I), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
 }
 // prettier-ignore
