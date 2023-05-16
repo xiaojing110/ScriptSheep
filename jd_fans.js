@@ -8,10 +8,7 @@
 
 //活动列表
 let activityList = [
-    { 'id': "10c1e44c87fe4a2ab7c6b8af0e912962", 'endTime': 1680796799000 },
-    { 'id': "0a1e21d27165458fa034922e71ee6efe", 'endTime': 1682870399000 },
-    { 'id': "304a300b232643a2926d86a3ad1db61f", 'endTime': 1681228799000 },
-    { 'id': "0eeb28db4b8a42b2a3bcf10878ffd22d", 'endTime': 1683043199000 },
+
 ];
 
 const $ = new Env('粉丝互动');
