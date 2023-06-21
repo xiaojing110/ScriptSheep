@@ -36,7 +36,7 @@ message = "";
 $.hotFlag = false;
 $.outFlag = false;
 $.activityEnd = false;
-$.prizeInfoId = process.env.jd_car_play_exchangeid ? process.env.jd_car_play_exchangeid : "10082bd15b4704";
+$.prizeInfoId = process.env.jd_car_play_exchangeid ? process.env.jd_car_play_exchangeid : "10082bd15b4707";
 !(async () => {
     if (!_0x3f2ba4[0]) {
         $.msg($.name, "【提示】请先获取cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
