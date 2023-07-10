@@ -1,5 +1,5 @@
 const got=require('got');
-const JD_SIGN_API=process.env['JD_SIGN_API']||'http://api.nolanstore.top/sign';
+const JD_SIGN_API=process.env['JD_SIGN_API']||'http://api.nolanstore.cc/sign';
 const JD_SIGN_KRAPI=process.env['JD_SIGN_KRAPI']||'';
 async function getSign(_0x9f79c2,_0x604f3a){
 	let _0x244309='';
