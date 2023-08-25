@@ -48,3 +48,4 @@ https://github.com/shufflewzc/faker3
 | moment   |          |
 | cheerio  |          |
 | ds       |          |
+| png-js   |          |
