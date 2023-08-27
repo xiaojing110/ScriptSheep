@@ -617,7 +617,7 @@ async function iII1lIi1(I1lllIIl, IlllillI) {
             "Content-Type": "application/x-www-form-urlencoded",
             "Origin": "https://assignment.jd.com",
             "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-            "User-Agent": $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require("./JS_USER_AGENTS").USER_AGENT : $.getdata("JSUA") ? $.getdata("JSUA") : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+            "User-Agent": $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require("./function/JS_USER_AGENTS").USER_AGENT : $.getdata("JSUA") ? $.getdata("JSUA") : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
             "Referer": "https://assignment.jd.com/",
             "Accept-Encoding": "gzip, deflate, br",
             "Cookie": I1lllIIl
@@ -634,7 +634,7 @@ async function I1illii1(liI1l1lI, iIiI1il) {
             "content-type": "application/x-www-form-urlencoded",
             "origin": "https://assignment.jd.com",
             "accept-language": "zh-cn",
-            "user-agent": $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require("./JS_USER_AGENTS").USER_AGENT : $.getdata("JSUA") ? $.getdata("JSUA") : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+            "user-agent": $.isNode() ? process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : require("./function/JS_USER_AGENTS").USER_AGENT : $.getdata("JSUA") ? $.getdata("JSUA") : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
             "referer": "https://assignment.jd.com/?inviterId=" + encodeURIComponent(iIiI1il),
             "Cookie": liI1l1lI
         },
