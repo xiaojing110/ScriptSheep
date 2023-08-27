@@ -686,5 +686,250 @@ function _0x2e02f7(_0x56b224, _0xb4feaf) {
     return _0x56b224.indexOf("missionInviteList") > -1 && delete _0x1482c2.params.admJson.actId, $.toStr(_0x1482c2, _0x1482c2);
 }
 
+function _0x32d3d8(_0x550189) {
+    AppSecret = "01315faaab3f4bfb8446fa54aa579321";
+    key = "8bd7eeb6c96e4145864af794bb2cadd0";
+    time2 = new Date().valueOf();
+    s2 = encodeURIComponent(JSON.stringify(_0x550189));
+    c = new RegExp("'", "g");
+    A = new RegExp("~", "g");
+    s2 = s2.replace(c, "%27");
+    s2 = s2.replace(A, "%7E");
+    signBody = key + "a" + key + "b" + s2 + "c" + time2 + AppSecret;
+    sign = CryptoJS.MD5(signBody.toLowerCase()).toString();
+    return {
+        "sign": sign,
+        "timeStamp": time2
+    };
+}
+
+function _0x1125cb(_0x1e78b1) {
+    _0x1e78b1 = _0x1e78b1 || 32;
+    let _0x5f42c8 = "abcdef0123456789",
+        _0x5914e4 = _0x5f42c8.length,
+        _0x5cc997 = "";
+
+    for (i = 0; i < _0x1e78b1; i++) _0x5cc997 += _0x5f42c8.charAt(Math.floor(Math.random() * _0x5914e4));
+
+    return _0x5cc997;
+}
+
+function _0x251c0d(_0x499bf7) {
+    if (typeof _0x499bf7 == "string") {
+        try {
+            return JSON.parse(_0x499bf7);
+        } catch (_0x23d472) {
+            return console.log(_0x23d472), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+        }
+    }
+}
+
+async function _0x25ee8b() {
+    await _0x6b75c6("isvObfuscator", {
+        "id": "",
+        "url": "https://mpdz-act-dz.isvjcloud.com"
+    });
+    let _0x5cdac0 = {
+        "url": "https://api.m.jd.com/client.action?functionId=isvObfuscator",
+        "headers": {
+            "Host": "api.m.jd.com",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "*/*",
+            "Connection": "keep-alive",
+            "Cookie": _0x3d2481,
+            "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
+            "Accept-Language": "zh-Hans-CN;q=1",
+            "Accept-Encoding": "gzip, deflate, br"
+        },
+        "body": "" + _0x6b75c6.body
+    };
+    return new Promise(_0x3526dc => {
+        $.post(_0x5cdac0, (_0x17ca1c, _0x59c830, _0x183586) => {
+            try {
+                if (_0x17ca1c) { } else {
+                    if (_0x183586) _0x183586 = JSON.parse(_0x183586), _0x183586.code === "0" && ($.Token = _0x183586.token); else { }
+                }
+            } catch (_0xcf76ed) {
+                $.log(_0xcf76ed);
+            } finally {
+                _0x3526dc();
+            }
+        });
+    });
+}
+
+function _0x6b75c6(_0x2c9399, _0x4f9893) {
+    let _0xc3fba8 = {
+        "fn": _0x2c9399,
+        "body": JSON.stringify(_0x4f9893)
+    },
+        _0x14f02e = {
+            "url": "http://api.kingran.ml/sign",
+            "body": JSON.stringify(_0xc3fba8),
+            "headers": {
+                "Accept": "*/*",
+                "Connection": "keep-alive",
+                "Cookie": _0x3d2481,
+                "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
+                "Accept-Language": "zh-Hans-CN;q=1",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json"
+            },
+            "timeout": 30000
+        };
+    return new Promise(async _0x5dec52 => {
+        $.post(_0x14f02e, (_0x1c86c8, _0x438b13, _0x10a1f4) => {
+            try {
+                if (_0x1c86c8) { } else {
+                    _0x10a1f4 = JSON.parse(_0x10a1f4);
+                    if (typeof _0x10a1f4 === "object" && _0x10a1f4 && _0x10a1f4.body) $.Signz = _0x10a1f4.body || ""; else { }
+                }
+            } catch (_0x5636c9) {
+                $.logErr(_0x5636c9, _0x438b13);
+            } finally {
+                _0x5dec52(_0x10a1f4);
+            }
+        });
+    });
+}
+
+async function _0x51793a() {
+    if (!$.joinVenderId) return;
+    return new Promise(async _0x3a95ae => {
+        $.errorJoinShop = "活动太火爆，请稍后再试";
+        let _0x5b2fc7 = "";
+        if ($.shopactivityId) _0x5b2fc7 = ",\"activityId\":" + $.shopactivityId;
+
+        const _0x39455d = "{\"venderId\":\"" + $.joinVenderId + "\",\"shopId\":\"" + $.joinVenderId + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0" + _0x5b2fc7 + ",\"channel\":406}",
+            _0x37c059 = {
+                "appid": "jd_shop_member",
+                "functionId": "bindWithVender",
+                "clientVersion": "9.2.0",
+                "client": "H5",
+                "body": JSON.parse(_0x39455d)
+            },
+            _0x1b3fb8 = await _0x42fd10("8adfb", _0x37c059),
+            _0x210f76 = {
+                "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=" + _0x39455d + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(_0x1b3fb8),
+                "headers": {
+                    "accept": "*/*",
+                    "accept-encoding": "gzip, deflate, br",
+                    "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "cookie": _0x3d2481,
+                    "origin": "https://shopmember.m.jd.com/",
+                    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+                }
+            };
+
+        $.get(_0x210f76, async (_0x23ad7b, _0x4af741, _0x3c252b) => {
+            try {
+                if (_0x23ad7b) _0x4af741 && typeof _0x4af741.statusCode != "undefined" && _0x4af741.statusCode == 403 && console.log("此ip已无法开卡，请更换IP后再执行脚本\n"); else {
+                    _0x3c252b = _0x3c252b && _0x3c252b.match(/jsonp_.*?\((.*?)\);/) && _0x3c252b.match(/jsonp_.*?\((.*?)\);/)[1] || _0x3c252b;
+
+                    let _0x165b39 = $.toObj(_0x3c252b, _0x3c252b);
+
+                    if (_0x165b39 && typeof _0x165b39 == "object") {
+                        if (_0x165b39 && _0x165b39.success === true) {
+                            console.log(" >> " + _0x165b39.message);
+                            $.errorJoinShop = _0x165b39.message;
+
+                            if (_0x165b39.result && _0x165b39.result.giftInfo) {
+                                for (let _0xfeea47 of _0x165b39.result.giftInfo.giftList) {
+                                    console.log(" >> 入会获得：" + _0xfeea47.discountString + _0xfeea47.prizeName + _0xfeea47.secondLineDesc);
+                                }
+                            }
+                        } else {
+                            if (_0x165b39 && typeof _0x165b39 == "object" && _0x165b39.message) $.errorJoinShop = _0x165b39.message, console.log("" + (_0x165b39.message || "")); else {
+                                console.log(_0x3c252b);
+                            }
+                        }
+                    } else console.log(_0x3c252b);
+                }
+            } catch (_0x4e152b) {
+                $.logErr(_0x4e152b, _0x4af741);
+            } finally {
+                _0x3a95ae();
+            }
+        });
+    });
+}
+
+async function _0x50b607() {
+    return new Promise(async _0x4ba9d1 => {
+        const _0x1aae1f = "{\"venderId\":\"" + $.joinVenderId + "\",\"channel\":406,\"payUpShop\":true}",
+            _0x4863d2 = {
+                "appid": "jd_shop_member",
+                "functionId": "bindWithVender",
+                "clientVersion": "9.2.0",
+                "client": "H5",
+                "body": JSON.parse(_0x1aae1f)
+            },
+            _0x279654 = await _0x42fd10("8adfb", _0x4863d2),
+            _0x39fa4f = {
+                "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=getShopOpenCardInfo&body=" + _0x1aae1f + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(_0x279654),
+                "headers": {
+                    "accept": "*/*",
+                    "accept-encoding": "gzip, deflate, br",
+                    "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "cookie": _0x3d2481,
+                    "origin": "https://shopmember.m.jd.com/",
+                    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+                }
+            };
+
+        $.get(_0x39fa4f, async (_0x418d84, _0x12e345, _0x221963) => {
+            try {
+                if (_0x418d84) _0x12e345 && typeof _0x12e345.statusCode != "undefined" && _0x12e345.statusCode == 403 && console.log("此ip已无法开卡，请更换IP后再执行脚本\n"); else {
+                    _0x221963 = _0x221963 && _0x221963.match(/jsonp_.*?\((.*?)\);/) && _0x221963.match(/jsonp_.*?\((.*?)\);/)[1] || _0x221963;
+
+                    let _0x36f6f3 = $.toObj(_0x221963, _0x221963);
+
+                    if (_0x36f6f3 && typeof _0x36f6f3 == "object") {
+                        if (_0x36f6f3 && _0x36f6f3.success == true) {
+                            console.log("去加入：" + (_0x36f6f3.result.shopMemberCardInfo.venderCardName || "") + " (" + $.joinVenderId + ")");
+                            $.shopactivityId = _0x36f6f3.result.interestsRuleList && _0x36f6f3.result.interestsRuleList[0] && _0x36f6f3.result.interestsRuleList[0].interestsInfo && _0x36f6f3.result.interestsRuleList[0].interestsInfo.activityId || "";
+                        }
+                    } else console.log(_0x221963);
+                }
+            } catch (_0x41368b) {
+                $.logErr(_0x41368b, _0x12e345);
+            } finally {
+                _0x4ba9d1();
+            }
+        });
+    });
+}
+
+function _0x1e7ff8(_0x31aa57) {
+    return new Promise(_0x11934a => {
+        const _0x485b66 = {
+            "url": "" + _0x31aa57,
+            "timeout": 10000,
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+            }
+        };
+        $.get(_0x485b66, async (_0x3b6e2a, _0x3350ef, _0x436205) => {
+            try {
+                if (_0x3b6e2a) { } else _0x436205 ? _0x436205 = JSON.parse(_0x436205) : console.log("未获取到数据,请重新运行");
+            } catch (_0x41168e) {
+                $.logErr(_0x41168e, _0x3350ef);
+                _0x436205 = null;
+            } finally {
+                _0x11934a(_0x436205);
+            }
+        });
+    });
+}
+
+function _0x247817(_0x55eb95, _0x505304) {
+    return Math.floor(Math.random() * (_0x505304 - _0x55eb95)) + _0x55eb95;
+}
+
+function _0xcad625(_0x5c41a8, _0x27b568) {
+    if (_0x27b568 === "max") return Math.max.apply(Math, _0x5c41a8); else {
+        if (_0x27b568 === "min") return Math.min.apply(Math, _0x5c41a8);
+    }
+}
 // prettier-ignore
 function Env(t, e) { "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0); class s { constructor(t) { this.env = t } send(t, e = "GET") { t = "string" == typeof t ? { url: t } : t; let s = this.get; return "POST" === e && (s = this.post), new Promise((e, i) => { s.call(this, t, (t, s, r) => { t ? i(t) : e(s) }) }) } get(t) { return this.send.call(this.env, t) } post(t) { return this.send.call(this.env, t, "POST") } } return new class { constructor(t, e) { this.name = t, this.http = new s(this), this.data = null, this.dataFile = "box.dat", this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`) } isNode() { return "undefined" != typeof module && !!module.exports } isQuanX() { return "undefined" != typeof $task } isSurge() { return "undefined" != typeof $httpClient && "undefined" == typeof $loon } isLoon() { return "undefined" != typeof $loon } toObj(t, e = null) { try { return JSON.parse(t) } catch { return e } } toStr(t, e = null) { try { return JSON.stringify(t) } catch { return e } } getjson(t, e) { let s = e; const i = this.getdata(t); if (i) try { s = JSON.parse(this.getdata(t)) } catch { } return s } setjson(t, e) { try { return this.setdata(JSON.stringify(t), e) } catch { return !1 } } getScript(t) { return new Promise(e => { this.get({ url: t }, (t, s, i) => e(i)) }) } runScript(t, e) { return new Promise(s => { let i = this.getdata("@chavy_boxjs_userCfgs.httpapi"); i = i ? i.replace(/\n/g, "").trim() : i; let r = this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout"); r = r ? 1 * r : 20, r = e && e.timeout ? e.timeout : r; const [o, h] = i.split("@"), n = { url: `http://${h}/v1/scripting/evaluate`, body: { script_text: t, mock_type: "cron", timeout: r }, headers: { "X-Key": o, Accept: "*/*" } }; this.post(n, (t, e, i) => s(i)) }).catch(t => this.logErr(t)) } loaddata() { if (!this.isNode()) return {}; { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e); if (!s && !i) return {}; { const i = s ? t : e; try { return JSON.parse(this.fs.readFileSync(i)) } catch (t) { return {} } } } } writedata() { if (this.isNode()) { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e), r = JSON.stringify(this.data); s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r) } } lodash_get(t, e, s) { const i = e.replace(/\[(\d+)\]/g, ".$1").split("."); let r = t; for (const t of i) if (r = Object(r)[t], void 0 === r) return s; return r } lodash_set(t, e, s) { return Object(t) !== t ? t : (Array.isArray(e) || (e = e.toString().match(/[^.[\]]+/g) || []), e.slice(0, -1).reduce((t, s, i) => Object(t[s]) === t[s] ? t[s] : t[s] = Math.abs(e[i + 1]) >> 0 == +e[i + 1] ? [] : {}, t)[e[e.length - 1]] = s, t) } getdata(t) { let e = this.getval(t); if (/^@/.test(t)) { const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t), r = s ? this.getval(s) : ""; if (r) try { const t = JSON.parse(r); e = t ? this.lodash_get(t, i, "") : e } catch (t) { e = "" } } return e } setdata(t, e) { let s = !1; if (/^@/.test(e)) { const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e), o = this.getval(i), h = i ? "null" === o ? null : o || "{}" : "{}"; try { const e = JSON.parse(h); this.lodash_set(e, r, t), s = this.setval(JSON.stringify(e), i) } catch (e) { const o = {}; this.lodash_set(o, r, t), s = this.setval(JSON.stringify(o), i) } } else s = this.setval(t, e); return s } getval(t) { return this.isSurge() || this.isLoon() ? $persistentStore.read(t) : this.isQuanX() ? $prefs.valueForKey(t) : this.isNode() ? (this.data = this.loaddata(), this.data[t]) : this.data && this.data[t] || null } setval(t, e) { return this.isSurge() || this.isLoon() ? $persistentStore.write(t, e) : this.isQuanX() ? $prefs.setValueForKey(t, e) : this.isNode() ? (this.data = this.loaddata(), this.data[e] = t, this.writedata(), !0) : this.data && this.data[e] || null } initGotEnv(t) { this.got = this.got ? this.got : require("got"), this.cktough = this.cktough ? this.cktough : require("tough-cookie"), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar)) } get(t, e = (() => { })) { t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.get(t, (t, s, i) => { !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i) })) : this.isQuanX() ? (this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => e(t))) : this.isNode() && (this.initGotEnv(t), this.got(t).on("redirect", (t, e) => { try { if (t.headers["set-cookie"]) { const s = t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString(); s && this.ckjar.setCookieSync(s, null), e.cookieJar = this.ckjar } } catch (t) { this.logErr(t) } }).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => { const { message: s, response: i } = t; e(s, i, i && i.body) })) } post(t, e = (() => { })) { if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.post(t, (t, s, i) => { !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i) }); else if (this.isQuanX()) t.method = "POST", this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => e(t)); else if (this.isNode()) { this.initGotEnv(t); const { url: s, ...i } = t; this.got.post(s, i).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => { const { message: s, response: i } = t; e(s, i, i && i.body) }) } } time(t, e = null) { const s = e ? new Date(e) : new Date; let i = { "M+": s.getMonth() + 1, "d+": s.getDate(), "H+": s.getHours(), "m+": s.getMinutes(), "s+": s.getSeconds(), "q+": Math.floor((s.getMonth() + 3) / 3), S: s.getMilliseconds() }; /(y+)/.test(t) && (t = t.replace(RegExp.$1, (s.getFullYear() + "").substr(4 - RegExp.$1.length))); for (let e in i) new RegExp("(" + e + ")").test(t) && (t = t.replace(RegExp.$1, 1 == RegExp.$1.length ? i[e] : ("00" + i[e]).substr(("" + i[e]).length))); return t } msg(e = t, s = "", i = "", r) { const o = t => { if (!t) return t; if ("string" == typeof t) return this.isLoon() ? t : this.isQuanX() ? { "open-url": t } : this.isSurge() ? { url: t } : void 0; if ("object" == typeof t) { if (this.isLoon()) { let e = t.openUrl || t.url || t["open-url"], s = t.mediaUrl || t["media-url"]; return { openUrl: e, mediaUrl: s } } if (this.isQuanX()) { let e = t["open-url"] || t.url || t.openUrl, s = t["media-url"] || t.mediaUrl; return { "open-url": e, "media-url": s } } if (this.isSurge()) { let e = t.url || t.openUrl || t["open-url"]; return { url: e } } } }; if (this.isMute || (this.isSurge() || this.isLoon() ? $notification.post(e, s, i, o(r)) : this.isQuanX() && $notify(e, s, i, o(r))), !this.isMuteLog) { let t = ["", "==============📣系统通知📣=============="]; t.push(e), s && t.push(s), i && t.push(i), console.log(t.join("\n")), this.logs = this.logs.concat(t) } } log(...t) { t.length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) } logErr(t, e) { const s = !this.isSurge() && !this.isQuanX() && !this.isLoon(); s ? this.log("", `❗️${this.name}, 错误!`, t.stack) : this.log("", `❗️${this.name}, 错误!`, t) } wait(t) { return new Promise(e => setTimeout(e, t)) } done(t = {}) { const e = (new Date).getTime(), s = (e - this.startTime) / 1e3; this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t) } }(t, e) }
