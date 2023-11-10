@@ -1,124 +1,112 @@
 /*
-东东农场助力
-20 2,6,11 * * * jd_farm_help.js
-updatetime:2023/10/29
-变量
-epxort FRUIT_DELAY='1000',设置等待时间(毫秒)，默认请求5次接口等待5秒（5000）
-export FRUITCODES='xxx&xxx' 指定助力码助力，多个用&分割，不指定则自动搜集任务助力码
+新农场助力
+33 3,9 * * * jd_farm_help_new.js
+export NEWFRUITCODES = 'xxx&xxx' 可指定助力码助力，多个用&分割，不指定则自动搜集任务助力码
 */
 
-const $ = new Env('东东农场-助力');
-let _0x14271f = [],
-    _0x5b5b19 = "",
-    _0x16ee6d,
-    _0x10a9cc = [],
-    _0x572df1 = [],
-    _0x16a000 = "",
-    _0x3aae32 = "",
-    _0x3b8e03 = "",
-    _0x20a1c8 = [],
-    _0x5cdc0d = {},
-    _0x1987e4 = false;
+const $ = new Env('新农场助力');
+let _0x5e76a0 = [],
+    _0x252203 = [],
+    _0x4bd5bc = "",
+    _0x5dc6ac,
+    _0x497839 = [],
+    _0x54c8e5 = "",
+    _0x41af5d = "",
+    _0x59f215 = "",
+    _0x4b0b07 = [],
+    _0x3ddca7 = {},
+    _0x1cb139 = 0,
+    _0x104cc4 = false;
 
-const _0x48e293 = require("fs"),
-    _0x394064 = "https://api.m.jd.com/client.action",
-    _0x3142f5 = process.env.FRUIT_DELAY ? process.env.FRUIT_DELAY * 1 : 5000,
-    _0x7218d5 = require("./function/dylany");
+const _0x37f5af = require("fs"),
+    _0x26071d = "https://api.m.jd.com/client.action",
+    _0x2c1da1 = process.env.FRUIT_DELAY ? process.env.FRUIT_DELAY * 1 : 5000,
+    _0x64772 = require("./function/dylanv");
 
 $.reqnum = 1;
 !(async () => {
-    await _0x26ca20();
+    await _0x29941b();
 
-    if (!_0x14271f[0]) {
-        const _0x4bfad5 = {
+    if (!_0x252203[0]) {
+        const _0x486df4 = {
             "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         };
-        $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", _0x4bfad5);
+        $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", _0x486df4);
         return;
     }
 
-    $.log("\n当前版本：2023/10/28");
+    $.log("\n当前版本：2023/10/23");
     $.log("问题建议：https://t.me/dylan_jdpro\n");
     $.log("\n环境变量：");
     $.log("export DY_PROXY='api_url' 可使用代理api");
-    $.log("export FRUITCODES = 'xxx&xxx' 指定助力码助力，多个用&分割，不指定则自动搜集任务助力码");
-    $.log("epxort FRUIT_DELAY='1000',设置等待时间(毫秒)，默认请求5次接口等待5秒（5000）\n\n");
+    $.log("export NEWNEWFRUITCODES = 'xxx&xxx' 可指定助力码助力，多个用&分割，不指定则自动搜集任务助力码");
 
-    for (let _0x3c4140 = 0; _0x3c4140 < _0x14271f.length; _0x3c4140++) {
-        if (_0x14271f[_0x3c4140]) {
-            _0x5b5b19 = _0x14271f[_0x3c4140];
-            $.UserName = decodeURIComponent(_0x5b5b19.match(/pt_pin=([^; ]+)(?=;?)/) && _0x5b5b19.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-            $.index = _0x3c4140 + 1;
+    for (let _0x42496b = 0; _0x42496b < _0x252203.length; _0x42496b++) {
+        if (_0x252203[_0x42496b]) {
+            _0x4bd5bc = _0x252203[_0x42496b];
+            $.UserName = decodeURIComponent(_0x4bd5bc.match(/pt_pin=([^; ]+)(?=;?)/) && _0x4bd5bc.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+            $.index = _0x42496b + 1;
             $.isLogin = true;
             $.nickName = "";
-            await _0x2e4362();
+            await _0x691131();
             console.log("\n开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n");
 
             if (!$.isLogin) {
-                const _0x234f18 = {
+                const _0x145476 = {
                     "open-url": "https://bean.m.jd.com/bean/signIndex.action"
                 };
-                $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", _0x234f18);
-                $.isNode() && (await _0x16ee6d.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+                $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", _0x145476);
+                $.isNode() && (await _0x5dc6ac.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
                 continue;
             }
 
-            _0x3aae32 = "";
-            _0x3b8e03 = "";
-            _0x5cdc0d = {};
+            _0x41af5d = "";
+            _0x59f215 = "";
+            _0x3ddca7 = {};
             $.UA = require("./USER_AGENTS").UARAM();
-            await _0x3d4e82();
+            await _0x2b5004();
 
-            if (_0x10a9cc.length == 0) {
-                $.log("没有助力码,请设置变量FRUITCODES指定或执行农场任务后搜集助力码");
+            if (_0x497839.length == 0) {
+                $.log("没有助力码,请变量NEWFRUITCODES指定或执行农场任务自动收集助力码");
                 return;
             }
 
-            await _0x3edbdd();
+            await _0x132d4c();
             await $.wait(2000);
         }
     }
-})().catch(_0x376380 => {
-    $.log("", "❌ " + $.name + ", 失败! 原因: " + _0x376380 + "!", "");
+})().catch(_0x4a9077 => {
+    $.log("", "❌ " + $.name + ", 失败! 原因: " + _0x4a9077 + "!", "");
 }).finally(() => {
     $.done();
 });
 
-async function _0x3edbdd() {
-    _0x3b8e03 = "【京东账号" + $.index + "🆔】" + ($.nickName || $.UserName);
+async function _0x132d4c() {
+    _0x59f215 = "【京东账号" + $.index + "🆔】" + ($.nickName || $.UserName);
 
     try {
-        await _0x1c0974("", 1);
-
-        if ($.farmInfo.farmUserPro) {
-            await _0x9b2213();
-            await _0x3ba668();
-        } else {
-            JSON.stringify($.farmInfo).includes("winTexts") ? (console.log("初始化农场数据异常, 请确认此账号是否开通农场"), _0x3aae32 = "【数据异常】请确认此账号是否开通农场\n") : (console.log("初始化农场数据异常, 请登录京东 app查看农场0元水果功能是否正常,农场初始化数据: " + JSON.stringify($.farmInfo)), _0x3aae32 = "【数据异常】请手动登录京东app查看此账号" + $.name + "是否正常");
-        }
-    } catch (_0x4afd2e) {
+        await _0x4964f4();
+    } catch (_0x3a66f) {
         console.log("任务执行异常，请检查执行日志 ‼️‼️");
-        $.logErr(_0x4afd2e);
+        $.logErr(_0x3a66f);
     }
-
-    await _0x2d75e1();
 }
 
-async function _0x3ba668() {
-    await _0x49f34b();
-    await _0x29ce32();
+async function _0xf5c258() {
+    await _0xb25ee1();
+    await _0x399c32();
 }
 
-async function _0x29ce32() {
+async function _0x399c32() {
     console.log("\n开始天天抽奖助力...");
 
-    for (let _0x269360 of _0x10a9cc) {
-        if (_0x269360 === $.farmInfo.farmUserPro.shareCode) {
+    for (let _0x4b5d09 of _0x497839) {
+        if (_0x4b5d09 === $.farmInfo.farmUserPro.shareCode) {
             console.log("跳过自己\n");
             continue;
         }
 
-        await _0x31d538(_0x269360);
+        await _0x27c148(_0x4b5d09);
         await $.wait(1000);
 
         if ($.lotteryMasterHelpRes.helpResult === undefined) {
@@ -140,116 +128,94 @@ async function _0x29ce32() {
     }
 }
 
-async function _0x9b2213() {
+async function _0x4964f4() {
     console.log("\n开始助力好友...");
-    let _0x559af8 = 0,
-        _0x54c84c = 3,
-        _0x1d7389 = "";
+    let _0x5ba2a7 = "";
 
-    for (let _0x1dd436 of _0x10a9cc) {
-        console.log("去助力: " + _0x1dd436);
+    for (let _0x313b97 of _0x497839) {
+        console.log("去助力: " + _0x313b97);
 
-        if (!_0x1dd436) {
+        if (!_0x313b97) {
             continue;
         }
 
-        if (_0x1dd436 === $.farmInfo.farmUserPro.shareCode) {
-            console.log("不能为自己助力哦，跳过\n");
-            continue;
-        }
+        let _0x45e8e7 = await _0x2da38c(_0x313b97);
 
-        await _0x2752a1(_0x1dd436);
         await $.wait(2000);
 
-        if ($.helpResult.code === "0") {
-            if ($.helpResult.helpResult.code === "0") {
-                _0x559af8 += $.helpResult.helpResult.salveHelpAddWater;
+        if (_0x45e8e7.code === 0) {
+            if (_0x45e8e7.data.bizCode === 0) {
                 console.log("【助力结果】: 助力成功");
-                console.log("助力获得" + $.helpResult.helpResult.salveHelpAddWater + "g水滴");
-                _0x1d7389 += ($.helpResult.helpResult.masterUserInfo.nickName || "匿名用户") + ",";
+                _0x5ba2a7 += (_0x45e8e7.data.result.masterInfo.nickname || "匿名用户") + ",";
             } else {
-                if ($.helpResult.helpResult.code === "8") {
+                if (_0x45e8e7.data.bizCode === 5004) {
                     console.log("【助力结果】: 助力失败，今天助力次数已耗尽");
+                    break;
                 } else {
-                    if ($.helpResult.helpResult.code === "9") {
+                    if (_0x45e8e7.data.bizCode === 5003) {
                         console.log("【助力结果】: 已经助力过TA了");
                     } else {
-                        $.helpResult.helpResult.code === "10" ? (console.log("【助力结果】: 对方已满助力"), _0x20a1c8.push(_0x1dd436)) : console.log("助力其他情况：" + JSON.stringify($.helpResult.helpResult));
+                        if (_0x45e8e7.data.bizCode === 5005) {
+                            console.log("【助力结果】: 对方已满助力");
+
+                            _0x4b0b07.push(_0x313b97);
+                        } else {
+                            if (_0x45e8e7.data.bizCode === 5002) {
+                                console.log("【助力结果】: 不能给自己助力");
+                            } else {
+                                if (_0x45e8e7.data.bizCode === -1001) {
+                                    console.log("【助力结果】: " + _0x45e8e7.data.bizMsg);
+                                } else {
+                                    console.log("助力其他情况：" + JSON.stringify(_0x45e8e7));
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            console.log("【助力次数还剩】" + $.helpResult.helpResult.remainTimes + "次\n");
-            _0x54c84c = $.helpResult.helpResult.remainTimes;
-
-            if ($.helpResult.helpResult.remainTimes === 0) {
-                console.log("您当前助力次数已耗尽，跳出助力");
-                break;
-            }
         } else {
-            console.log("助力失败::" + JSON.stringify($.helpResult));
+            console.log("助力失败::" + JSON.stringify(_0x45e8e7));
         }
     }
 
-    if ($.isLoon() || $.isQuanX() || $.isSurge()) {
-        let _0x4f57f9 = _0x5723a2() + $.farmInfo.farmUserPro.shareCode;
-
-        !$.getdata(_0x4f57f9) && ($.setdata("", _0x5723a2(Date.now() - 86400000) + $.farmInfo.farmUserPro.shareCode), $.setdata("", _0x4f57f9));
-        _0x1d7389 && ($.getdata(_0x4f57f9) ? $.setdata($.getdata(_0x4f57f9) + "," + _0x1d7389, _0x4f57f9) : $.setdata(_0x1d7389, _0x4f57f9));
-        _0x1d7389 = $.getdata(_0x4f57f9);
-    }
-
-    _0x559af8 > 0 && console.log("【助力好友👬】获得" + _0x559af8 + "g💧\n");
-    _0x3aae32 += "【今日剩余助力👬】" + _0x54c84c + "次\n";
     console.log("助力好友结束，即将开始领取额外水滴奖励\n");
 }
 
-async function _0x49f34b() {
-    await _0x2e8e83();
+async function _0xb25ee1() {
+    await _0x2282c0();
 
     if ($.friendList) {
         console.log("\n今日已邀请好友" + $.friendList.inviteFriendCount + "个 / 每日邀请上限" + $.friendList.inviteFriendMax + "个");
-        await _0x536736();
-
-        if ($.friendList.inviteFriendCount > 0) {
-            if ($.friendList.inviteFriendCount > $.friendList.inviteFriendGotAwardCount) {
-                console.log("开始领取邀请好友的奖励");
-                await _0x120e34();
-                console.log("领取邀请好友的奖励结果：：" + JSON.stringify($.awardInviteFriendRes));
-            }
-        } else {
-            console.log("今日未邀请过好友");
-        }
+        await _0x5e3bc8();
+        $.friendList.inviteFriendCount > 0 ? $.friendList.inviteFriendCount > $.friendList.inviteFriendGotAwardCount && (console.log("开始领取邀请好友的奖励"), await _0x598f5c(), console.log("领取邀请好友的奖励结果：：" + JSON.stringify($.awardInviteFriendRes))) : console.log("今日未邀请过好友");
     } else {
         console.log("查询好友列表失败\n");
     }
 }
 
-async function _0x536736() {
-    for (let _0x1143cf of _0x10a9cc) {
-        if (_0x1143cf === $.farmInfo.farmUserPro.shareCode) {
+async function _0x5e3bc8() {
+    for (let _0x42f0c7 of _0x497839) {
+        if (_0x42f0c7 === $.farmInfo.farmUserPro.shareCode) {
             console.log("自己不能邀请自己成为好友噢\n");
             continue;
         }
 
-        if (_0x10a9cc.findIndex(_0x5a3ef8 => _0x5a3ef8 === _0x1143cf) >= 5) {
+        if (_0x497839.findIndex(_0x612c49 => _0x612c49 === _0x42f0c7) >= 5) {
             break;
         }
 
-        await _0x3b6d1d(_0x1143cf);
+        await _0x4413db(_0x42f0c7);
 
         if ($.inviteFriendRes && $.inviteFriendRes.helpResult && $.inviteFriendRes.helpResult.code === "0") {
             console.log("接收邀请成为好友结果成功,您已成为" + $.inviteFriendRes.helpResult.masterUserInfo.nickName + "的好友");
         } else {
-            if ($.inviteFriendRes && $.inviteFriendRes.helpResult && $.inviteFriendRes.helpResult.code === "17") {
-                console.log("接收邀请成为好友结果失败,对方已是您的好友");
-            }
+            $.inviteFriendRes && $.inviteFriendRes.helpResult && $.inviteFriendRes.helpResult.code === "17" && console.log("接收邀请成为好友结果失败,对方已是您的好友");
         }
     }
 }
 
-async function _0x31d538() {
-    const _0x435f1b = {
+async function _0x27c148() {
+    const _0x5c81bc = {
         imageUrl: "",
         nickName: "",
         shareCode: arguments[0] + "-3",
@@ -257,22 +223,23 @@ async function _0x31d538() {
         version: 24,
         channel: 1
     };
-    $.lotteryMasterHelpRes = await _0x1c0974(_0x435f1b);
+    $.lotteryMasterHelpRes = await initForFarm(_0x5c81bc);
 }
 
-async function _0x3b6d1d() {
-    $.inviteFriendRes = await _0x1c0974({
+async function _0x4413db() {
+    const _0x46fa5d = {
         imageUrl: "",
         nickName: "",
         shareCode: arguments[0] + "-inviteFriend",
         version: 24,
         channel: 1
-    });
+    };
+    $.inviteFriendRes = await initForFarm(_0x46fa5d);
 }
 
-async function _0x2752a1() {
-    for (let _0x508c11 of Array(3)) {
-        const _0x4e7f23 = {
+async function _0x2c6c0a() {
+    for (let _0x1d942b of Array(3)) {
+        const _0x3b6db6 = {
             sid: "",
             mpin: "",
             shareCode: arguments[0],
@@ -282,7 +249,7 @@ async function _0x2752a1() {
             lat: "0",
             lng: "0"
         };
-        $.helpResult = await _0x1c0974(_0x4e7f23);
+        $.helpResult = await initForFarm(_0x3b6db6);
 
         if ($.helpResult.code == "0") {
             break;
@@ -292,27 +259,20 @@ async function _0x2752a1() {
     }
 }
 
-async function _0x1c0974(_0x535c34, _0x4492f9, _0x55f920 = 1500) {
-    $.reqnum % 5 == 0 && (console.log("\n等待" + _0x3142f5 / 1000 + "秒......\n"), _0x55f920 = _0x3142f5);
+async function _0x2da38c(_0x1f38e0, _0x405d03 = 1500) {
+    $.reqnum % 5 == 0 && (console.log("\n等待" + _0x2c1da1 / 1000 + "秒......\n"), _0x405d03 = _0x2c1da1);
     $.reqnum++;
-    const _0x4c1923 = {
-        babelChannel: "121",
-        sid: "",
-        un_area: "",
-        version: 24,
-        channel: 1,
-        lat: "0",
-        lng: "0"
+    const _0x5e1492 = {
+        version: 1,
+        inviteCode: _0x1f38e0,
+        shareChannel: "",
+        assistChannel: ""
     };
 
-    if (!_0x535c34) {
-        _0x535c34 = _0x4c1923;
-    }
-
-    let _0x520543 = {
-        appId: "8a2af",
-        fn: "initForFarm",
-        body: _0x535c34,
+    let _0x55ac9b = {
+        appId: "28981",
+        fn: "farm_assist",
+        body: _0x5e1492,
         apid: "signed_wh5",
         ver: $.UA.split(";")[2],
         cl: "ios",
@@ -320,242 +280,228 @@ async function _0x1c0974(_0x535c34, _0x4492f9, _0x55f920 = 1500) {
         code: 1,
         ua: $.UA
     },
-        _0x173f75 = await _0x7218d5.getbody(_0x520543);
+        _0x4e5253 = await _0x64772.getbody(_0x55ac9b);
 
-    return new Promise(_0x52ce79 => {
-        const _0x109bf0 = {
-            cookie: _0x5b5b19,
-            origin: "https://carry.m.jd.com",
-            referer: "https://carry.m.jd.com/",
+    return new Promise(_0x7a55bf => {
+        const _0x3e2ddd = {
+            cookie: _0x4bd5bc,
+            origin: "https://h5.m.jd.com",
+            referer: "https://h5.m.jd.com/",
             "User-Agent": $.UA
         };
-        const _0x38a52c = {
-            url: "https://api.m.jd.com/client.action?functionId=initForFarm&" + _0x173f75,
-            headers: _0x109bf0,
-            timeout: 10000
+        const _0x582d63 = {
+            url: "https://api.m.jd.com/client.action?functionId=farm_assist&" + _0x4e5253,
+            headers: _0x3e2ddd,
+            timeout: 30000
         };
         setTimeout(() => {
-            $.get(_0x38a52c, async (_0x14d769, _0x1379e6, _0x4ac4ee) => {
+            $.get(_0x582d63, async (_0x1c16a3, _0x3f790a, _0x5ecd71) => {
                 try {
-                    if (_0x14d769) {
-                        console.log("initForFarm: 请求失败 ‼️‼️");
-                        console.log(JSON.stringify(_0x14d769));
+                    if (_0x1c16a3) {
+                        console.log("farm_assist: 请求失败 ‼️‼️");
+                        console.log(JSON.stringify(_0x1c16a3));
                     } else {
-                        if (_0x52febe(_0x4ac4ee)) {
-                            _0x4ac4ee = JSON.parse(_0x4ac4ee);
-                            _0x4ac4ee.code != "0";
-                            _0x4492f9 && ($.farmInfo = _0x4ac4ee);
-                        }
+                        _0x5b9220(_0x5ecd71) && (_0x5ecd71 = JSON.parse(_0x5ecd71));
                     }
-                } catch (_0x3094a0) {
-                    $.logErr(_0x3094a0, _0x1379e6);
+                } catch (_0x1388ce) {
+                    $.logErr(_0x1388ce, _0x3f790a);
                 } finally {
-                    _0x52ce79(_0x4ac4ee);
+                    _0x7a55bf(_0x5ecd71);
                 }
             });
-        }, _0x55f920);
+        }, _0x405d03);
     });
 }
 
-async function _0x2e8e83() {
-    const _0x4266c6 = {
+async function _0x2282c0() {
+    const _0xd032a9 = {
         version: 24,
         channel: 1
     };
-    $.friendList = await _0x3baa83("friendListInitForFarm", _0x4266c6);
+    $.friendList = await _0x3fa9cb("friendListInitForFarm", _0xd032a9);
 }
 
-async function _0x120e34() {
-    $.awardInviteFriendRes = await _0x3baa83("awardInviteFriendForFarm");
+async function _0x598f5c() {
+    $.awardInviteFriendRes = await _0x3fa9cb("awardInviteFriendForFarm");
 }
 
-async function _0x2d75e1() {
+async function _0x2c579e() {
     if ($.isNode() && process.env.FRUIT_NOTIFY_CONTROL) {
         $.ctrTemp = "" + process.env.FRUIT_NOTIFY_CONTROL === "false";
     } else {
-        $.getdata("jdFruitNotify") ? $.ctrTemp = $.getdata("jdFruitNotify") === "false" : $.ctrTemp = "" + _0x1987e4 === "false";
+        $.getdata("jdFruitNotify") ? $.ctrTemp = $.getdata("jdFruitNotify") === "false" : $.ctrTemp = "" + _0x104cc4 === "false";
     }
 
-    if ($.ctrTemp) {
-        $.msg($.name, _0x3b8e03, _0x3aae32, _0x5cdc0d);
-
-        if ($.isNode()) {
-            _0x16a000 += _0x3b8e03 + "\n" + _0x3aae32 + ($.index !== _0x14271f.length ? "\n\n" : "");
-        }
-    } else {
-        $.log("\n" + _0x3aae32 + "\n");
-    }
+    $.ctrTemp ? ($.msg($.name, _0x59f215, _0x41af5d, _0x3ddca7), $.isNode() && (_0x54c8e5 += _0x59f215 + "\n" + _0x41af5d + ($.index !== _0x252203.length ? "\n\n" : ""))) : $.log("\n" + _0x41af5d + "\n");
 }
 
-function _0x5723a2(_0x5abc3f) {
-    let _0xa98d34;
+function _0x9ab4b4(_0x12bc5f) {
+    let _0x192666;
 
-    _0x5abc3f ? _0xa98d34 = new Date(_0x5abc3f) : _0xa98d34 = new Date();
-    return _0xa98d34.getFullYear() + "-" + (_0xa98d34.getMonth() + 1 >= 10 ? _0xa98d34.getMonth() + 1 : "0" + (_0xa98d34.getMonth() + 1)) + "-" + (_0xa98d34.getDate() >= 10 ? _0xa98d34.getDate() : "0" + _0xa98d34.getDate());
+    _0x12bc5f ? _0x192666 = new Date(_0x12bc5f) : _0x192666 = new Date();
+    return _0x192666.getFullYear() + "-" + (_0x192666.getMonth() + 1 >= 10 ? _0x192666.getMonth() + 1 : "0" + (_0x192666.getMonth() + 1)) + "-" + (_0x192666.getDate() >= 10 ? _0x192666.getDate() : "0" + _0x192666.getDate());
 }
 
-function _0x3d4e82() {
-    return new Promise(async _0x4eeb38 => {
+function _0x2b5004() {
+    return new Promise(async _0xfe2ba7 => {
         if ($.shareCodesArr.length != 0) {
-            if (_0x10a9cc[$.index - 1]) {
-                _0x10a9cc = $.shareCodesArr[$.index - 1].split("@");
+            if (_0x497839[$.index - 1]) {
+                _0x497839 = $.shareCodesArr[$.index - 1].split("@");
             } else {
-                const _0x1f2fde = $.index > _0x572df1.length ? _0x572df1.length - 1 : $.index - 1;
+                const _0x4936bf = $.index > _0x5e76a0.length ? _0x5e76a0.length - 1 : $.index - 1;
 
-                _0x10a9cc = _0x572df1[_0x1f2fde].split("@");
+                _0x497839 = _0x5e76a0[_0x4936bf].split("@");
             }
         }
 
-        _0x10a9cc = _0x10a9cc.filter(_0x515323 => _0x20a1c8.indexOf(_0x515323) == -1 && !!_0x515323);
-        console.log("您提供了" + _0x10a9cc.length + "个农场助力码\n");
-        console.log("将要助力的好友" + JSON.stringify(_0x10a9cc));
+        _0x497839 = _0x497839.filter(_0x5de2e4 => _0x4b0b07.indexOf(_0x5de2e4) == -1 && !!_0x5de2e4);
+        console.log("您提供了" + _0x497839.length + "个农场助力码\n");
+        console.log("将要助力的好友" + JSON.stringify(_0x497839));
 
-        _0x4eeb38();
+        _0xfe2ba7();
     });
 }
 
-function _0x26ca20() {
-    return new Promise(_0x14fd4e => {
+function _0x29941b() {
+    return new Promise(_0x164933 => {
         console.log("开始获取配置文件...\n");
-        _0x16ee6d = $.isNode() ? require("./sendNotify") : "";
+        _0x5dc6ac = $.isNode() ? require("./sendNotify") : "";
 
-        const _0x3e8e3d = $.isNode() ? require("./jdCookie.js") : "";
+        const _0x4ea92a = $.isNode() ? require("./jdCookie.js") : "";
 
         if (process.env.DY_PROXY) {
-            const _0x4c17c0 = require("./function/proxy.js");
+            const _0x157d01 = require("./function/proxy.js");
 
-            $.get = _0x4c17c0.intoRequest($.get.bind($));
-            $.post = _0x4c17c0.intoRequest($.post.bind($));
+            $.get = _0x157d01.intoRequest($.get.bind($));
+            $.post = _0x157d01.intoRequest($.post.bind($));
         }
 
         $.shareCodesArr = [];
 
         if ($.isNode()) {
-            if (process.env.FRUITCODES) {
-                _0x10a9cc = process.env.FRUITCODES.split("&");
+            if (process.env.NEWFRUITCODES) {
+                _0x497839 = process.env.NEWFRUITCODES.split("&");
             } else {
-                process.env.FRUITSHARECODES && (process.env.FRUITSHARECODES.indexOf("\n") > -1 ? _0x572df1 = process.env.FRUITSHARECODES.split("\n") : _0x572df1 = process.env.FRUITSHARECODES.split("&"));
+                if (process.env.NEWFRUITSHARECODES) {
+                    if (process.env.NEWFRUITSHARECODES.indexOf("\n") > -1) {
+                        _0x5e76a0 = process.env.NEWFRUITSHARECODES.split("\n");
+                    } else {
+                        _0x5e76a0 = process.env.NEWFRUITSHARECODES.split("&");
+                    }
+                }
             }
         }
 
         if ($.isNode()) {
-            Object.keys(_0x3e8e3d).forEach(_0x1919ca => {
-                if (_0x3e8e3d[_0x1919ca]) {
-                    _0x14271f.push(_0x3e8e3d[_0x1919ca]);
-                }
+            Object.keys(_0x4ea92a).forEach(_0x2c4099 => {
+                _0x4ea92a[_0x2c4099] && _0x252203.push(_0x4ea92a[_0x2c4099]);
             });
 
             if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") {
                 console.log = () => { };
             }
         } else {
-            _0x14271f = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ..._0x2cac74($.getdata("CookiesJD") || "[]").map(_0x39875e => _0x39875e.cookie)].filter(_0x265be0 => !!_0x265be0);
+            _0x252203 = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ..._0x1726ae($.getdata("CookiesJD") || "[]").map(_0x5e7689 => _0x5e7689.cookie)].filter(_0x19e6db => !!_0x19e6db);
         }
 
         if ($.isNode()) {
-            Object.keys(_0x572df1).forEach(_0x4bb936 => {
-                _0x572df1[_0x4bb936] && $.shareCodesArr.push(_0x572df1[_0x4bb936]);
+            Object.keys(_0x5e76a0).forEach(_0x78e6e5 => {
+                _0x5e76a0[_0x78e6e5] && $.shareCodesArr.push(_0x5e76a0[_0x78e6e5]);
             });
         } else {
             if ($.getdata("jd_fruit_inviter")) {
-                $.shareCodesArr = $.getdata("jd_fruit_inviter").split("\n").filter(_0x32f139 => !!_0x32f139);
+                $.shareCodesArr = $.getdata("jd_fruit_inviter").split("\n").filter(_0x52b368 => !!_0x52b368);
             }
 
             console.log("\nBoxJs设置的" + $.name + "好友邀请码:" + ($.getdata("jd_fruit_inviter") ? $.getdata("jd_fruit_inviter") : "暂无") + "\n");
         }
 
-        let _0x389c8f = _0x48e293.existsSync("./fruit_helpcode");
+        let _0x522141 = _0x37f5af.existsSync("./fruit_helpcode_new");
 
-        if (process.env.FRUITSHARECODES) {
+        if (process.env.NEWFRUITSHARECODES) {
             $.log("使用日志搜集的助力码\n");
         } else {
-            if (process.env.FRUITCODES) {
+            if (process.env.NEWFRUITCODES) {
                 $.log("使用变量指定的助力码\n");
             } else {
-                if (_0x572df1.length == 0 && _0x389c8f) {
-                    $.log("使用本地缓存的助力码\n");
-                    _0x10a9cc = _0x48e293.readFileSync("./fruit_helpcode", "utf-8");
-                    _0x10a9cc = JSON.parse(_0x10a9cc);
-                } else {
-                    $.log("没有检测到任何助力码！！！\n");
-                }
+                _0x5e76a0.length == 0 && _0x522141 ? ($.log("使用本地缓存的助力码\n"), _0x497839 = _0x37f5af.readFileSync("./fruit_helpcode_new", "utf-8"), _0x497839 = JSON.parse(_0x497839)) : $.log("没有检测到任何助力码！！！\n");
             }
         }
 
-        _0x14fd4e();
+        _0x164933();
     });
 }
 
-function _0x2e4362() {
-    return new Promise(_0x29e1a3 => {
-        const _0x5c2963 = {
-            Cookie: _0x5b5b19,
+function _0x691131() {
+    return new Promise(_0x32d42b => {
+        const _0x1953c4 = {
+            Cookie: _0x4bd5bc,
             referer: "https://h5.m.jd.com/",
             "User-Agent": $.UA
         };
-        const _0x583703 = {
+        const _0x29295f = {
             url: "https://plogin.m.jd.com/cgi-bin/ml/islogin",
-            headers: _0x5c2963,
+            headers: _0x1953c4,
             timeout: 10000
         };
-        $.get(_0x583703, (_0x24d714, _0x448a1d, _0x462b9e) => {
+        $.get(_0x29295f, (_0x3715bf, _0x59847d, _0x55a9bd) => {
             try {
-                if (_0x462b9e) {
-                    _0x462b9e = JSON.parse(_0x462b9e);
+                if (_0x55a9bd) {
+                    _0x55a9bd = JSON.parse(_0x55a9bd);
 
-                    if (!(_0x462b9e.islogin === "1")) {
-                        _0x462b9e.islogin === "0" && ($.isLogin = false);
+                    if (!(_0x55a9bd.islogin === "1")) {
+                        _0x55a9bd.islogin === "0" && ($.isLogin = false);
                     }
                 }
-            } catch (_0x327332) {
-                console.log(_0x327332);
+            } catch (_0x8dd34) {
+                console.log(_0x8dd34);
             } finally {
-                _0x29e1a3();
+                _0x32d42b();
             }
         });
     });
 }
 
-function _0x3baa83(_0x56a5d1, _0x32cac5 = {}, _0x4c917e = 1500) {
-    $.reqnum % 5 == 0 && (console.log("\n等待" + _0x3142f5 / 1000 + "秒......\n"), _0x4c917e = _0x3142f5);
+function _0x3fa9cb(_0xd46e47, _0x150352 = {}, _0x3f0411 = 1500) {
+    $.reqnum % 5 == 0 && (console.log("\n等待" + _0x2c1da1 / 1000 + "秒......\n"), _0x3f0411 = _0x2c1da1);
     $.reqnum++;
-    return new Promise(_0x585c66 => {
+    return new Promise(_0x16a58e => {
         setTimeout(() => {
-            $.get(_0x180556(_0x56a5d1, _0x32cac5), (_0x4a83e5, _0x2295cd, _0x36311c) => {
+            $.get(_0x511cd9(_0xd46e47, _0x150352), (_0x8bc75b, _0xdab32c, _0x463628) => {
                 try {
-                    if (_0x4a83e5) {
+                    if (_0x8bc75b) {
                         console.log("\n东东农场: API查询请求失败 ‼️‼️");
-                        console.log(JSON.stringify(_0x4a83e5));
-                        console.log("function_id:" + _0x56a5d1);
-                        $.logErr(_0x4a83e5);
+                        console.log(JSON.stringify(_0x8bc75b));
+                        console.log("function_id:" + _0xd46e47);
+                        $.logErr(_0x8bc75b);
                     } else {
-                        _0x52febe(_0x36311c) && (_0x36311c = JSON.parse(_0x36311c));
+                        _0x5b9220(_0x463628) && (_0x463628 = JSON.parse(_0x463628));
                     }
-                } catch (_0x1302cb) {
-                    $.logErr(_0x1302cb, _0x2295cd);
+                } catch (_0x3a766b) {
+                    $.logErr(_0x3a766b, _0xdab32c);
                 } finally {
-                    _0x585c66(_0x36311c);
+                    _0x16a58e(_0x463628);
                 }
             });
-        }, _0x4c917e);
+        }, _0x3f0411);
     });
 }
 
-function _0x52febe(_0x394f57) {
+function _0x5b9220(_0x5b6638) {
     try {
-        if (typeof JSON.parse(_0x394f57) == "object") {
+        if (typeof JSON.parse(_0x5b6638) == "object") {
             return true;
         }
-    } catch (_0x3d6014) {
-        console.log(_0x3d6014);
+    } catch (_0x560903) {
+        console.log(_0x560903);
         console.log("京东服务器访问数据为空，请检查自身设备网络情况");
         return false;
     }
 }
 
-function _0x180556(_0x2a5fc7, _0x5160a5 = {}) {
+function _0x511cd9(_0x44b1b9, _0x52b515 = {}) {
     return {
-        url: _0x394064 + "?functionId=" + _0x2a5fc7 + "&body=" + encodeURIComponent(JSON.stringify(_0x5160a5)) + "&appid=wh5",
+        url: _0x26071d + "?functionId=" + _0x44b1b9 + "&body=" + encodeURIComponent(JSON.stringify(_0x52b515)) + "&appid=wh5",
         headers: {
             Host: "api.m.jd.com",
             Accept: "*/*",
@@ -564,18 +510,18 @@ function _0x180556(_0x2a5fc7, _0x5160a5 = {}) {
             "User-Agent": $.UA,
             "Accept-Language": "zh-CN,zh-Hans;q=0.9",
             Referer: "https://carry.m.jd.com/",
-            Cookie: _0x5b5b19
+            Cookie: _0x4bd5bc
         },
         timeout: 10000
     };
 }
 
-function _0x2cac74(_0x4ae908) {
-    if (typeof _0x4ae908 == "string") {
+function _0x1726ae(_0x2ed46e) {
+    if (typeof _0x2ed46e == "string") {
         try {
-            return JSON.parse(_0x4ae908);
-        } catch (_0x5cfbb6) {
-            console.log(_0x5cfbb6);
+            return JSON.parse(_0x2ed46e);
+        } catch (_0x80e072) {
+            console.log(_0x80e072);
             $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie");
             return [];
         }

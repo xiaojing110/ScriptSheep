@@ -1,69 +1,112 @@
-const _0x302d24 = require('got');
-let _0x32220e = 'https://6dy.nbplay.site/sign';
-// if (!__filename.includes('6dy')) _0x32220e = 'http://api.nolanstore.cc/sign';
-const _0x4dbb71 = process.env.SIGN_URL ? process.env.SIGN_URL : _0x32220e;
-async function _0xc9cb0f(_0x1ea9d2, _0x44de46, _0x2c4333) {
-    const _0x919427 = {};
-    _0x919427.fn = _0x1ea9d2, _0x919427.body = _0x44de46;
-    let _0x338f82 = '',
-        _0x4f8240 = '',
-        _0x5cb9db = _0x919427;
-    _0x2c4333 && (_0x5cb9db.ver = _0x2c4333);
-    const _0x31fd71 = {};
-    _0x31fd71.limit = 0x1, _0x31fd71.methods = ['GET', 'POST'];
-    const _0x27d8f6 = {};
-    return _0x27d8f6.request = 0x7530, _0x338f82 = await _0x302d24.post(_0x4dbb71, {
-        'json': _0x5cb9db,
-        'retry': _0x31fd71,
-        'hooks': {
-            'beforeRetry': [(_0x586fba, _0x4e306a) => {
-                if (_0x4e306a) { }
-            }]
-        },
-        'timeout': _0x27d8f6
-    }).json().catch(async _0x24152e => {
-        console.log('sign获取失败,重试...\n'), _0x4f8240 = await _0x5f6def(_0x1ea9d2, _0x44de46);
-    }), _0x4f8240 ? _0x4f8240.body : _0x338f82.body;
-}
-async function _0x5f6def(_0x423ed8, _0x3d6d73) {
-    const _0x419f27 = {};
-    _0x419f27.fn = _0x423ed8, _0x419f27.body = _0x3d6d73;
-    const _0x44cbde = {};
-    _0x44cbde.request = 0x7530;
-    let _0x343cbb = await _0x302d24.post('http://api.nolanstore.cc/sign', {
-        'json': _0x419f27,
-        'retry': {
-            'limit': 0x1,
-            'methods': ['GET', 'POST']
-        },
-        'hooks': {
-            'beforeRetry': [(_0x34a430, _0x17520b) => {
-                if (_0x17520b) { }
-            }]
-        },
-        'timeout': _0x44cbde
-    }).json().catch(_0x215b63 => {
-        console.log(_0x215b63.message), console.log('sign获取失败,请检查网络！\n');
+const _0xf16ac6 = require("got");
+
+let _0x440aa9 = "https://6dy.jdpro.site/sign";
+
+// if (!__filename.includes("6dy")) {
+//     _0x440aa9 = "http://api.nolanstore.cc/sign";
+// }
+
+const _0x2c1efc = process.env.SIGN_URL ? process.env.SIGN_URL : _0x440aa9;
+
+async function _0x63cb62(_0x47c9d3, _0x367dd8, _0xe7dcd2) {
+    const _0x3a9a5a = {
+        fn: _0x47c9d3,
+        body: _0x367dd8
+    };
+    let _0x960714 = "",
+        _0x44fb3e = "";
+    _0xe7dcd2 && (_0x3a9a5a.ver = _0xe7dcd2);
+    const _0x2c15da = {
+        limit: 1,
+        methods: ["GET", "POST"]
+    };
+    const _0x4edd2e = {
+        beforeRetry: [(_0x37c285, _0x445f51) => {
+            _0x445f51;
+        }]
+    };
+    const _0x53a1fe = {
+        request: 30000
+    };
+    const _0x230e85 = {
+        json: _0x3a9a5a,
+        retry: _0x2c15da,
+        hooks: _0x4edd2e,
+        timeout: _0x53a1fe
+    };
+    _0x960714 = await _0xf16ac6.post(_0x2c1efc, _0x230e85).json().catch(async _0x24eae4 => {
+        console.log("sign获取失败,重试...\n");
+        _0x44fb3e = await _0x362c10(_0x47c9d3, _0x367dd8);
     });
-    return _0x343cbb;
+    return _0x44fb3e ? _0x44fb3e.body : _0x960714.body;
 }
-async function _0x5e0eb9(_0x368efd, _0x3b5205) {
-    const _0x57c7e5 = {};
-    _0x57c7e5.fn = _0x368efd, _0x57c7e5.body = _0x3b5205;
-    const _0x29edaa = {};
-    _0x29edaa.limit = 0x1, _0x29edaa.methods = ['GET', 'POST'];
-    const _0x2b2548 = {};
-    _0x2b2548.beforeRetry = [(_0x1e85e4, _0x405c7d) => {
-        if (_0x405c7d) { }
-    }];
-    const _0x23d0da = {};
-    _0x23d0da.request = 0x7530;
-    const _0x5a6a00 = {};
-    _0x5a6a00.json = _0x57c7e5, _0x5a6a00.retry = _0x29edaa, _0x5a6a00.hooks = _0x2b2548, _0x5a6a00.timeout = _0x23d0da;
-    let _0x10e883 = await _0x302d24.post('http://api.nolanstore.cc/sign', _0x5a6a00).json().catch(_0x381607 => {
-        console.log(_0x381607.message), console.log('sign获取失败,请检查网络！\n');
+
+async function _0x362c10(_0xb3616f, _0x4dfefe) {
+    const _0x3ec3fa = {
+        fn: _0xb3616f,
+        body: _0x4dfefe
+    };
+    const _0xfb6de = {
+        limit: 1,
+        methods: ["GET", "POST"]
+    };
+    const _0x4180a7 = {
+        beforeRetry: [(_0x38b3ea, _0x195d7e) => {
+            _0x195d7e;
+        }]
+    };
+    const _0x41cc6c = {
+        request: 30000
+    };
+    const _0x36af90 = {
+        json: _0x3ec3fa,
+        retry: _0xfb6de,
+        hooks: _0x4180a7,
+        timeout: _0x41cc6c
+    };
+
+    let _0x4d2918 = await _0xf16ac6.post("http://api.nolanstore.cc/sign", _0x36af90).json().catch(_0x377ba9 => {
+        console.log(_0x377ba9.message);
+        console.log("sign获取失败,请检查网络！\n");
     });
-    return _0x10e883.body;
+
+    return _0x4d2918;
 }
-const _0x17787a = {};
-_0x17787a.getbody = _0xc9cb0f, _0x17787a.getbody2 = _0x5e0eb9, module.exports = _0x17787a;
+
+async function _0x33db4a(_0x55d10c, _0x13aa46) {
+    const _0x39922e = {
+        fn: _0x55d10c,
+        body: _0x13aa46
+    };
+    const _0x2f0184 = {
+        limit: 1,
+        methods: ["GET", "POST"]
+    };
+    const _0x312c4a = {
+        beforeRetry: [(_0x2262d3, _0x3c15e0) => {
+            _0x3c15e0;
+        }]
+    };
+    const _0x39772a = {
+        request: 30000
+    };
+    const _0x3c8b4a = {
+        json: _0x39922e,
+        retry: _0x2f0184,
+        hooks: _0x312c4a,
+        timeout: _0x39772a
+    };
+
+    let _0x644183 = await _0xf16ac6.post("http://api.nolanstore.cc/sign", _0x3c8b4a).json().catch(_0x1e9286 => {
+        console.log(_0x1e9286.message);
+        console.log("sign获取失败,请检查网络！\n");
+    });
+
+    return _0x644183.body;
+}
+
+const _0x4edf35 = {
+    getbody: _0x63cb62,
+    getbody2: _0x33db4a
+};
+module.exports = _0x4edf35;
