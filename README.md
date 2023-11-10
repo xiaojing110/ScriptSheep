@@ -15,6 +15,13 @@
 
 个人使用第三方的代理池
 
+## 关于自定义
+
+- sign变量：JD_SIGN_KRAPI
+- sign变量：SIGN_URL
+  
+*其余见脚本内部说明*
+
 ## 原版脚本库
 
 https://github.com/KingRan/KR
