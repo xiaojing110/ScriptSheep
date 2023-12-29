@@ -8,7 +8,7 @@ cron "55 5 * * *" script-path=jd_newYear_party.js, tag=京东跨年狂欢抽奖
  */
 const $ = new Env('京东跨年狂欢抽奖')
 const lI1l1i = $.isNode() ? require("./function/sendNotify") : "",
-      i1iil = $.isNode() ? require("./function/jdCookie") : "",
+      i1iil = $.isNode() ? require("./jdCookie.js") : "",
       llI11l = require("./function/krgetH5st"),
       I1llIl = require("./function/jdCommon");
 
