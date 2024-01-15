@@ -3,7 +3,7 @@
  * @LastEditors: 6dy
  * @Description: 批量取关京东店铺和商品
  * @Fixed: 不再支持Qx，仅支持Node.js,修复取关商品
- * @Updatetime: 2023/4/18
+ * @Updatetime: 2024/1/10
  */
 const $ = new Env('批量取关店铺和商品');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -73,21 +73,25 @@ let args_xh = {
      * */
     failTimes: process.env.JD_UNSUB_FAILTIMES || 3
 }
+const _0x430d2d = $.isNode() ? require("./function/dylib.js") : "",
+    _0x255eef = require("./function/dylanv.js");
+
 !(async () => {
     if (args_xh.isRun) {
         !cookiesArr[0] && $.msg("【京东账号一】取关京东店铺商品失败", "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
             "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        await _0x5533a2();
+        await _0x530f86();
 
-        for (let _0x1869af = 0; _0x1869af < cookiesArr.length; _0x1869af++) {
-            if (cookiesArr[_0x1869af]) {
-                cookie = cookiesArr[_0x1869af];
+        for (let _0x4b5aa4 = 0; _0x4b5aa4 < cookiesArr.length; _0x4b5aa4++) {
+            if (cookiesArr[_0x4b5aa4]) {
+                cookie = cookiesArr[_0x4b5aa4];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-                $.index = _0x1869af + 1;
+                $.index = _0x4b5aa4 + 1;
                 $.isLogin = true;
                 $.nickName = "";
-                await _0x2846f5();
+                await _0x5df279();
+                $.jddtoken = await _0x430d2d.jddToken("wqs.jd.com/");
                 console.log("\n****开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*****\n");
 
                 if (args_xh.except.includes($.UserName)) {
@@ -99,7 +103,11 @@ let args_xh = {
                     $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
                         "open-url": "https://bean.m.jd.com/bean/signIndex.action"
                     });
-                    $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+
+                    if ($.isNode()) {
+                        await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie");
+                    }
+
                     continue;
                 }
 
@@ -113,38 +121,54 @@ let args_xh = {
                 $.shopIdList = "";
                 $.endGoods = $.endShops = false;
                 $.failTimes = 0;
-                await _0x29d155();
+                await _0x2e820c();
+                console.log("当前已关注商品：" + $.goodsTotalNum + "个");
+
+                let _0x5aa9f3 = parseInt($.goodsTotalNum / 10) + 1;
+
+                if (_0x5aa9f3 > 1) {
+                    console.log("获取商品ing...");
+
+                    for (let _0x5ae21c = 2; _0x5ae21c < _0x5aa9f3 + 1; _0x5ae21c++) {
+                        await _0x2e820c(_0x5ae21c);
+                        await $.wait(2000);
+                    }
+                }
+
                 await $.wait(args_xh.unSubscribeInterval);
 
                 if (!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) {
-                    let _0x9bacf0 = $.commIdList.split(",").filter(_0x3a2f1d => !!_0x3a2f1d);
+                    let _0x59c3ca = $.commIdList.split(",").filter(_0x86188f => !!_0x86188f);
 
-                    $.log("开始取关商品...\n");
+                    $.log("\n开始取关商品...\n");
 
-                    for (let _0x1eec5a = 0; _0x1eec5a < 20; _0x1eec5a++) {
-                        if (_0x9bacf0.length === 0) break;
-                        $.log("第" + (_0x1eec5a + 1) + "次取关商品->");
+                    for (let _0x1dca7c = 0; _0x1dca7c < 20; _0x1dca7c++) {
+                        if (_0x59c3ca.length === 0) break;
+                        $.log("第" + (_0x1dca7c + 1) + "次取关商品->");
 
-                        let _0x43fe8b = _0x9bacf0.splice(0, 20);
+                        let _0x257561 = _0x59c3ca.splice(0, 20);
 
-                        _0x43fe8b = _0x43fe8b.join(",");
-                        await _0x512485(_0x43fe8b);
+                        _0x257561 = _0x257561.join(",");
+
+                        let _0x3358a3 = await _0x5845f4(_0x257561);
+
+                        _0x3358a3 && ($.goodsTotalNum = $.goodsTotalNum - _0x257561.split(",").length);
                         await $.wait(2000);
                     }
                 } else console.log("不执行取消收藏商品\n");
 
                 await $.wait(args_xh.unSubscribeInterval);
-                await _0x5c2cda();
+                await _0x55cdf2();
                 await $.wait(args_xh.unSubscribeInterval);
-                if (!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await _0x319d99(); else console.log("不执行取消收藏店铺\n");
+                if (!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await _0x3f0882(); else console.log("不执行取消收藏店铺\n");
 
                 do {
                     if (parseInt($.shopsTotalNum) === 0) break; else {
                         if (parseInt($.shopsTotalNum) === parseInt($.shopsKeyWordsNum)) break; else {
                             $.shopIdList = "";
-                            await _0x5c2cda();
+                            await _0x55cdf2();
                             await $.wait(args_xh.unSubscribeInterval);
-                            if (!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await _0x319d99(); else console.log("不执行取消收藏店铺\n");
+                            if (!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await _0x3f0882(); else console.log("不执行取消收藏店铺\n");
                         }
                     }
 
@@ -154,18 +178,18 @@ let args_xh = {
                     }
                 } while (true);
 
-                await _0x2cbd6a();
+                await _0x36a3fe();
             }
         }
     } else $.log("\n默认不执行,请设置变量JD_UNSUB = 'true'");
-})().catch(_0x4cd60c => {
-    $.log("", "❌ " + $.name + ", 失败! 原因: " + _0x4cd60c + "!", "");
+})().catch(_0x2adbb0 => {
+    $.log("", "❌ " + $.name + ", 失败! 原因: " + _0x2adbb0 + "!", "");
 }).finally(() => {
     $.done();
 });
 
-function _0x5533a2() {
-    return new Promise(_0xfbee29 => {
+function _0x530f86() {
+    return new Promise(_0x1bea5a => {
         if ($.isNode() && process.env.JD_UNSUB) {
             console.log("=====环境变量配置如下=====");
             console.log("except: " + typeof args_xh.except + ", " + args_xh.except);
@@ -180,116 +204,129 @@ function _0x5533a2() {
             console.log("=======================");
         }
 
-        _0xfbee29();
+        _0x1bea5a();
     });
 }
 
-function _0x2cbd6a() {
-    if (args_xh.isNotify) {
-        $.msg($.name, "", "【京东账号" + $.index + "】" + $.nickName + "\n【还剩关注店铺】" + $.shopsTotalNum + "个\n【还剩关注商品】" + $.goodsTotalNum + "个");
-    } else $.log("【京东账号" + $.index + "】" + $.nickName + "\n【还剩关注店铺】" + $.shopsTotalNum + "个\n【还剩关注商品】" + $.goodsTotalNum + "个");
+function _0x36a3fe() {
+    args_xh.isNotify ? $.msg($.name, "", "【京东账号" + $.index + "】" + $.nickName + "\n【还剩关注店铺】" + $.shopsTotalNum + "个\n【还剩关注商品】" + $.goodsTotalNum + "个") : $.log("【京东账号" + $.index + "】" + $.nickName + "\n【还剩关注店铺】" + $.shopsTotalNum + "个\n【还剩关注商品】" + $.goodsTotalNum + "个");
 }
 
-function _0x32818e(_0x8598e, _0x11359d, _0x173fe4) {
-    let _0xc5663e = _0x8598e.indexOf(_0x11359d),
-        _0x2c5ec6 = _0x8598e.indexOf(_0x173fe4, _0xc5663e);
+function _0x24b68b(_0x449361, _0x16b57f, _0x2819f4) {
+    let _0x15860c = _0x449361.indexOf(_0x16b57f),
+        _0x477c4b = _0x449361.indexOf(_0x2819f4, _0x15860c);
 
-    if (_0xc5663e < 0 || _0x2c5ec6 < _0xc5663e) return "";
-    return _0x8598e.substring(_0xc5663e + _0x11359d.length, _0x2c5ec6);
+    if (_0x15860c < 0 || _0x477c4b < _0x15860c) return "";
+    return _0x449361.substring(_0x15860c + _0x16b57f.length, _0x477c4b);
 }
 
-function _0x29d155() {
-    return new Promise(async _0x506249 => {
-        console.log("获取已关注的商品...");
-
-        const _0x2fa2d1 = require("./function/dylanx.js");
-
-        let _0x14df94 = {
-            "page": "1",
-            "pagesize": "300",
-            "sortType": "time_desc"
-        },
-            _0x39d682 = await _0x2fa2d1.getbody("favoriteList", _0x14df94),
-            _0x353a07 = {
-                "url": "https://api.m.jd.com/client.action",
-                "body": "functionId=favoriteList&" + _0x39d682 + "&lmt=0",
-                "headers": {
-                    "Host": "api.m.jd.com",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "User-Agent": "okhttp/3.12.13",
-                    "Cookie": cookie
-                }
-            };
-
-        $.post(_0x353a07, async (_0xd3d456, _0x18baa2, _0x2ca598) => {
+async function _0x2e820c(_0x308a18 = 1) {
+    $.UA = "Mozilla/5.0 (Linux; Android 12; 22 Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/111.0.5563.116 Mobile Safari/537.36 XWEB/1110053 MMWEBSDK/20230202 MMWEBID/8970 MicroMessenger/8.0.33.2320(0x28002151) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64 MiniProgramEnv/android";
+    let _0x5237b0 = {
+        "cp": _0x308a18,
+        "pageSize": 10,
+        "category": "",
+        "promote": 0,
+        "cutPrice": 0,
+        "coupon": 0,
+        "stock": 0,
+        "area": "0_0_0_0",
+        "tenantCode": "jgminise",
+        "bizModelCode": "6",
+        "bizModeClientType": "WxMiniProgram",
+        "externalLoginType": "1"
+    },
+        _0x126990 = {
+            "appId": "c420a",
+            "fn": "queryFollowProduct",
+            "body": _0x5237b0,
+            "apid": "jd-cphdeveloper-m",
+            "ver": $.UA.split(";")[2],
+            "cl": "ios",
+            "user": $.UserName,
+            "code": 1,
+            "ua": $.UA
+        };
+    _0x5237b0 = await _0x255eef.getbody(_0x126990);
+    if (!_0x5237b0) return;
+    let _0x1d20d2 = {
+        "url": "https://api.m.jd.com/api?loginType=2&" + _0x5237b0 + "&x-api-eid-token=" + $.jddtoken.token,
+        "headers": {
+            "Host": "api.m.jd.com",
+            "Origin": "https://wqs.jd.com",
+            "User-Agent": $.UA,
+            "Cookie": cookie
+        }
+    };
+    return new Promise(async _0x54ae71 => {
+        $.get(_0x1d20d2, async (_0x5c8bfa, _0x273512, _0xde1ee9) => {
             try {
-                if (_0xd3d456) {
-                    console.log(_0xd3d456);
+                if (_0x5c8bfa) {
+                    console.log(_0x5c8bfa);
                     return;
                 }
 
-                _0x2ca598 = JSON.parse(_0x2ca598);
+                _0xde1ee9 = JSON.parse(_0xde1ee9);
 
-                if (_0x2ca598.code === "0") {
-                    $.goodsTotalNum = parseInt(_0x2ca598.favoriteList.length);
-                    console.log("当前已关注商品：" + $.goodsTotalNum + "个");
-                    $.goodsKeyWordsNum = 0;
+                if (_0xde1ee9.code === "0") {
+                    if (_0xde1ee9.totalNum !== 0) {
+                        $.goodsTotalNum = parseInt(_0xde1ee9.totalNum);
+                        $.goodsKeyWordsNum = 0;
 
-                    for (let _0x40ccac of _0x2ca598.favoriteList) {
-                        if (args_xh.goodsKeyWords.some(_0x5f4ab2 => _0x40ccac.wname.includes(_0x5f4ab2))) args_xh.printLog ? console.log(_0x40ccac.wname + " ") : "", args_xh.printLog ? console.log("商品被过滤，含有关键词\n") : "", $.goodsKeyWordsNum += 1; else {
-                            $.commIdList += _0x40ccac.fid + ",";
-                            $.unsubscribeGoodsNum++;
+                        for (let _0x1b0932 of _0xde1ee9.followProductList) {
+                            args_xh.goodsKeyWords.some(_0x32ca85 => _0x1b0932.commTitle.includes(_0x32ca85)) ? (args_xh.printLog ? console.log(_0x1b0932.commTitle + " ") : "", args_xh.printLog ? console.log("商品被过滤，含有关键词\n") : "", $.goodsKeyWordsNum += 1) : ($.commIdList += _0x1b0932.commId + ",", $.unsubscribeGoodsNum++);
                         }
-                    }
-                } else $.endGoods = true, console.log("无商品可取消收藏\n");
-            } catch (_0x2c7a3a) {
-                $.logErr(_0x2c7a3a, _0x18baa2);
+                    } else $.endGoods = true, console.log("无商品需要取关\n");
+                } else console.log(_0xde1ee9.errMsg);
+            } catch (_0x8137a3) {
+                $.logErr(_0x8137a3, _0x273512);
             } finally {
-                _0x506249(_0x2ca598);
+                _0x54ae71(_0xde1ee9);
             }
         });
     });
 }
 
-function _0x512485(_0x240ab0) {
-    return new Promise(_0x38f3a7 => {
-        let _0x712a5d = {
-            "commId": _0x240ab0,
+function _0x5845f4(_0x560771) {
+    return new Promise(_0x6fa556 => {
+        let _0x33c3e9 = {
+            "commId": _0x560771,
             "tenantCode": "jgminise",
             "bizModelCode": "6",
             "bizModeClientType": "WxMiniProgram",
             "externalLoginType": ""
         };
-        const _0x456ef2 = {
-            "url": "https://api.m.jd.com/api?appid=jd-cphdeveloper-m&functionId=delFollowProduct&body=" + encodeURIComponent(JSON.stringify(_0x712a5d)) + "&loginType=2&g_login_type=2&g_tk=891942062&g_ty=ajax&appCode=msd95910c4",
+        const _0x3fa705 = {
+            "url": "https://api.m.jd.com/api?appid=jd-cphdeveloper-m&functionId=delFollowProduct&body=" + encodeURIComponent(JSON.stringify(_0x33c3e9)) + "&loginType=2&g_login_type=2&g_tk=891942062&g_ty=ajax&appCode=msd95910c4",
             "headers": {
                 "Cookie": cookie,
                 "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
                 "Referer": "https://wqs.jd.com/"
             }
         };
-        $.get(_0x456ef2, (_0x81ac9, _0x40f792, _0x8e3d4a) => {
+        let _0x47386a = false;
+        $.get(_0x3fa705, (_0x58b8b2, _0x47ae67, _0x274ea2) => {
             try {
-                if (_0x81ac9) {
-                    console.log(_0x81ac9);
+                if (_0x58b8b2) {
+                    console.log(_0x58b8b2);
                     return;
                 }
 
-                _0x8e3d4a = JSON.parse(_0x8e3d4a);
-                _0x8e3d4a.errorCode === 0 ? (console.log("成功取关商品：" + _0x240ab0.split(",").length + "个\n"), $.failTimes = 0) : console.log("批量取关商品失败，失败次数：" + ++$.failTimes + "\n", JSON.stringify(_0x8e3d4a));
-            } catch (_0x3d5992) {
-                $.logErr(_0x3d5992, _0x40f792);
+                _0x274ea2 = JSON.parse(_0x274ea2);
+                _0x274ea2.errorCode === 0 ? (console.log("成功取关商品：" + _0x560771.split(",").length + "个\n"), $.failTimes = 0, _0x47386a = true) : console.log("批量取关商品失败，失败次数：" + ++$.failTimes + "\n", JSON.stringify(_0x274ea2));
+            } catch (_0x5b01e9) {
+                $.logErr(_0x5b01e9, _0x47ae67);
             } finally {
-                _0x38f3a7(_0x8e3d4a);
+                _0x6fa556(_0x47386a);
             }
         });
     });
 }
 
-function _0x5c2cda() {
-    return new Promise(_0x4d0779 => {
+function _0x55cdf2() {
+    return new Promise(_0x6b2d43 => {
         console.log("正在获取已关注的店铺...");
-        const _0x45b364 = {
+        const _0x2329bf = {
             "url": "https://wq.jd.com/fav/shop/QueryShopFavList?cp=1&pageSize=" + args_xh.shopPageSize + "&sceneval=2&g_login_type=1&callback=jsonpCBKA",
             "headers": {
                 "Cookie": cookie,
@@ -297,44 +334,40 @@ function _0x5c2cda() {
                 "Referer": "https://wqs.jd.com/"
             }
         };
-        $.get(_0x45b364, (_0x5a410f, _0x2ce5e, _0x41e784) => {
+        $.get(_0x2329bf, (_0x3bcaac, _0x28c95b, _0x66af7f) => {
             try {
-                if (_0x41e784.indexOf("Authorization") !== -1) {
+                if (_0x66af7f.indexOf("Authorization") !== -1) {
                     console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题");
                     return;
                 }
 
-                _0x41e784 = JSON.parse(_0x32818e(_0x41e784, "try{jsonpCBKA(", ");}catch(e){}"));
+                _0x66af7f = JSON.parse(_0x24b68b(_0x66af7f, "try{jsonpCBKA(", ");}catch(e){}"));
 
-                if (_0x41e784.iRet === "0") {
-                    $.shopsTotalNum = parseInt(_0x41e784.totalNum);
+                if (_0x66af7f.iRet === "0") {
+                    $.shopsTotalNum = parseInt(_0x66af7f.totalNum);
                     console.log("当前已关注店铺：" + $.shopsTotalNum + "个");
 
-                    if (_0x41e784.data.length > 0) {
+                    if (_0x66af7f.data.length > 0) {
                         $.shopsKeyWordsNum = 0;
 
-                        for (let _0x21efc2 of _0x41e784.data) {
-                            if (args_xh.shopKeyWords.some(_0xae9965 => _0x21efc2.shopName.includes(_0xae9965))) {
-                                args_xh.printLog ? console.log("店铺被过滤，含有关键词") : "";
-                                args_xh.printLog ? console.log(_0x21efc2.shopName + "\n") : "";
-                                $.shopsKeyWordsNum += 1;
-                            } else $.shopIdList += _0x21efc2.shopId + ",", $.unsubscribeShopsNum++;
+                        for (let _0x204fc6 of _0x66af7f.data) {
+                            args_xh.shopKeyWords.some(_0x22b72f => _0x204fc6.shopName.includes(_0x22b72f)) ? (args_xh.printLog ? console.log("店铺被过滤，含有关键词") : "", args_xh.printLog ? console.log(_0x204fc6.shopName + "\n") : "", $.shopsKeyWordsNum += 1) : ($.shopIdList += _0x204fc6.shopId + ",", $.unsubscribeShopsNum++);
                         }
                     } else $.endShops = true, console.log("无店铺可取消关注\n");
-                } else console.log("获取已关注店铺失败：" + JSON.stringify(_0x41e784));
-            } catch (_0x5814c2) {
-                $.logErr(_0x5814c2, _0x2ce5e);
+                } else console.log("获取已关注店铺失败：" + JSON.stringify(_0x66af7f));
+            } catch (_0x58fc21) {
+                $.logErr(_0x58fc21, _0x28c95b);
             } finally {
-                _0x4d0779(_0x41e784);
+                _0x6b2d43(_0x66af7f);
             }
         });
     });
 }
 
-function _0x319d99() {
-    return new Promise(_0x2bb685 => {
+function _0x3f0882() {
+    return new Promise(_0x2e0fae => {
         console.log("正在执行批量取消关注店铺...");
-        const _0x44a221 = {
+        const _0x4b0fa7 = {
             "url": "https://wq.jd.com/fav/shop/batchunfollow?shopId=" + $.shopIdList + "&sceneval=2&g_login_type=1",
             "headers": {
                 "Cookie": cookie,
@@ -342,31 +375,29 @@ function _0x319d99() {
                 "Referer": "https://wqs.jd.com/"
             }
         };
-        $.get(_0x44a221, (_0xca7491, _0xd2b2b0, _0x26ed52) => {
+        $.get(_0x4b0fa7, (_0x59a9e8, _0x1048ba, _0x4ccd65) => {
             try {
-                if (_0x26ed52.indexOf("Authorization") !== -1) {
+                if (_0x4ccd65.indexOf("Authorization") !== -1) {
                     console.log("获取数据失败，401 Authorization Required，可能是User-Agent的问题");
                     return;
                 }
 
-                _0x26ed52 = JSON.parse(_0x26ed52);
-
-                if (_0x26ed52.iRet === "0") {
-                    console.log("已成功取消关注店铺：" + $.unsubscribeShopsNum + "个\n");
-                    $.failTimes = 0;
-                } else console.log("批量取消关注店铺失败，失败次数：" + ++$.failTimes + "\n");
-            } catch (_0x4e4df2) {
-                $.logErr(_0x4e4df2, _0xd2b2b0);
+                _0x4ccd65 = JSON.parse(_0x4ccd65);
+                if (_0x4ccd65.iRet === "0") console.log("已成功取消关注店铺：" + $.unsubscribeShopsNum + "个\n"), $.failTimes = 0; else {
+                    console.log("批量取消关注店铺失败，失败次数：" + ++$.failTimes + "\n");
+                }
+            } catch (_0x88b95c) {
+                $.logErr(_0x88b95c, _0x1048ba);
             } finally {
-                _0x2bb685(_0x26ed52);
+                _0x2e0fae(_0x4ccd65);
             }
         });
     });
 }
 
-function _0x2846f5() {
-    return new Promise(async _0x4a9a6f => {
-        const _0x10862f = {
+function _0x5df279() {
+    return new Promise(async _0x3e7bc2 => {
+        const _0x30f3ae = {
             "url": "https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2",
             "headers": {
                 "Accept": "application/json,text/plain, */*",
@@ -379,38 +410,34 @@ function _0x2846f5() {
                 "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
             }
         };
-        $.post(_0x10862f, (_0x40aa18, _0x3552d2, _0x4fa619) => {
+        $.post(_0x30f3ae, (_0x33f4e8, _0x57799d, _0x531d15) => {
             try {
-                if (_0x40aa18) console.log("" + JSON.stringify(_0x40aa18)), console.log($.name + " API请求失败，请检查网路重试"); else {
-                    if (_0x4fa619) {
-                        _0x4fa619 = JSON.parse(_0x4fa619);
+                if (_0x33f4e8) console.log("" + JSON.stringify(_0x33f4e8)), console.log($.name + " API请求失败，请检查网路重试"); else {
+                    if (_0x531d15) {
+                        _0x531d15 = JSON.parse(_0x531d15);
 
-                        if (_0x4fa619.retcode === 13) {
+                        if (_0x531d15.retcode === 13) {
                             $.isLogin = false;
                             return;
                         }
 
-                        if (_0x4fa619.retcode === 0) {
-                            $.nickName = _0x4fa619.base && _0x4fa619.base.nickname || $.UserName;
-                        } else $.nickName = $.UserName;
-                    } else {
-                        console.log("京东服务器返回空数据");
-                    }
+                        _0x531d15.retcode === 0 ? $.nickName = _0x531d15.base && _0x531d15.base.nickname || $.UserName : $.nickName = $.UserName;
+                    } else console.log("京东服务器返回空数据");
                 }
-            } catch (_0x237fab) {
-                $.logErr(_0x237fab, _0x3552d2);
+            } catch (_0xd74152) {
+                $.logErr(_0xd74152, _0x57799d);
             } finally {
-                _0x4a9a6f();
+                _0x3e7bc2();
             }
         });
     });
 }
 
-function _0x93df1(_0x20543c) {
-    if (typeof _0x20543c == "string") try {
-        return JSON.parse(_0x20543c);
-    } catch (_0x46fd9a) {
-        return console.log(_0x46fd9a), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+function _0x740ad2(_0x2a887e) {
+    if (typeof _0x2a887e == "string") try {
+        return JSON.parse(_0x2a887e);
+    } catch (_0x480ed2) {
+        return console.log(_0x480ed2), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
 }
 function Env(t, e) {
